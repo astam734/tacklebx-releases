@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Versions of the papers</title>
+<meta name="description" content="Each posted paper's versions, with what changed in each.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+.site-back { display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem; padding-top: 1.1rem; font: 600 0.95rem/1.4 var(--display); } .site-back a { color: var(--accent); text-decoration: none; } .site-back a:hover, .site-back a:focus-visible { text-decoration: underline; } .site-back.bottom { border-top: 1px solid var(--rule); padding-top: 1.25rem; padding-bottom: 3rem; }
+p, li, td, a { overflow-wrap: anywhere; } figure { margin: 1.5rem 0; }
+
+/* Layout: one long reading column under a rain-streaked title band; parts open with a mono eyebrow; side questions fold open in place. */
+:root {
+  --bg: #f2f5f7;
+  --ink: #15202a;
+  --muted: #586672;
+  --rule: #d3dbe1;
+  --accent: #1d5a78;
+  --fold: #e6edf1;
+  --rain: rgba(29, 90, 120, 0.10);
+  --display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --body: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0e151b; --ink: #e2e8ec; --muted: #94a2ad; --rule: #25313a;
+  --accent: #82bcd8; --fold: #16212a; --rain: rgba(130, 188, 216, 0.08); color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0e151b; --ink: #e2e8ec; --muted: #94a2ad; --rule: #25313a;
+  --accent: #82bcd8; --fold: #16212a; --rain: rgba(130, 188, 216, 0.08); color-scheme: dark }
+
+body { background: var(--bg); color: var(--ink); font: 400 1.125rem/1.65 var(--body); }
+.wrap { max-width: 42rem; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+header.hero { border-bottom: 1px solid var(--rule);
+  background-image: repeating-linear-gradient(100deg, transparent 0 22px, var(--rain) 22px 23px); }
+header.hero .wrap { padding-block: clamp(3rem, 9vw, 6rem) 2.5rem; display: grid; gap: 1rem; }
+h1 { font: 700 clamp(2.4rem, 7vw, 4rem)/1.02 var(--display); letter-spacing: -0.02em; margin: 0; text-wrap: balance; }
+.subtitle { font: 500 clamp(1.15rem, 2.6vw, 1.45rem)/1.3 var(--display); color: var(--muted); margin: 0; text-wrap: balance; }
+.byline { font: 500 0.8rem/1.4 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); margin: 0.5rem 0 0; }
+
+nav.toc { margin-block: 2rem 0; }
+nav.toc summary { font: 500 0.8rem var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); cursor: pointer; }
+nav.toc ol { margin: 0.75rem 0 0; padding-left: 1.2rem; display: grid; gap: 0.25rem; font: 500 1rem/1.4 var(--display); }
+nav.toc a { color: var(--ink); text-decoration: none; }
+nav.toc a:hover, nav.toc a:focus-visible { color: var(--accent); text-decoration: underline; }
+
+main.wrap { padding-block: 1rem 4rem; }
+main p { margin: 0 0 1.1em; }
+main em { font-style: italic; }
+main a { color: var(--accent); }
+main hr { border: 0; border-top: 1px solid var(--rule); margin: 2.5rem 0; }
+h2 { font: 700 clamp(1.6rem, 4vw, 2.1rem)/1.15 var(--display); letter-spacing: -0.01em; margin: 3.5rem 0 1.25rem; text-wrap: balance; scroll-margin-top: 1rem; }
+h2 .eyebrow { display: block; font: 500 0.75rem/1 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.6rem; }
+h3 { font: 700 1.2rem/1.3 var(--display); margin: 2.25rem 0 0.75rem; text-wrap: balance; }
+main ul, main ol { padding-left: 1.3rem; margin: 0 0 1.1em; }
+main li { margin-bottom: 0.4em; }
+main strong { font-weight: 600; }
+main table { border-collapse: collapse; font-size: 0.95rem; }
+.tablewrap { overflow-x: auto; margin: 0 0 1.25em; }
+main th, main td { border-bottom: 1px solid var(--rule); padding: 0.4rem 0.6rem; text-align: left; vertical-align: top; }
+
+details.fold { background: var(--fold); border-radius: 6px; margin: 1.25rem 0 1.5rem; }
+details.fold summary { list-style: none; cursor: pointer; padding: 0.85rem 1rem 0.85rem 2.6rem; position: relative;
+  font: 600 1.02rem/1.35 var(--display); }
+details.fold summary::-webkit-details-marker { display: none; }
+details.fold summary::before { content: "+"; position: absolute; left: 1rem; top: 0.72rem; font: 500 1.15rem/1 var(--mono); color: var(--accent); }
+details.fold[open] summary::before { content: "\2212"; }
+details.fold summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+.fold-body { padding: 0 1.1rem 0.6rem 2.6rem; font-size: 1.02rem; }
+
+sup a.footnote-ref, a.footnote-ref { font: 500 0.7rem var(--mono); text-decoration: none; color: var(--accent); padding: 0 0.1em; }
+section.footnotes { margin-top: 4rem; border-top: 1px solid var(--rule); padding-top: 1.5rem; font-size: 0.9rem; color: var(--muted); }
+section.footnotes::before { content: "Sources and notes"; display: block; font: 500 0.75rem var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; }
+section.footnotes hr { display: none; }
+section.footnotes ol { padding-left: 1.6rem; }
+section.footnotes li { margin-bottom: 0.5em; }
+a.footnote-back { text-decoration: none; }
+
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+
+main.prose h2 { font: 700 1.25rem/1.25 var(--display); margin: 2.2rem 0 0.4rem; } main.prose ul { padding-left: 1.1rem; } main.prose li { margin: 0.5rem 0; }
+main.prose a { color: var(--accent); } .cur { font: 500 0.75rem var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--accent); }
+
+</style>
+<header class="hero"><div class="wrap">
+  <h1>Versions of the papers</h1>
+  <p class="subtitle">What changed in each posted version of the series on superintelligence and conflict</p>
+  <p class="byline">Allan C. Stam · University of Virginia</p>
+  <nav class="site-back" aria-label="Tacklebx"><a href="https://www.tacklebx.com/">← Tacklebx home</a><a href="https://www.tacklebx.com/research">All research</a></nav>
+</div></header>
+<main class="prose"><div class="wrap">
+<p class="lede">These are working papers and they change. Each paper keeps one address that always holds its latest version, and the first page of the technical paper and of its plain-language guide carries the version number and date. A paper and its guide share a number and are replaced together. A new number means a claim, a condition, a result or a source changed; small corrections of wording are made without one. Earlier versions are kept and linked here.</p>
+<h2>Introduction to the series</h2>
+<p class="byline">The series introduction</p>
+<ul>
+<li><strong>Version 1, 27 November 2026</strong> <span class=cur>current</span>. First numbered version. <a href="https://updates.tacklebx.com/read/series-introduction.pdf">plain-language guide</a> · <a href="https://updates.tacklebx.com/read/series-introduction-technical.pdf">technical version</a></li>
+</ul>
+<h2>Running Toward the Clinic: Speed, Biological Risk and Health in the AI Transition</h2>
+<p class="byline">Paper 2 of the series</p>
+<ul>
+<li><strong>Version 2, 27 November 2026</strong> <span class=cur>current</span>. Technical paper revised after review: eight controlled trials added to the misuse evidence, source record completed, Declarations added, replication files posted. The plain-language edition was rebuilt from the revised paper. <a href="https://updates.tacklebx.com/read/running-toward-the-clinic.pdf">plain-language guide</a> · <a href="https://updates.tacklebx.com/read/running-toward-the-clinic-technical.pdf">technical version</a></li>
+<li><strong>Version 1, 28 October 2026</strong>. First posted version (technical paper 28 October 2026; illustrated plain-language edition 24 November 2026). <a href="https://updates.tacklebx.com/read/archive/running-toward-the-clinic-v1.pdf">plain-language guide</a> · <a href="https://updates.tacklebx.com/read/archive/running-toward-the-clinic-v1.html">guide as a web page</a> · <a href="https://updates.tacklebx.com/read/archive/running-toward-the-clinic-technical-v1.pdf">technical version</a></li>
+</ul>
+<h2>Measures That Need No Reading of Ends</h2>
+<p class="byline">Paper 3 of the series</p>
+<ul>
+<li><strong>Version 1, 27 November 2026</strong> <span class=cur>current</span>. First numbered version. It replaces the files posted on 26 November 2026: the plain-language guide had conditions and limits restored after a further check against the technical paper. <a href="https://updates.tacklebx.com/read/measures-that-need-no-reading-of-ends.pdf">plain-language guide</a> · <a href="https://updates.tacklebx.com/read/measures-that-need-no-reading-of-ends-technical.pdf">technical version</a></li>
+</ul>
+<h2>When Is a Machine an Actor?</h2>
+<p class="byline">Paper 4 of the series</p>
+<ul>
+<li><strong>Version 1, 27 November 2026</strong> <span class=cur>current</span>. First numbered version. <a href="https://updates.tacklebx.com/read/when-is-a-machine-an-actor.pdf">plain-language guide</a> · <a href="https://updates.tacklebx.com/read/when-is-a-machine-an-actor-technical.pdf">technical version</a></li>
+</ul>
+<h2>The War Baseline</h2>
+<p class="byline">Paper 6 of the series</p>
+<ul>
+<li><strong>Version 1, 27 November 2026</strong> <span class=cur>current</span>. First numbered version. It replaces the files posted on 26 November 2026: the plain-language guide had conditions and limits restored after a further check against the technical paper; one statement about another paper of the series was corrected in both. <a href="https://updates.tacklebx.com/read/the-war-baseline.pdf">plain-language guide</a> · <a href="https://updates.tacklebx.com/read/the-war-baseline-technical.pdf">technical version</a></li>
+</ul>
+<h2>Disagreement Without Hidden Information</h2>
+<p class="byline">Paper 7 of the series</p>
+<ul>
+<li><strong>Version 1, 27 November 2026</strong> <span class=cur>current</span>. First numbered version. It replaces the files posted on 26 November 2026: the plain-language guide had conditions and limits restored after a further check against the technical paper. <a href="https://updates.tacklebx.com/read/disagreement-without-hidden-information.pdf">plain-language guide</a> · <a href="https://updates.tacklebx.com/read/disagreement-without-hidden-information-technical.pdf">technical version</a></li>
+</ul>
+<h2>Fighting for Free</h2>
+<p class="byline">Paper 8 of the series</p>
+<ul>
+<li><strong>Version 1, 27 November 2026</strong> <span class=cur>current</span>. First numbered version. It replaces the files posted on 26 November 2026: the plain-language guide had conditions and limits restored after a further check against the technical paper. <a href="https://updates.tacklebx.com/read/fighting-for-free.pdf">plain-language guide</a> · <a href="https://updates.tacklebx.com/read/fighting-for-free-technical.pdf">technical version</a></li>
+</ul>
+<h2>Takeoff and Emergence</h2>
+<p class="byline">Paper 9 of the series</p>
+<ul>
+<li><strong>Version 1, 27 November 2026</strong> <span class=cur>current</span>. First numbered version. It replaces the files posted on 26 November 2026: the plain-language guide had conditions and limits restored after a further check against the technical paper. <a href="https://updates.tacklebx.com/read/takeoff-and-emergence.pdf">plain-language guide</a> · <a href="https://updates.tacklebx.com/read/takeoff-and-emergence-technical.pdf">technical version</a></li>
+</ul>
+<h2>Many Machines</h2>
+<p class="byline">Paper 10 of the series</p>
+<ul>
+<li><strong>Version 1, 27 November 2026</strong> <span class=cur>current</span>. First numbered version. It replaces the files posted on 26 November 2026: the plain-language guide had conditions and limits restored after a further check against the technical paper. <a href="https://updates.tacklebx.com/read/many-machines.pdf">plain-language guide</a> · <a href="https://updates.tacklebx.com/read/many-machines-technical.pdf">technical version</a></li>
+</ul>
+<h2>Satiation Is Not Enough</h2>
+<p class="byline">Paper 11 of the series</p>
+<ul>
+<li><strong>Version 1, 27 November 2026</strong> <span class=cur>current</span>. First numbered version. It replaces the files posted on 26 November 2026: the plain-language guide had conditions and limits restored after a further check against the technical paper. <a href="https://updates.tacklebx.com/read/satiation-is-not-enough.pdf">plain-language guide</a> · <a href="https://updates.tacklebx.com/read/satiation-is-not-enough-technical.pdf">technical version</a></li>
+</ul>
+<h2>Ends, Rank and Conflict</h2>
+<p class="byline">Paper 12 of the series</p>
+<ul>
+<li><strong>Version 1, 27 November 2026</strong> <span class=cur>current</span>. First numbered version. It replaces the files posted on 26 November 2026: the plain-language guide had conditions and limits restored after a further check against the technical paper. <a href="https://updates.tacklebx.com/read/ends-rank-and-conflict.pdf">plain-language guide</a> · <a href="https://updates.tacklebx.com/read/ends-rank-and-conflict-technical.pdf">technical version</a></li>
+</ul>
+<h2>A Test the Conjecture Could Lose</h2>
+<p class="byline">Paper 13 of the series</p>
+<ul>
+<li><strong>Version 1, 27 November 2026</strong> <span class=cur>current</span>. First numbered version. <a href="https://updates.tacklebx.com/read/a-test-the-conjecture-could-lose.pdf">plain-language guide</a> · <a href="https://updates.tacklebx.com/read/a-test-the-conjecture-could-lose-technical.pdf">technical version</a></li>
+</ul>
+<h2>Measures That Depend on Ends</h2>
+<p class="byline">Paper 14 of the series</p>
+<ul>
+<li><strong>Version 1, 27 November 2026</strong> <span class=cur>current</span>. First numbered version. It replaces the files posted on 26 November 2026: the plain-language guide had conditions and limits restored after a further check against the technical paper; one statement about another paper of the series was corrected in both. <a href="https://updates.tacklebx.com/read/measures-that-depend-on-ends.pdf">plain-language guide</a> · <a href="https://updates.tacklebx.com/read/measures-that-depend-on-ends-technical.pdf">technical version</a></li>
+</ul>
+<h2>Changing the Ends</h2>
+<p class="byline">Paper 15 of the series</p>
+<ul>
+<li><strong>Version 1, 27 November 2026</strong> <span class=cur>current</span>. First numbered version. It replaces the files posted on 26 November 2026: the plain-language guide had conditions and limits restored after a further check against the technical paper; one statement about another paper of the series was corrected in both. <a href="https://updates.tacklebx.com/read/changing-the-ends.pdf">plain-language guide</a> · <a href="https://updates.tacklebx.com/read/changing-the-ends-technical.pdf">technical version</a></li>
+</ul>
+<h2>Limits, and an Answer</h2>
+<p class="byline">Paper 16 of the series</p>
+<ul>
+<li><strong>Version 1, 27 November 2026</strong> <span class=cur>current</span>. First numbered version. <a href="https://updates.tacklebx.com/read/limits-and-an-answer.pdf">plain-language guide</a> · <a href="https://updates.tacklebx.com/read/limits-and-an-answer-technical.pdf">technical version</a></li>
+</ul>
+</div></main>
+<nav class="wrap site-back bottom" aria-label="Tacklebx"><a href="https://www.tacklebx.com/">← Tacklebx home</a><a href="https://www.tacklebx.com/research">All research</a></nav>
