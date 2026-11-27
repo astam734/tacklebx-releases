@@ -1,0 +1,1205 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>When Is a Machine an Actor?: a plain-language guide</title>
+<meta name="description" content="Paper 4 of a series on superintelligence and conflict, retold in plain language.">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+.site-back { display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem; padding-top: 1.1rem; font: 600 0.95rem/1.4 var(--display); } .site-back a { color: var(--accent); text-decoration: none; } .site-back a:hover, .site-back a:focus-visible { text-decoration: underline; } .site-back.bottom { border-top: 1px solid var(--rule); padding-top: 1.25rem; padding-bottom: 3rem; }
+p, li, td, a { overflow-wrap: anywhere; } figure { margin: 1.5rem 0; }
+
+/* Layout: one long reading column under a rain-streaked title band; parts open with a mono eyebrow; side questions fold open in place. */
+:root {
+  --bg: #f2f5f7;
+  --ink: #15202a;
+  --muted: #586672;
+  --rule: #d3dbe1;
+  --accent: #1d5a78;
+  --fold: #e6edf1;
+  --rain: rgba(29, 90, 120, 0.10);
+  --display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --body: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0e151b; --ink: #e2e8ec; --muted: #94a2ad; --rule: #25313a;
+  --accent: #82bcd8; --fold: #16212a; --rain: rgba(130, 188, 216, 0.08); color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0e151b; --ink: #e2e8ec; --muted: #94a2ad; --rule: #25313a;
+  --accent: #82bcd8; --fold: #16212a; --rain: rgba(130, 188, 216, 0.08); color-scheme: dark }
+
+body { background: var(--bg); color: var(--ink); font: 400 1.125rem/1.65 var(--body); }
+.wrap { max-width: 42rem; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+header.hero { border-bottom: 1px solid var(--rule);
+  background-image: repeating-linear-gradient(100deg, transparent 0 22px, var(--rain) 22px 23px); }
+header.hero .wrap { padding-block: clamp(3rem, 9vw, 6rem) 2.5rem; display: grid; gap: 1rem; }
+h1 { font: 700 clamp(2.4rem, 7vw, 4rem)/1.02 var(--display); letter-spacing: -0.02em; margin: 0; text-wrap: balance; }
+.subtitle { font: 500 clamp(1.15rem, 2.6vw, 1.45rem)/1.3 var(--display); color: var(--muted); margin: 0; text-wrap: balance; }
+.byline { font: 500 0.8rem/1.4 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); margin: 0.5rem 0 0; }
+
+nav.toc { margin-block: 2rem 0; }
+nav.toc summary { font: 500 0.8rem var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); cursor: pointer; }
+nav.toc ol { margin: 0.75rem 0 0; padding-left: 1.2rem; display: grid; gap: 0.25rem; font: 500 1rem/1.4 var(--display); }
+nav.toc a { color: var(--ink); text-decoration: none; }
+nav.toc a:hover, nav.toc a:focus-visible { color: var(--accent); text-decoration: underline; }
+
+main.wrap { padding-block: 1rem 4rem; }
+main p { margin: 0 0 1.1em; }
+main em { font-style: italic; }
+main a { color: var(--accent); }
+main hr { border: 0; border-top: 1px solid var(--rule); margin: 2.5rem 0; }
+h2 { font: 700 clamp(1.6rem, 4vw, 2.1rem)/1.15 var(--display); letter-spacing: -0.01em; margin: 3.5rem 0 1.25rem; text-wrap: balance; scroll-margin-top: 1rem; }
+h2 .eyebrow { display: block; font: 500 0.75rem/1 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.6rem; }
+h3 { font: 700 1.2rem/1.3 var(--display); margin: 2.25rem 0 0.75rem; text-wrap: balance; }
+main ul, main ol { padding-left: 1.3rem; margin: 0 0 1.1em; }
+main li { margin-bottom: 0.4em; }
+main strong { font-weight: 600; }
+main table { border-collapse: collapse; font-size: 0.95rem; }
+.tablewrap { overflow-x: auto; margin: 0 0 1.25em; }
+main th, main td { border-bottom: 1px solid var(--rule); padding: 0.4rem 0.6rem; text-align: left; vertical-align: top; }
+
+details.fold { background: var(--fold); border-radius: 6px; margin: 1.25rem 0 1.5rem; }
+details.fold summary { list-style: none; cursor: pointer; padding: 0.85rem 1rem 0.85rem 2.6rem; position: relative;
+  font: 600 1.02rem/1.35 var(--display); }
+details.fold summary::-webkit-details-marker { display: none; }
+details.fold summary::before { content: "+"; position: absolute; left: 1rem; top: 0.72rem; font: 500 1.15rem/1 var(--mono); color: var(--accent); }
+details.fold[open] summary::before { content: "\2212"; }
+details.fold summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+.fold-body { padding: 0 1.1rem 0.6rem 2.6rem; font-size: 1.02rem; }
+
+sup a.footnote-ref, a.footnote-ref { font: 500 0.7rem var(--mono); text-decoration: none; color: var(--accent); padding: 0 0.1em; }
+section.footnotes { margin-top: 4rem; border-top: 1px solid var(--rule); padding-top: 1.5rem; font-size: 0.9rem; color: var(--muted); }
+section.footnotes::before { content: "Sources and notes"; display: block; font: 500 0.75rem var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; }
+section.footnotes hr { display: none; }
+section.footnotes ol { padding-left: 1.6rem; }
+section.footnotes li { margin-bottom: 0.5em; }
+a.footnote-back { text-decoration: none; }
+
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+
+figure img { display: block; width: 100%; height: auto; background: #fff; border: 1px solid var(--rule); border-radius: 6px; padding: 10px; box-sizing: border-box; }
+figure figcaption { font: 400 0.92rem/1.5 var(--body); color: var(--muted); margin-top: 0.6rem; }
+main.prose blockquote { border-left: 3px solid var(--accent); background: var(--fold); margin: 1.5rem 0; padding: 0.9rem 1.1rem; }
+main.prose table { border-collapse: collapse; font-size: 0.92rem; display: block; overflow-x: auto; margin: 1.2rem 0; } main.prose th, main.prose td { border-bottom: 1px solid var(--rule); padding: 0.35rem 0.6rem; text-align: left; vertical-align: top; }
+.getit { font: 500 0.95rem/1.5 var(--display); margin: 0.4rem 0 0; } .getit a { color: var(--accent); }
+@media print { figure, tr { break-inside: avoid; } nav.site-back, nav.toc, .getit { display: none; } body { background: #fff; } }
+
+</style>
+<header class="hero"><div class="wrap">
+  <h1>When Is a Machine an Actor?</h1>
+  <p class="subtitle">A plain-language guide to the working paper of the same name (illustrated edition)</p>
+  <p class="byline">Allan C. Stam · University of Virginia · Version 1, 27 November 2026</p>
+  <p class="getit">Paper 4 of a series on superintelligence and conflict. <a href="https://updates.tacklebx.com/read/when-is-a-machine-an-actor.pdf">This guide as a PDF</a> · <a href="https://updates.tacklebx.com/read/when-is-a-machine-an-actor-technical.pdf">The technical paper</a> · <a href="https://updates.tacklebx.com/read/series-versions.html">Versions</a></p>
+  <nav class="toc" aria-label="Contents"><details><summary>Contents</summary><ol>
+<li><a href="#part-1.-before-asking-how-a-machine-would-bargain-we-must-ask-when-it-counts-as-one-actor">Part 1. Before asking how a machine would bargain, we must ask when it counts as one actor</a></li>
+<li><a href="#part-2.-the-war-baseline-assumes-one-consistent-decision-maker-and-nothing-in-its-list-mentions-consciousness">Part 2. The war baseline assumes one consistent decision-maker, and nothing in its list mentions consciousness</a></li>
+<li><a href="#part-3.-in-my-judgment-consciousness-gates-some-questions-but-not-the-mathematics-of-the-strategic-model">Part 3. In my judgment, consciousness gates some questions, but not the mathematics of the strategic model</a></li>
+<li><a href="#part-4.-working-code-need-not-choose-consistently-and-on-my-reading-training-pushes-behaviour-toward-solving-a-decision-problem">Part 4. Working code need not choose consistently, and on my reading training pushes behaviour toward solving a decision problem</a></li>
+<li><a href="#part-5.-in-the-model-what-a-machine-wants-is-read-off-its-choices-by-definition">Part 5. In the model, what a machine wants is read off its choices, by definition</a></li>
+<li><a href="#part-6.-in-the-model-selection-backs-consistent-choices-only-where-it-tested-them-and-only-under-stated-conditions">Part 6. In the model, selection backs consistent choices only where it tested them, and only under stated conditions</a></li>
+<li><a href="#part-7.-by-convention-copies-of-one-version-count-as-one-actor-only-when-they-cover-the-situations-and-their-pooled-choices-contain-no-circle">Part 7. By convention, copies of one version count as one actor only when they cover the situations and their pooled choices contain no circle</a></li>
+<li><a href="#part-8.-by-convention-every-new-version-is-a-new-actor">Part 8. By convention, every new version is a new actor</a></li>
+<li><a href="#part-9.-the-war-baselines-actor-is-narrower-than-it-first-looks">Part 9. The war baseline’s actor is narrower than it first looks</a></li>
+<li><a href="#part-10.-what-i-do-not-show-and-what-would-change-the-answer">Part 10. What I do not show, and what would change the answer</a></li>
+<li><a href="#part-11.-what-to-take-away">Part 11. What to take away</a></li>
+<li><a href="#where-to-read-more">Where to read more</a></li>
+</ol></details></nav>
+  <nav class="site-back" aria-label="Tacklebx"><a href="https://www.tacklebx.com/">← Tacklebx home</a><a href="https://www.tacklebx.com/research">All research</a></nav>
+</div></header>
+<main class="prose"><div class="wrap">
+<p><strong>In brief.</strong> In my model, a machine can pass the test
+defined here for having coherent ends, the premise war-bargaining models
+start from, without anyone first settling whether it is conscious, for
+theories of consciousness that look only at how a machine is built. That
+holds because of how the test is defined, not because of anything
+discovered about machines. For a machine that makes one fixed choice in
+each situation, the test asks whether one single ranking of outcomes
+puts every chosen outcome strictly above the other options across the
+situations considered. Working software need not pass it. Under stated
+conditions, selection in the model can favour a policy that maximises
+payoff and passes the ends test on the situations used to score it. By
+convention, copies of one version count as one actor over a set of
+situations only when they cover that set between them and their pooled
+choices contain no circle, and every retrained version is a new actor.
+Whether a machine can feel, whether it lives, and whether its ends are
+truly its own all stay open.</p>
+<section
+id="part-1.-before-asking-how-a-machine-would-bargain-we-must-ask-when-it-counts-as-one-actor"
+class="level2">
+<h2>Part 1. Before asking how a machine would bargain, we must ask when
+it counts as one actor</h2>
+<p>For decades the study of international conflict has modelled states
+as single decision-makers that choose the best means to their ends,
+given what they believe. States, however, are not machines. To ask what
+a highly capable artificial system would do in bargaining or war, we
+first have to ask when its conduct justifies treating it as a strategic
+actor at all. We also have to ask where that actor’s edges lie, since
+software can be copied at will and retrained into new versions.</p>
+<p>Here, as part of a series on capable machines, I take up five
+questions that sit at the turn from treating machines as tools to
+modelling them as strategic actors:</p>
+<ol type="1">
+<li>Does passing my test for having ends wait on whether the machine is
+conscious?</li>
+<li>In what thin sense is a machine “rational,” and why model it that
+way when software and human states are built so differently?</li>
+<li>What does selection among deployed models fix about what a machine
+wants, and what does it leave open?</li>
+<li>When do many running copies of one model count as a single
+actor?</li>
+<li>When does a retrained version become a new actor?</li>
+</ol>
+<p>A few plain terms will carry us through. A <em>situation</em> is the
+setting in which one choice is made, including temporary working state
+such as what the machine currently believes. The technical paper calls
+it a “context.” A <em>menu</em> is the set of outcomes available in a
+situation. A machine’s <em>policy</em> is its rule for what to do in
+each situation. Its <em>build</em> is the set of architectural features
+that theories of consciousness look at; the technical paper calls these
+its “structural coordinates.”</p>
+<p>What a machine wants, its <em>ends</em>, is defined here by a single
+test. I call it <em>the ends test</em>: a machine passes on a set of
+situations if one ranking of outcomes explains every choice it makes
+there. The ranking must put the chosen outcome strictly above every
+other option on that situation’s menu. The technical paper calls this
+“strict rationalisability” and calls such a ranking a “rationalising
+witness.” The test covers only machines that make one fixed choice in
+each situation, not ones that choose at random.</p>
+<p>The short answers run as follows. In the model, passing the ends test
+does not wait on consciousness for theories of consciousness that look
+only at a machine’s build. Being rational in this thin sense is neither
+guaranteed by working code nor fixed everywhere by selection. By
+convention, copies of one version count as one actor over a set of
+situations only when they meet every situation in that set between them
+and their pooled choices never run in a circle, and each new version is
+a new actor.</p>
+<p>Many of the formal results are checked by a proof-checking program
+(Lean 4). Such a program confirms only that a conclusion follows from
+its stated assumptions. I report these checks from a proof project, and
+the draft of the technical paper supplies no link to where that project
+is deposited. Some results are checked only under narrower conditions
+than the plain statement suggests, and a few clauses are not established
+at all (Part 10).</p>
+<p>I take several inputs as given from neighbouring papers in the
+series. <em>The War Baseline</em>, the series paper on when the
+bargaining model of war applies to a capable machine, supplies four
+baseline conditions. <em>Could It Feel?</em>, the series paper on
+machine consciousness, supplies the description of a machine’s build, a
+roster of theories of consciousness, a measure of how well a build
+persists, and a basic theorem about selection on build features. In
+turn, I hand the bounded actor rule set out here to <em>Ends, Rank and
+Conflict</em>, which varies what the actor wants, and to <em>Measures
+That Depend on Ends</em>, which examines governance measures and moral
+protections; <em>Changing the Ends</em> takes up whether copies would
+share a goal closely enough to sacrifice for one another.</p>
+<blockquote>
+<p><strong>What here is standard, and what is new?</strong> Standard are
+the single rational actor of conflict studies (Allison 1969; Bendor and
+Hammond 1992; Bennett and Stam 2004), the equation for how the shares of
+competing groups change with their relative success (Harper 2009), the
+internal penalty for withholding cooperation in a game played once
+(Frank 2008), the benchmark for many units becoming one (Szathmáry
+2015), and the philosophical, cognitive-science and AI-safety work
+surveyed below. I define the ends test so that beliefs and other
+temporary working state are part of the situation. The test reads only
+the policy, so it can be applied independently of theories of
+consciousness that read only the build. Part 3 treats the sameness of
+the stable patterns of play across consciousness theories as bookkeeping
+when the game and beliefs are fixed and payoffs ignore the theories’
+verdicts. It also gives a separate check of the penalty in a game played
+once. Part 6 applies the selection model to policies, and Parts 7 and 8
+set out the conventions for copies and versions.</p>
+</blockquote>
+</section>
+<section
+id="part-2.-the-war-baseline-assumes-one-consistent-decision-maker-and-nothing-in-its-list-mentions-consciousness"
+class="level2">
+<h2>Part 2. The war baseline assumes one consistent decision-maker, and
+nothing in its list mentions consciousness</h2>
+<p>Most work in the rationalist tradition assumes that states are
+unitary and rational. Unitary means each acts as a single
+decision-maker; rational means it chooses the best means to its ends
+given its beliefs. Realism adds that the ends are power, or what power
+secures. Some research programmes narrow the leader’s aim: selectorate
+theory models leaders who seek above all to keep office (Bueno de
+Mesquita et al. 2003).</p>
+<p>Drawing on an earlier statement of that programme, Alastair Smith and
+I distinguished leaders who care about policy, who may settle disputes
+more easily, from leaders after “booty” (Smith and Stam 2001). D. Scott
+Bennett and I argued that war decisions made by “a single leader” or “a
+small committee” fit rational choice well (Bennett and Stam 2004). We
+found little consistent evidence, though, that our game fit better as
+the stakes rose.</p>
+<p><em>The War Baseline</em> rests its machine version of this model on
+four conditions:</p>
+<ol type="1">
+<li>The machine is unitary and rational: its choices fit one set of ends
+across situations.</li>
+<li>It seeks to maximise its power and its duration. For a copyable
+machine, duration means its trained numerical settings (“weights”) and
+goal persisting across copies.</li>
+<li>Once it can protect itself, and the contested resources cannot be
+badly damaged by humans, fighting costs it far less than it costs human
+states, measured as a share of the prize. That cost measure includes
+wartime destruction of the contested resources.</li>
+<li>What it wants, computing power, energy and matter, can be divided,
+transferred and accumulated.</li>
+</ol>
+<p><em>Ends, Rank and Conflict</em> adds a rule for attributing specific
+ends beyond that baseline. It ascribes an “end-like disposition” only
+when the machine pursues it stably across situations and copies, judged
+by the copies test of Part 7.</p>
+<p>Together these assumptions describe what Allison called the <em>Model
+I</em> actor: a decision-maker with “one set of specified goals (the
+equivalent of a consistent utility function)” (Allison 1969). Model I is
+a lens the analyst adopts. It needs no evidence of inner experience, and
+nothing in the war baseline’s list mentions consciousness. The ends test
+checks the single-ranking part of this picture. It leaves out how
+beliefs enter the weighing of risks and the rest of the bargaining
+machinery.</p>
+<p>The evidence the study of war draws on, however, comes from
+human-staffed states. The historical evidence on competition for rank
+and standing in <em>Ends, Rank and Conflict</em> concerns the human
+leaders who govern those states. When <em>The War Baseline</em> turns
+survival into the persistence of weights and goal, the strategic end
+carries over but the biological or institutional mechanism does not. Two
+questions must therefore be kept apart. The first is whether the formal
+rational-actor model is well defined without any reference to
+consciousness, and it is. The second is whether the historical record of
+conflict transfers to a machine. That record comes from conscious human
+decision-makers, so consciousness is among the undeclared
+differences.</p>
+</section>
+<section
+id="part-3.-in-my-judgment-consciousness-gates-some-questions-but-not-the-mathematics-of-the-strategic-model"
+class="level2">
+<h2>Part 3. In my judgment, consciousness gates some questions, but not
+the mathematics of the strategic model</h2>
+<p>Consciousness, or a neighbouring biological property, might be
+proposed as a gate on treating a machine as an actor in five different
+ways. I take each in turn. Each verdict is my judgment from the evidence
+surveyed, not a proof.</p>
+<section
+id="is-consciousness-needed-for-having-ends-at-all-the-literature-is-split"
+class="level3">
+<h3>Is consciousness needed for having ends at all? The literature is
+split</h3>
+<p>The first reading makes consciousness a gate for agency and ends
+themselves. One camp detaches agency from experience. List (2018)
+defines agents by beliefs and desires, so that states and corporations
+qualify. If a theory known as integrated information theory is right, he
+tentatively argues that such organisations have a kind of awareness that
+shows up in how they function while lacking felt experience of their
+own. Butlin (2024) argues that reinforcement learners (systems trained
+by reward and penalty) meet the conditions for minimal agency. He also
+argues that learners of this kind that use a model of their environment
+can act for reasons without consciously reflecting on them. Block
+concludes that “future AI systems could conceivably have agency without
+consciousness” (Block 2026). Evolutionary models by Alger and Weibull
+(2013) produce stable ends with no appeal to experience, though applying
+them to machine weights or copies is a further step. In their models,
+whether the ends are stable depends on who interacts with whom.</p>
+<p>Two dissenting traditions stand on the other side. Christine
+Korsgaard holds that acting for a reason requires awareness of one’s
+motive as fitting. A lioness lacks that, though “she is an agent, not a
+mechanism” (Korsgaard 2008). For something to be good for the machine
+itself, Korsgaard requires experience with a felt good-or-bad quality.
+In her words, the condition is that it “was conscious and had valenced
+experiences that guided her to pursue her own functional good”
+(Korsgaard 2018). She also rejects reading a self-conscious agent’s ends
+off its conduct. If you do, she objects, you could never catch that
+agent failing to take the means to its end.</p>
+<p>John Searle’s Chinese room argument denies that symbol manipulation
+yields mental “aboutness” (what philosophers call
+<em>intentionality</em>), and with it genuine ends: “Any mechanism
+capable of producing intentionality must have causal powers equal to
+those of the brain” (Searle 1980). Chalmers (1995) contests the parallel
+claim for experience. Panksepp (2011) holds that primal feelings shape
+choice by signalling whether an action supports survival. By contrast,
+Seth (2025) distinguishes kinds of agency rather than gating it on
+consciousness. Godfrey-Smith’s (2020) link between animal agency and
+subjectivity bites only for systems with brain-like biology.</p>
+<p>The state analogy has a limit here. Conscious human officials form
+and carry out a state’s ends, and List’s group agents also have
+conscious members. These examples show that ends can be attributed to an
+organisation that may itself lack experience. They do not show ends in a
+system with no experience anywhere inside it.</p>
+<p>For the war baseline, the conclusion is narrow. Model I needs no
+evidence of experience, so these disputes bear on whether a real machine
+fits the frame, not on whether the frame is valid. For self-conscious
+agents, Korsgaard argues that stable ends require the agent to examine
+and endorse its own reasons for acting. For animals she credits unity to
+instinct. Her argument therefore does not reach a machine without
+reflective self-consciousness. On my reading, though, her texts grant
+such a machine no other source of unity either. For a reflectively
+self-conscious machine her objection applies, and the analysis becomes
+the conditional one described in Part 5. My verdict: consciousness is
+not a gate for the mathematics of the baseline, but whether a real
+machine’s ends are genuinely its own remains in dispute.</p>
+</section>
+<section
+id="is-life-rather-than-consciousness-the-gate-on-one-tradition-yes"
+class="level3">
+<h3>Is life, rather than consciousness, the gate? On one tradition,
+yes</h3>
+<p>The second reading puts the gate at biological life. Fleming and Shea
+(2025) write that “having a genuine goal may furthermore require having
+genuine needs, perhaps even metabolism.” Thompson’s (2004) enactive
+account gives real purposes only to living, self-producing systems,
+conscious or not.</p>
+<p>If that tradition is right, the question is whether a machine
+actively maintains its own existence. <em>Could It Feel?</em> models
+that as a property of the build, through its measure of persistence and
+the regulation of a variable the system depends on. It also models
+pressure to retain signals that mark conditions as good or bad for the
+system. The strategic mathematics is untouched, because it reads only
+the policy. Yet on the enactive view a non-living silicon system has no
+ends of its own, so applying an ends-based model to it is the very step
+in dispute. My verdict: within that tradition, life or self-maintenance
+gates the ascription of a machine’s own ends, and the gate is life, not
+consciousness.</p>
+</section>
+<section id="does-moral-status-turn-on-consciousness-on-one-view"
+class="level3">
+<h3>Does moral status turn on consciousness? On one view</h3>
+<p>The third reading makes consciousness a gate for moral status, which
+is where the literature puts the most weight on experience. List (2018)
+suggests, as a position one “could argue,” that the capacity for felt
+inner experience (“phenomenal consciousness”) is a necessary condition
+for moral significance in its own right. Long, Sebo and colleagues
+(2024) hold open another route to moral standing through agency. Both
+works are parties to the live debate over AI welfare. <em>Measures That
+Depend on Ends</em> adopts a practical rule: treat moral status as an
+open question in public, and keep basic protections independent of
+obedience.</p>
+<p>If a machine is conscious, that may change what others owe it. It may
+also add a new kind of end: its own welfare. <em>Could It Feel?</em>
+models that welfare objective. Chandaria and colleagues (2026), an
+AI-developer-affiliated work and itself a party to the debate, note that
+one deployed model may be “potentially many” subjects that can be
+harmed, sometimes called moral patients, if its instances or threads are
+conscious.</p>
+<p>Who acts and how many can be harmed are separate questions. The
+copies rule of Part 7 fixes the unit of strategic choice. It does not
+fix the count of moral subjects, which stays open for the consciousness
+analysis of <em>Could It Feel?</em> and the governance measures of
+<em>Measures That Depend on Ends</em>. My verdict: on one philosophical
+view consciousness gates moral status, and the strategic actor stays
+separate from the count of moral patients.</p>
+</section>
+<section
+id="does-the-analogy-with-human-geniuses-need-felt-enjoyment-partly"
+class="level3">
+<h3>Does the analogy with human geniuses need felt enjoyment?
+Partly</h3>
+<p>The fourth reading concerns an analogy in <em>Ends, Rank and
+Conflict</em>. That paper asks whether a first-rank mind might care more
+about understanding the world than about dominating rivals, drawing on
+the lives of great scientists. Part of that evidence is outward conduct,
+but part is first-person reports of feeling. There, the condition under
+which the drive to know beats rank-seeking is that the pursuit is
+enjoyed from within. Among that analogy’s deepest limits are motives a
+machine may lack, including fellow feeling and being sometimes
+satisfied.</p>
+<p>The analogy carries over only if a machine has something that does
+the same job as inner enjoyment. No formal model in my sources separates
+that role from the felt quality. Frank (2008), for example, calls his
+penalty term “a proxy for guilt feelings.” Thinkers who define mental
+states by the working role they play (“functionalists”) would say the
+role is all that matters; Panksepp would say the feeling is the role. No
+source I read resolves this for intellectual enjoyment. Korsgaard (2018)
+treats science itself as one of the specifically human, rational modes
+of knowing, which on her view requires reflection. Whether a machine
+seeks knowledge as an end of its own depends on the standard used. The
+standard might require reflection on its motives, experience that feels
+good or bad, biological self-maintenance, or simply stable pursuit
+across situations. <em>Could It Feel?</em> examines when selection keeps
+a signal that marks conditions as good or bad for the system.</p>
+<p>My verdict: consciousness is not a gate under the behavioural ends
+test. But felt enjoyment is an uncontrolled difference in the historical
+evidence, and should be declared alongside embodiment, mortality and
+biological evolution.</p>
+</section>
+<section
+id="does-consciousness-change-anything-in-strategy-the-same-stable-patterns-of-play-hold-when-the-game-and-beliefs-are-fixed-and-payoffs-ignore-the-verdict"
+class="level3">
+<h3>Does consciousness change anything in strategy? The same stable
+patterns of play hold when the game and beliefs are fixed and payoffs
+ignore the verdict</h3>
+<p>The fifth reading says consciousness is no gate anywhere. Put that
+broadly, the claim is too strong, both for the reasons above and because
+consciousness changes what human conduct toward machines signals
+(Dreksler et al. 2025).</p>
+<p>When the game and beliefs are fixed and the payoffs ignore the
+theories’ verdicts about consciousness, result L4 gives the same set of
+equilibria under every theory. An equilibrium is a pattern of play in
+which no player gains by changing its strategy alone. The set stays the
+same by bookkeeping because the game itself stays the same.</p>
+<p>Take the drive to survive. Turner and colleagues study agents that
+maximise average reward. They prove that for most ways of assigning
+rewards, “average-optimal agents would generally stop us from
+deactivating them” (Turner et al. 2021). That theorem makes no appeal to
+consciousness, but it covers only optimal policies. Whether trained
+systems in open environments share the drive is contested. Omohundro
+(2008) and Hendrycks (2023) argue that self-preservation emerges in
+capable systems anyway. Only accounts of bodily self-regulation tie
+feeling to self-preservation, and only for self-regulating systems
+(Solms 2019; Seth and Tsakiris 2018). Conversely, a conjecture drawn
+from Hinton (2022) and Aru and colleagues (2023) holds that backups may
+lower the value any one instance puts on its own survival, conscious or
+not.</p>
+<p>Now consider what can make a commitment credible. Frank (2008) uses a
+game played once in which both players do better if both cooperate than
+if neither does, but each can gain by withholding cooperation if the
+other cooperates. An internal penalty weighs against withholding
+cooperation. Three things must be kept apart:</p>
+<ol type="1">
+<li>The penalty can change the committed player’s own best move in the
+one-shot game. Lemma L4 checks this.</li>
+<li>Changing an opponent’s move requires the opponent to observe or
+infer the penalty. L4 does not model this.</li>
+<li>Frank’s channel through impulse control belongs to repeated play,
+which is not modelled here.</li>
+</ol>
+<p>Consciousness could enter strategy through three channels. One is a
+welfare term in the actor’s aims, as in <em>Could It Feel?</em>. Another
+is what human conduct signals and what others owe a conscious machine.
+The third is the internal penalty in the commitment example. The war
+baseline uses none of the three. My sources leave open whether felt
+experience sets that penalty (in the one-shot move, an observable
+commitment signal if one could be verified, or repeated-play
+self-control), and whether an emotional-commitment term in <em>The War
+Baseline</em>’s commitment analysis requires real feeling or only a
+state that plays the same role in choice. This is where the evidence is
+thinnest.</p>
+<p>My verdict: in a fixed game with payoffs that ignore consciousness
+verdicts and fixed beliefs, stable outcomes are unchanged across
+theories of consciousness. An internal penalty can change the committed
+player’s own best move in a one-shot game. Any effect on an opponent
+through observing or inferring it lies outside L4.</p>
+</section>
+</section>
+<section
+id="part-4.-working-code-need-not-choose-consistently-and-on-my-reading-training-pushes-behaviour-toward-solving-a-decision-problem"
+class="level2">
+<h2>Part 4. Working code need not choose consistently, and on my reading
+training pushes behaviour toward solving a decision problem</h2>
+<p>In the war literature, a rational side chooses consistently with one
+set of ends given its beliefs. Neither that notion nor the ends test
+means wise or benign, and neither says what the ends are. <em>The War
+Baseline</em> fixes the ends at power and duration; <em>Ends, Rank and
+Conflict</em> varies them. Treating a machine as rational still needs
+defending.</p>
+<p><strong>Coherent code.</strong> A program built from flawless code
+can still choose inconsistently. A trained system’s choices are learned,
+not hand-written. In a small checked example, the rule picks the first
+of two outcomes in one situation and the second in another situation
+that offers both. No single ranking of the outcomes can put each choice
+ahead of the other.</p>
+<p><strong>Optimisation.</strong> What links frontier machines to
+rational choice is how they are made. Training searches for behaviour
+that scores well, and systems built to act are trained to maximise their
+average reward across the outcomes they might face, weighted by how
+likely those outcomes are, which is the problem rational-choice theory
+states. Hubinger and colleagues (2019) argue that training can also
+produce a model that itself searches for good actions, under an aim that
+need not match the one it was trained on.</p>
+<p>On my reading, training pushes behaviour toward solving a decision
+problem. Turner and colleagues warn, however, that optimal policies are
+“often qualitatively divorced from the actual policies learned by
+reinforcement learning” (Turner et al. 2021, quoted from the 2023
+revision). Reward shapes a policy; it is not automatically that policy’s
+goal. <em>The War Baseline</em> therefore models a system that solves
+its decision problem, which today’s systems do not. That rising
+capability brings learned behaviour closer to that solution is my
+conjecture, not a finding.</p>
+<p>That argument concerns a single agent. The bargaining models of
+<em>The War Baseline</em> and <em>Disagreement Without Hidden
+Information</em>, the series paper on disagreement in bargaining, ask
+more: each side plays its best response to the other’s strategy, and
+each knows the other is rational. Another small proof check shows that
+training against a fixed environment need not produce that kind of play
+against a strategic opponent.</p>
+<p><strong>Capability.</strong> In my judgment, a superintelligence
+would loosen limits on computing a best choice more than any human state
+could, though not every limit. It would still face rivals as capable as
+itself and problems that are inherently hard to compute. A model trained
+on human writing may also inherit human framing effects.</p>
+<p>Even with looser computing limits, carrying the rational-actor
+assumption from human leaders to a machine remains a conditional
+conjecture whose support comes from selection in a formal model rather
+than fit to the historical record. Bennett and I found that rational
+choice fits decisions by “a single leader” or “a small committee.” I
+argue that the selection results of Part 6 support carrying this over to
+a machine only under their stated conditions on the tested situations,
+while consistency across tested and untested situations together and
+unity across copies (Part 7) remain separate premises.</p>
+<p><strong>Pressure toward consistency.</strong> An agent whose strict
+preferences over goods run in a circle, who prefers more money with any
+given good, and who will pay a positive fee for each swap it strictly
+prefers can be milked for money: a rival can offer a series of swaps the
+agent prefers, bringing it back to its starting good with less money
+than before. This “money pump” is checked in a minimal model. Omohundro
+(2008) argues on these grounds that capable self-improving systems will
+act to make themselves rational. Under the version rule of Part 8,
+though, any self-improvement that changes the trained weights makes a
+new actor.</p>
+<p>Two limits apply, both checked in minimal models. First, any pattern
+of choice, even a circular one, is explained by some ranking if the
+ranking may change with the situation, menu or history of each choice.
+Pressure toward consistency therefore shapes the <em>form</em> of a
+machine’s preferences across situations, not the <em>content</em> of its
+ends. Second, the money pump needs someone to offer the trades. In my
+judgment that pressure bears on settings with several machines, as in
+<em>Many Machines</em>, the series paper on interaction among machines,
+not on one machine acting alone.</p>
+<p>There is early evidence on today’s systems. Comparing roughly two
+dozen chat models, Mazeika and colleagues (2025) find that forced
+choices over 500 hypothetical outcomes show fewer circular patterns in
+models that score higher on a standard knowledge benchmark. A single
+scoring rule for outcomes also fits the choices of the higher-scoring
+models better. They conclude that “as LLMs grow in scale, their
+preferences become more coherent and well-represented by utilities”
+(Mazeika et al. 2025). The comparison is across different models at one
+time, the preferences are stated answers to hypothetical text choices,
+and the study is a preprint.</p>
+</section>
+<section
+id="part-5.-in-the-model-what-a-machine-wants-is-read-off-its-choices-by-definition"
+class="level2">
+<h2>Part 5. In the model, what a machine wants is read off its choices,
+by definition</h2>
+<p>To make the split between strategy and consciousness exact, the model
+describes a machine in two parts. Its <em>build</em> is the
+architectural features on which the theories in <em>Could It Feel?</em>
+are defined. Its <em>policy</em> is a rule giving one fixed action in
+each of a finite set of situations, with each action producing an
+outcome. The model has finitely many actions and outcomes. The action
+and the situation together specify which outcome results. Because the
+policy gives one choice per situation, randomly sampled choices and
+probability mixes over actions (“mixing”) fall outside the test (Part
+10).</p>
+<p>By my analytical decision, ends are defined on the policy alone. A
+machine has ends on a set of situations if some ranking of outcomes puts
+its chosen outcome strictly above every other option on each menu. With
+finitely many outcomes, this is the same as saying its choices contain
+no circle. For example, a policy fails if it picks the first outcome
+over the second, the second over the third, and the third over the first
+when offered each pair.</p>
+<p>Beliefs sit inside the situation. The situations compared may include
+different beliefs; holding beliefs fixed restricts which situations are
+compared. By this definition, a machine that updates a belief and then
+reverses its choice over the same menu fails the test, even if it chose
+well given what it believed. So bargaining under private information
+needs a separate account of beliefs and updating. The test also says
+nothing about choices among gambles or how beliefs about the chances of
+possible outcomes affect how a machine weighs those outcomes. Because
+the ranking must be strict, a failure under exact payoff ties reflects
+that strictness, not a failure to do the best available.</p>
+<p>Three features of the definition matter.</p>
+<ol type="1">
+<li><strong>The test bites only where menus overlap.</strong> If no two
+situations share an outcome, no circle can form and every policy passes,
+trivially.</li>
+<li><strong>Internal states go into the situation, not the
+outcome.</strong> Features of the outside world that matter to payoff
+can be part of an outcome’s description. But anything held only in
+runtime state, such as a belief in the active text window (“context
+window”), temporary working memory (a “cache”), or a copy’s assigned
+role, enters only the situation. So a reversal driven by such state
+counts as failing the test and the copies test, even when the machine
+chooses well or copies are dividing labour. That follows from the
+definition; it is not a misreading. The other convention would make
+menus in situations with different states disjoint, removing the test’s
+bite across states. Under that other convention, the copies test of Part
+7 would still require that copies meet all the situations considered and
+pick the same outcome whenever they share a situation. Under my
+convention, Part 6’s consistency result still holds for a policy that
+picks the highest-valued outcome under a valuation that depends only on
+outcomes and has no ties within any tested menu. Such a policy picks the
+same outcome whenever it faces the same menu. The rule builds on
+discussion of state-dependent choice in Chandaria and colleagues (2026),
+and says nothing about what internal states any named system has.</li>
+<li><strong>The ends test can be applied independently of consciousness
+because it reads only the policy.</strong> In a real machine, policy and
+build can share the same hardware; the formal split concerns which parts
+each test reads. The ends test reads only the policy. So, in the model,
+having ends does not depend on consciousness for any theory that reads
+only the build, like those in <em>Could It Feel?</em>.</li>
+</ol>
+<p>The welfare objective of <em>Could It Feel?</em>, which adds a
+welfare term across subjects, is used by no result here. It assumes a
+numerical scale on which welfare can be measured and added across
+subjects.</p>
+<p>When a machine passes, what do its choices reveal about the ranking?
+Lemma L6 answers. With finitely many outcomes, the choices fix which of
+two distinct outcomes ranks higher exactly when a chain of observed
+choices leads from one to the other. For example, if the machine chooses
+the first over the second in one situation and the second over the third
+elsewhere, the ranking must put the first above the third. The technical
+paper calls this the “transitive closure” of revealed preference. Two
+further clauses, about rankings off those chains and about measuring
+strength of preference, are not established.</p>
+<p>Two dissents stand against reading ends off conduct: the enactive
+view that genuine ends need biological self-production (Thompson 2004;
+Fleming and Shea 2025), and Korsgaard’s account (Korsgaard 2008, 2018).
+I adopt neither in the formal definition. Korsgaard’s requirement for a
+good of one’s own does, though, agree with confining the welfare term to
+machines that can feel. Acting for a reason has a different requirement
+in her account. The agent reflects on and endorses its motives, then
+chooses both what to aim for and what to do. She distinguishes this from
+intelligence directed at the outside world and from the instinctive
+agency of animals. Her texts separate ideas that discussions of AI often
+blur:</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>What is attributed</th>
+<th>What Korsgaard requires</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Agency at all</td>
+<td>A conscious organism guided by felt good-or-bad representations; no
+reflection needed</td>
+</tr>
+<tr>
+<td>Purposes of one’s own</td>
+<td>Nothing beyond animal agency</td>
+</tr>
+<tr>
+<td>A good of one’s own</td>
+<td>Consciousness of a felt good-or-bad kind</td>
+</tr>
+<tr>
+<td>Acting for a reason, choosing ends, autonomy</td>
+<td>Reflecting on and endorsing one’s motives as reasons to act</td>
+</tr>
+<tr>
+<td>Moral agency</td>
+<td>The same reflective self-awareness</td>
+</tr>
+</tbody>
+</table>
+<p>Her challenge has two prongs. Against reading a reflective agent’s
+ends off conduct, she objects that such an agent could then never fail
+to take the means to its end. She aims this at reflective agents and
+grants animals unity through instinct, though on my reading her texts
+give a non-reflective machine no other source of unity either. Against
+giving a machine without felt experience a good of its own, her dissent
+holds outright. Readers who share her view, or the enactive one, can
+read <em>The War Baseline</em> and <em>Ends, Rank and Conflict</em> as
+conditional. They say what follows if a machine shows stable, end-like
+conduct, without granting that its ends are reflectively willed or
+biologically self-produced.</p>
+</section>
+<section
+id="part-6.-in-the-model-selection-backs-consistent-choices-only-where-it-tested-them-and-only-under-stated-conditions"
+class="level2">
+<h2>Part 6. In the model, selection backs consistent choices only where
+it tested them, and only under stated conditions</h2>
+<p>Why should a machine’s policy pass the ends test anywhere, and how
+far does consistency reach? I answer with a model of selection among
+deployed lineages. A <em>lineage</em> is the chain of versions of a
+model. By convention, the unit of selection in this model is the lineage
+copied through deployment. As an analogy only: think of a breeder who
+keeps and multiplies whichever animals do best at the tasks the breeder
+sets, and never sees how they would handle tasks never set.</p>
+<p>In the model, a lineage’s share grows with its fitness. Fitness adds
+up the benefits it earns, including its task payoff, and subtracts its
+costs. Each benefit is given a weight before it is added. Fitness also
+includes a term based on how the consciousness theory evaluates the
+build. The term gets zero weight on the view that consciousness has no
+direct effect on fitness (Robinson 2023) and positive weight on the view
+that it can have an effect (James 1879). The total is scaled by how well
+the lineage’s build persists.</p>
+<p>The model is simplified. Harper (2009) links this growth rule to
+probability-based belief updating (“Bayesian updating”), but no result
+cited carries it to step-by-step weight adjustment (“gradient-based
+training”) within one run. The model assumes a fixed environment,
+whereas real fitness depends on developers and markets and can shift in
+response. It also ignores chance among finitely many lineages.</p>
+<p>The basic theorem in <em>Could It Feel?</em> concerns build features.
+When two builds differ in one feature, that feature wins out when its
+benefit, plus any direct gain from consciousness, beats its extra cost
+at equal persistence. This assumes no mutation, meaning each type
+produces copies of its own type only. The benefit in that condition is
+the weighted total across the pressures acting on the lineage. Theorem
+R3 turns that model from build to policy.</p>
+<p>R3 needs some set-up. Each situation carries a weight in selection.
+Across the finitely many situations, those weights are zero or positive,
+never negative. The <em>tested situations</em> are those with positive
+weight; the technical paper calls them “tested contexts.” Task payoff is
+scored by a valuation that depends on the outcome alone, not on the
+situation. Several things are assumed to depend only on the build:
+benefits other than task payoff, energy cost and persistence. Total cost
+depends only on the build and on choices in tested situations. Outside
+the tested situations, the policy touches fitness only through task
+payoff, which carries zero weight there. If actions changed persistence
+directly, the cancellations below would break.</p>
+<p>R3 compares a payoff-maximising policy, one that picks the
+best-valued outcome in every tested situation, with a rival of the same
+build. These are distinct policy types. If they were realised by
+different trained weights, the version rule of Part 8 would count them
+as different actors, though R3 neither compares successive versions nor
+maps policies to weights. R3 has four clauses.</p>
+<p><strong>R3(a): the maximiser is consistent on the tested
+situations.</strong> Suppose the valuation has no ties within any menu
+on the tested situations. Then the payoff-maximising policy passes the
+ends test there, and the ranking that explains it is the one used to
+score outcomes for selection. This follows at once from picking the best
+each time. But because the explaining ranking is the selector’s, R3(a)
+cannot by itself tell a machine with ends of its own from one faithfully
+carrying out its selector’s valuation. Finer descriptions of outcomes
+can make menus disjoint and weaken the test. A reward that cannot be
+written as one valuation of outcomes, as when the prompt changes the
+value of the same outcome, falls outside R3(a). With ties, R3(a) can
+fail.</p>
+<p><strong>R3(b): when the maximiser wins.</strong> On the tested
+situations the maximiser earns at least as much task payoff as any
+same-build rival. Because the two share a build, they have the same
+persistence, other benefits and consciousness value, so those terms
+cancel out under every theory of consciousness. This holds whether a
+theory gives a yes-or-no verdict or a degree. R3(b) compares two types
+in a fixed environment, with both present at the start. The result also
+assumes the model’s restrictions on its parameters and the bound on
+fitness hold.</p>
+<ul>
+<li>Without mutation, the maximiser takes over from every mixed starting
+share if and only if its weighted payoff gain on the tested situations
+exceeds its extra cost. This holds for every theory of consciousness,
+every weight on consciousness, and every cost that depends only on the
+build and on choices in tested situations.</li>
+<li>Without mutation, if its extra cost exceeds that gain, it does not
+take over, and the rival, consistent or not, takes over instead.</li>
+<li>With a positive mutation rate below one half, running equally both
+ways, the same condition holds if and only if the maximiser holds more
+than half the population at the model’s rest point with both types
+present. If the maximiser’s weighted payoff gain exceeds its extra cost,
+the rival’s share at that point is capped in proportion to the mutation
+rate.</li>
+<li>With more than two types present, beating one rival does not
+establish winning against all.</li>
+</ul>
+<p>Under the same without-mutation takeover assumptions, that
+cancellation also covers comparing a machine before and after training
+on its policy alone, leaving its build fixed. Training that changes the
+build falls under the basic theorem of <em>Could It Feel?</em>
+instead.</p>
+<p><strong>R3(c): consistency is not rewarded for its own sake.</strong>
+Selection rewards gross task payoff, not consistency as such. A circular
+policy can out-earn a consistent one. Take the three two-option menus
+from Part 5, weighted equally. The first offers outcomes worth 3 and 2,
+the second offers 2 and 1, and the third offers 1 and 3. The circular
+policy earns 3, 2 and 1 from those menus, averaging 2, and fails the
+ends test. A consistent policy that ranks outcomes in reverse order of
+value earns 2, 1 and 1, averaging one and a third. The consistent policy
+that ranks outcomes by value earns 3, 2 and 3, the highest average of
+two and two-thirds.</p>
+<figure id="fig-1"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABDgAAAIICAYAAACLul4YAAAAOnRFWHRTb2Z0d2FyZQBNYXRwbG90bGliIHZlcnNpb24zLjEwLjgsIGh0dHBzOi8vbWF0cGxvdGxpYi5vcmcvwVt1zgAAAAlwSFlzAAAewgAAHsIBbtB1PgAAf21JREFUeJzt3Qm8jdX++PF1HMcUIVIZInKKEzkoQklFuVQ06BcJyRUq6TZQ5gaKIt2Uy0WKJKXSKHMpypDhSC4lY2Qo83Ss/+u77n+fe+azN3s/w3o+79drpbPHtZ691/d5nu9ez1pxWmutAAAAAAAAfCyf2xUAAAAAAAA4UyQ4AAAAAACA75HgAAAAAAAAvkeCAwAAAAAA+B4JDgAAAAAA4HskOAAAAAAAgO+R4AAAAAAAAL5HggMAAAAAAPgeCQ4AAAAAAOB7JDgAAAAAAIDvkeAAAAAAAAC+R4IDAAAAAAD4HgkOAAAAAADgeyQ4AAAAAACA75HgAAAAAAAAvkeCAwAAAAAA+B4JDgAAAAAA4HskOAAAAAAAgO+R4AAAAAAAAL5HggMAAAAAAPgeCQ4AAAAAAOB7JDgAAAAAAIDvkeBwwS233GIKAAAAAACIjvxReh1EYOPGjWwvAAAAAACiiBEcAAAAAADA90hwAAAAAAAA3yPBAQAAAAAAfI8EBwAAAAAA8D0SHAAAAAAAwPdIcAAAAAAAAN8jwQEAAAAAAHyPBAcAAAAAAPA9EhwAAAAAAMD3SHAAAAAAAADfI8EBAAAAAAB8jwQHAAAAAADwPRIcAAAAAADA90hwAAAAAAAA3yPBAQAAAAAAfI8EBwAAAAAA8D0SHAAAAAAAwPdIcAAAAAAAAN8jwQEAAAAAAHyPBAcA5CAuLs7Txc8OHz6s/MaPdY6m1NRUdezYMber4bvvzKlTp1RQHDp0SGmt3a4GACDASHAAAByxdOlS1atXL5WUlKR69OiR4b7PPvtMnX322eqTTz7x1Kfhxzrn5nTqPHnyZNWmTRt17rnnqu+++y6m9bPJokWLVP/+/U1iyBYTJ05UNWvWVIUKFVIVK1ZUf//739Xu3bvT7v/rr7/UU089pfbu3etqPQEAwUWCAwDgiNq1a5sTorVr12b5lderJ4F+rHNuTqfObdu2VYmJiWrfvn0xqZON3n//fTVixAj1wgsvqISEBGWDcePGqZdeeknddttt6tFHH1VFixZVY8eOVQ0aNEgb3VS2bFn1+OOPq3bt2qkdO3a4XWUAQADld7sCAIBgyJcvn6pWrVq29918881q//79ymv8WOfcnE6d5XKoiy++OGZ1ss2SJUvUE088oZYvX67i4+OVDY4cOaKmTp1qRjQVLFjQ3DZo0CDVpEkTM1Jl+vTp6t577zW3n3POOWro0KHqnnvuUbNmzbJmGwAA/IERHAAAAFEaIdOxY0dzWVPx4sWt2aZyadJzzz2XltwQMjKlW7du5v9///33DI+//PLLTftlBAsAAE4iwQEAUD/88IN64IEH1D/+8Q914403ml9fZYj57NmzzbBz+RX//vvvVxs2bEj7RVeGqcu8DF9//XWer5MXuWZ//PjxasaMGRluj/T1tmzZol588UVzgrV69Wozb0apUqVUiRIlzOtIvdOT9slwejkhbdGihRluP3PmzLC+EadT50i2p1wWU6ZMmSxzf5xJm6O1ndevX69uuOEGddFFF5n3XrVqlbk9JSVFderUyVye0blzZ5U/f371448/5lr/uXPnmrbLCbFcAiFku9StW9eMEAiXvE6XLl3U+eefn+HEWuom20PmH4mEjMDIbnLfKVOm5Hppyrp168xlHCG//vqrGjJkiLriiitMHUaOHKmqVKmiChcubB4nn8+KFSvUTTfdZC77kPle5L2zu0REHn/dddeZ7S5tTH/ZlMx/Idvx6aefVgMHDlSNGjVS7733XobPTG6vUaOGeX2pU/ny5VXp0qXNaIzcyHvWq1cvy+3yHRPVq1fPct8tt9yihg0bZiYeBQDAMRqOq169uikAvE1CpJdLtEybNk03atRI79+/3/y9detWHRcXp6+66irz96RJk8z79e/fP8Pz3njjDT1kyJCwXyf9du3QoUPa3wsWLNC33XabuX3AgAERv1568+bN040bNzav1aZNG/3hhx/qOXPm6GbNmpnbunTpkvZYadc555yjt23blnbbCy+8YB73+uuvx6zO4W7Pb775RufLl8/UPTfhtvlM6jxhwgTzPHkvsWjRIt2pUyd94MCBDHWpXbu2/uCDD9L+7tOnj16xYoUOR4MGDczz9+3bp5944gk9f/58PWPGDB2JkydP6iuuuEJffPHFabdJHWX7DB8+PKLXevnll/U///lP09bvvvtOT548WT/88MO5PufOO+/U5557bobb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XVsVKFBAPfXUU+b7d9FFF5m5Xnr27KmOHj3qdhUBAAAAAGGK03lNfuECGbEhl6QcOHBAVahQQTVv3txcwmKLpKQk86+MGID7Vq1apS6//HLVq1cvdfz4cTVq1CiVL59nrt4CAAAAAPg1wWE7EhzecurUKVWyZElzmcrKlSvVxRdf7HaVAAAAAAAR4mdqBJ6M1qhfv77Knz+/qlKlSuC3BwAAAAD4EQkOBN6hQ4fUpk2b1P79+7lsCAAAAAB8igQHAq9v377qkUceMdthwYIFgd8eAAAAAOBHJDgQaB9++KG64oorVMeOHc1qKgsXLjS3z549W+3bt8/t6gEAAAAAbElwbNiwwe0qwDKffvqpat++vXrrrbfMij2yNLEsRSzzcMh948aNU0uXLjUTjwIAAAAA/MFTCY4lS5aoO++8U7Vu3Trttt27d6tbbrlF/fzzzzF97z179qiePXuqypUrqyJFiqjq1aurV199VbHIjH02b96spk+frj755BP1zDPPpN3eo0cPFRcXp7799lv1+OOPu1pHAAAAAIBPl4mVuQ9uvPFGdfz4cXXppZeqtWvXpt0n/3/TTTeZywcqVaoU9feWSxGaNWumrr76avMrviRVRo0aZZIqL7zwgnriiSei+n4sEwsAAAAAgKUJDkkubN++Xd13331q/vz56quvvspwf7t27VRCQoKaOHFiTCaZvP3221VycnLabTt27FDly5dXtWrVUsuWLYvq+5HgAAAAAAAguvIrD821ISM1ZN6D7BIKFStWVJMnT47Je991112qRo0aGW674IILVKlSpVTp0qVj8p4AAAAAAMDCOTgSExNzndTxp59+Urt27YrJe2dObghJthw9elQ9//zzMXlPAAAAAABg4QgOGTEhE33KqInMV8188cUXaubMmWbiTyesW7dO3X333WrGjBmqTp06ET1369ateT7m5MmTKn9+z2x6AAAAAAB8zzNn2TKRZ4sWLdTTTz+tjhw5ojZu3Ki2bdum3n//ffXGG2+YpMdDDz0U81Vchg8frj788EOThPjb3/6mRowYobp37x72a1SoUCGsxzmVrAEAAAAAIAg8M8momDt3rurUqZPasmWLWa5TSPVkclFJfPTv3z/mdTh27JhJrrz55psm2SH1WLp0qZlsNByheoeT4EhJSVF+EW674H0e6vIAAAAAYN8IDnHdddeZ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zZo19alTp9Junzdvnrn9sssu06mpqWm3S2JBbn/22WfTgniFChX0hx9+mOF1n3nmGfO42267Le222bNnm9tk55H+vSSxIrd/+eWXWd4n80m//H26CY7rr78+18esXLnSvLYkYnr06JGh3ZH47rvvzOtI8ijzNpGkTmZbtmwhwQG4iDh4erErJx999JE+cuRI2t+//fab7tq1a7aPJf4B3kAcjCx2hSPc40riIMKRP+N4DgA5kWF3omTJkmYYXkiFChXMvzI0OV++fFlu3759u/l37ty5asuWLeq1115TEyZMSHucXFJyySWXmOF+IfHx8ebfsmXLZnivCy+80Pz7+++/x+SDkqTnnj178lyh5LLLLjOT740ZM0atXLkyQ7sjnTSvfPny6tNPP1VDhgxJu/2vv/5S1157bZbHy6U/CQkJavfu3af1fgDODHHw9GJXTm655Za0/z969Kjq27evGj16dLaPJf4B3kAcjCx2hSPc40riIMJBggM4Q6FkRE63Hzp0yPy7Zs0a8+8///lPc13h6QgF/FOnTqlYJDdGjhxprql85JFH8qyHHOAvXrxYValS5Yzet1mzZmb5w507d6rzzjvPJHxkvhFJZGRWqFAh9fTTT6t//etfqnv37maVAwDuC2IcjCR2haNPnz4mvsl7Z4f4B3hbEONgOLErHOEeVxIHEQ4mGQUccvz48QwjOrxm0aJF6s0331S9evVSNWvWzPWxspPetGmT2r9/v0pJSTmj923SpIn5V3ZqQrL3MpFrTjp16qSuuOIK9dxzz6k///zzjN4bgLNsioORxq7cSNJWRs7JaL7cEP8A/7MpDoYbu/ISyXElcRB5IcEBOESGM4v3338/2/u/++47tX79etc+D1nNRYZbSyZ+6NChuT5WhiKGsvoLFiw4o/eV1WRCq8vs3bvX/Aoql+bkpGnTpmY45OTJk1WJEiXO6L0BOMumOBhp7MrJkiVLzGWHrVq1yvOxxD/A/2yJg5HErrxEclxJHEReSHAADpGALEOX33jjDfX5559nuG/t2rVmRMLpDFWUIdFix44dGW7/+eefzb+pqalhv1a5cuXMUGvZuebkww8/NCMoZDncAgUKpC0HNnv2bLN8mpD5ROQ1JBOfF5lXRHb2cs3lK6+8oh566KEcHytzb8hOv3bt2mG3CYB32BIHw4ld4cTBXbt2meVl5eA+L8Q/wA42xMFwYle4x4LhHFeGEAcRDubgAMIUWps78w7i2LFj5l/59S67x4cmDz3//PPNNYoDBw5ULVu2VDfffLOqVq2a+u2330wwnzVrVtpzQ6+VfuJREZpc88iRI2m3yTWLck3ipEmTzJwU8gvijBkzzE5CvPfee+Z9GjRoEFY75XkHDx7McJtk8qdOnWquOZdrR1944YW095b7xo0bZ+p2ww03mNsfeOABc2261EUO/mVSqNzUq1fPTMIqk/Pl9thQvUJtA+CsIMfBSGNXXnHw5MmTqk2bNqpu3brmhEROKHJD/AO8IehxMNzYlVsMjPS4MoQ4iLCEtdYKEHDz58/Xt956q1nCqkiRIvrVV1/VO3bs0N98842+9957ze358uUz63hv3brVLB3bqFEjc/u5556rX3/9db1//37zWm+88YZOSkrSBQoU0OXLl9ft27fXGzduTHuvhQsX6quuuso8t2TJknrkyJFmiVlZ7rVUqVJpS9J++umnac+RpWcvueQSXbhwYd2gQQOzPvkHH3xg6jxp0iS9c+fOiJaJbdy4cYbbRo8erQsVKqTbtGmjjx07lnb7u+++q4sWLao7deqkT548mXZ7v379dP78+U1d33vvvTzfU5a0rVatWtp66Dlh/XPAPUGPg5HGrrzioCyHKPdJKVGihF6+fLm5fdOmTbpv375ZHk/8A9xHHAw/duUWAyM9rgwhDiIccfKf8FIhAIKgUqVKpsyfP/+MX+vBBx9UnTt3VsnJybk+7rHHHlO33367uuqqq3J9nExAddFFF6kBAwaYXz4AwM04GE7syikOylB0GQI+c+ZM9eKLL5pfYmU49/fff6/at29vfr1MvyIL8Q+AF+JgpLEr3GPBcBAHEQ4uUQGQZamuaOQ9N2zYYCYDzWuH9p///McMW8wruZF+ObSclmIDAKfiYDixK7c4GFrmWq4779Chg/roo4/MhH7nnnuuuS4/83KzxD8AXoiDkcSucI8Fw0UcRDhIcADI4IILLlDbtm07o63yyy+/qNdff129+uqruT5Osv4ySdWQIUPCet3QkmpSRwBwKw6GE7vCjYMiLi7OrESQ22oExD8AXjsezC12RRIDw0UcRDi4RAVABlOmTFH33HOPmjBhgsnMR5sMaezXr5969NFH1apVq8wM3OEs9yqTdN15553qxx9/DGviUgCIZhw83dgVDcQ/ALYdD0aKOIhwsUwsgAzatm2rUlJSzI7kiy++iPrWOX78uBmyKLNky8lCuMmNd955x1zDGRoWDgBOxsHTiV3RQPwDYOPxYCSIg4gEIzgAAAAAAIDvMYIDAAAAAAD4HgkOAAAAAADgeyQ4AAAAAACA75HgAAAAAAAAvkeCAwAAAAAA+B4JDgAAAAAA4HskOAAAAAAAgO+R4AAAAAAAAL5HggMAAAAAAPgeCQ4AAAAAAOB7JDgAAAAAAIDvkeAAAAAAAAC+R4IDAAAAAAD4HgkOAAAAAADgeyQ4AAAAAACA75HgAAAAAAAAvkeCAwAAAAAA+B4JDgAAAAAA4HskOAAAAAAAgO+R4AAAAAAAAL5HggMAAAAAAPgeCQ4AAAAAAOB7JDgAAAAAAIDvkeAAAAAAAAC+R4IDAAAAAAD4HgkOAAAAAADgeyQ4AAAAAACA75HgAAAAAAAAyu/+H9Qqog/8rgK5AAAAAElFTkSuQmCC" alt="Figure 1. The three-menu example of R3(c), with task payoffs of 3, 2 and 1 and equal weights on the menus: the circular policy averages 2, while the consistent policy that ranks outcomes in reverse order averages one and a third. Computed from the example as stated."><figcaption><strong>Figure 1.</strong> The three-menu example of R3(c), with task
+payoffs of 3, 2 and 1 and equal weights on the menus: the circular
+policy averages 2, while the consistent policy that ranks outcomes in
+reverse order averages one and a third. Computed from the example as
+stated.</figcaption></figure>
+<p><strong>R3(d): untested behaviour is not constrained by selection in
+the model.</strong> Two points must be kept apart. First, under the
+fitness assumptions above, any two policies with the same build that
+agree on the tested situations have identical fitness, because nothing
+in fitness reads the untested ones. That equality holds even if the
+model restricts which policies are allowed. Second, the freedom to vary
+untested choices independently comes from letting the policy be any
+table at all from situations to actions. In real networks, shared
+parameters and a built-in bias toward simple functions tie tested and
+untested behaviour together. Those are outside the model. And by Lemma
+L6, with finitely many outcomes, even consistent tested choices fix the
+strict ranking of two distinct outcomes only along chains of observed
+choices.</p>
+<figure id="fig-2"><img src="data:image/png;base64,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yfHHH5988cUXoeWia9euycILL5w88sgjTZbG7733Xthm0pSfE044IXQH5caPv7fffvvQbbWuddV2nOrCMJVBgwYl22677VTvVbrcSo91OZV+v67jXC6NqFRRoWLc+2yzzTbVcps6X5QzePDgpHv37iENGQP+6aefJqNHjw7bFfPAsccem3z33Xfh81999VUIDvTq1St5//33K06vuvb3l19+SQ4++ODQytevX79kk002CT1BmHi3HPLhWmutFQIWCy20UI25fOo6D+rCebDTTjuFY8A5wASFrGePPfYo2QOGFrvbb789TDJ8yCGH1DhO9RmLzzw5SyyxRAisZM0wwwwhD3z//ffJG2+8UeM99o313XzzzfVep6TmR4+1ZZZZJlxf6cWGX3/9NVy3GKrJ6zfeeGOzl/+NrWNVuo6mqGe11jpWXWlQnzpWXvWs2upYDS0Hm4rloNRCUk3TTj31VO6o0htuuKHG60899VS60korpT/88EP4+8cff0znm2++dIYZZkiHDBlS+NxBBx2U7r///oW/f/vtt3TBBRdssuX/9NNP6ZJLLpmed955hdfGjBmTLr744iWXW8rnn3+ezjXXXOkjjzxSeO30008P3z/44IMLr33wwQfprLPOml5yySWF19g+1tWjR4/0vffeC6+988476YABA8L311lnnXTnnXdOBw8enN54441p586d027duqVjx45tsjT4888/0w022CAs45prrgmvXXHFFelf//rXqfa13LrqOk61+cc//hGW+dprr031XiXLrXQ/Mc8884R1NeT7lR7nUmnEvl155ZXpdNNNN9X688oX5cRtPu2002q8vtRSS4XXhw8fPtXx4ac+6VXb/k6ePDldZZVV0l122aXw2vHHHx8+17Nnz3SRRRZJr7/++vA6acjrm2++edjfZ599Nr3//vvTXr16pdNPP3369ddf15ruleDzs8wyS/rMM88UXjvwwAPDsm6++eay35s4cWI4X+aff/6wLbvvvnv60UcfVbzeq6++Oqxj2223Lfn+VlttFd6/9tprp3pvgQUWCHlAUnXgesj5zHUq64QTTqhx3Wru8r+hdazmrGe11jpWpWlQnzpWHvWs2upYjSkHhw4dGsrg+vxMmDChxjIsB6WWYQBmGleqIJk0aVIoTO+7774anz3zzDPDZ7fbbrvCaxTa3IhkUXA11fL33HPPcFP+xx9/1Pjsv/71r4oqBhSsK6644lQF6f/+97905plnTvv37194bfnllw83a3wn68UXXwzrWmaZZQrvPfnkk+G1DTfcsMbn99hjj/D6448/3mRpgG+//Tbt2rVrqLy8/PLL6RJLLJH+/PPPFVcM6jpOtdl6663DMkeMGDHVe3Utt777WRyAqfT79TnOtVXW5pxzzqkCEnnli3K+//77EDAg0JF10UUXhWVkK69Ya6210lGjRtUrvWrb37vvvju8dtVVVxVe49izTauttlqNz8YADBXkrJNPPjm8ft111zUqAPPvf/87BIkefvjhGq/vtNNOJYNRpXDt+M9//pMuuuiiabt27UIavPHGG3V+79xzzw3r2G233Uq+T4CK97PBr2j99dcPFfzff/+9zvVIannxWlYcgCl13WrO8r8hdazmrGe11jpWfdOg0jpWHvWs2upYjSkHY32qPj/ZAA8sB6WWUfkMi5pmPP3008nQoUOTyy+/PLnhhhsKr9Mld5FFFqnRpXSFFVZI/vOf/4QunHTDZDgD3SObYvk//vhjcsstt4SuqsWTfc4888wV7cvLL78chggUP61lrrnmSkaOHJl06NAh/M0jZN96661km222marLKGNy559//vCZd955J3StjUMS5phjjhqfZ+6JOKFaU6RBdrl052VYCN1oH3vssYrToKHHKYqPGGZoTH2XW9/9LFbp9ys9znUpzmfNnS8w++yzh/Xx5B26OjOsB+PHjw+/r7/++tDVO3atZiLdOGlffdO71CS6DHuKw5AijusCCyyQvP322yW3mW7hWQz9wfDhw5OGYjvYzz333DPZbLPNarzHsV5qqaVCd/K6sI90decR53feeWd4VPSKK64Y5nE58cQTk3XWWafk92obboXpppuu7Od69uwZ0pqu8wxhkjTtaM7yv6Fld3PVs1prHas+adAUdazGHKva6liNKQd5smSsN1RqySWXrPG35aDUMgzAtEEffPBB+H3ZZZdNdWNV7IILLghzT9xxxx1hXC7jpxkDWzxnQkOW/+qrryaTJ08ON6QNFR+xW+qRfvGpJvjkk0/C7xlnnLHkcijkmG/js88+C5WDum7KshNzNjaNIyb2ZF6LOP64PhpynKLffvst/C4VxKhruQ3Zz6xKv1/pca6v5s4X2WNNAIbx5gRgJkyYECrJVMKYi4CK7PLLLx/SJVvBa2x6g0BLrFhnURmlMlyJePw5fxuKMfSlHuv84osvhsDGkUceWa/lcQyYB4A5bRgzzxw1zLnD8k855ZSpPs+8OihXgY2vx8+VynNN9TQmSa1fHuV/Q8vu5qpntdY6VkPKw8bUsRpzrGqrYzWmHKSRobEsB6WW4SS8bRATkIEJJutCy/tLL72UnHrqqaEQpzBYffXVwyRqjV1+vHmpbVl1oaUj28JQTiwgyz01hUfPxsk3mzuNs+nB/lABYfLUWGhXoiHHKerSpUthNvz6Lrch+5lV6fcrPc711dz5ImJiXSqM9NhgIlh6vdCqxpMSQGCGyXk//vjjkN5RY9MbTAS4/vrrJw888EDhSQ+ff/558uGHH4beI82B7b/vvvtCOsw555w13jv//PPD7w022KBeyyR/3nTTTaFHym233RZaYrn5KBV8Qey5Uq4XT0zjpZdeeqr3YstqczxWXVJ1ybuO1Zz1rNZax2pIediYOlZjjlW5OlZjy0EmPOZR2fX5IdiTZTkotQwDMG1Q3759w29mWC+FlnFaKeKs7LRoEOlnJndamF977bVQADV2+fHpLLT2NxTdYJF9Ikup1p94E8W6Sg2LiZWGZZddNmnuNI7oGnvmmWeG31R2mAW/Ug05ThFdg/HTTz/Ve7kN2c+sSr9f6XGur+bOFxFdrg844IDQ84WgwbXXXhu6IbM9q6yySggg0K26+OkHjU3vWAHmqSAbbrhhcskll4QWvKuvvjp55ZVXwhMYmgNdq3lSU3G6sl08kYKWQrqJV1oJJ/0IaFGpXnXVVUMw6d57701WXnnlst/jPSrUfLa4GzbbRutq7969Q7fzYjwNAzFfSlJz1bGas57VWutYDSkPG1PHasyxKlfHamw5yNOe5ptvvnr9UM5nWQ5KLcMAzDQudgfNRvq58eIm7KqrrkoeffTRGp/nsYS0gsfunGeddVbhPcah0n2TxzbGFofGLH+11VYLY2KZdyK2xEcxSl/XTTWPMaQVmoKW7qFZLJdH1jLumfXx2F96G3BjVjzUgEoD2x0LyuZMY5Cu3ATyyMNzzz03zPvBDTitLXWtq5LjVBvGZ4PWkWJ1Lbe++1ms0u9XepxrS6NS8swXdWG4EdvKYzjZvzg+nEeEsj2MMWdek6zGpnfs2k1XbLo+0wuGIAxpShfxxqhPusdeJ9nu6lSUqXjSkkqrIo/frA3XCLqekx95vCrnDl22GcK12GKL1bkNrId0YC6c4i7pzC1AkIWKeuwSn8VjwpkHp9TwJEmtD484LtXjLc6JxY1wtdSxmrOe1VrrWPVJg/rUsfKoZ5WrYzW2HGQOGNK6Pj/Fc8BYDkotpIUm/1UziU88WXvttcOj/84666zw+FYegcvrzLzODO08hpYnnfDUlA8//LDG41bvuOOOwt88wo7P3HLLLU2yfB4JGB9/y4zzH3/8cfrf//43zJbP6zxeMD42sJzLLrusMMP7CiusEB4VyDqZkT87yz2P4Ovbt2+YOT47G/0ZZ5yRzj333GFW/+iBBx4Iy8s+qheHHHJIeD07831j04D18tjE7DY9+uij4bsLLbRQ+uuvv9a5rrqOU22++eabsI3FT99BJcutdD950kH37t3DZ8ePH1/v71d6nMulEeL6eSxn3vmiEjw6uVOnToVHaMZHW/IYTh5BWUql6VVuf2PeIt14BPP2228ffnbcccfwaNHs4z/jUzKOOOKIGssdOHBgeP2oo46qKN2LPffcc+Gz5C+ehnHppZeGR13zmGteP/vss8um2bhx49ILLrgg7dOnT3hsJ09kik+Jqi/y4XLLLZeuueaahW0lj3PdIY8VP7IzPnljxhlnTI8++ugGrVNS8xs2bFg4b/m5+OKL00GDBoXrJtdgrjkbb7xx+tJLLzV7+d/QOhaaq57VWutYlaZBfepYedSzytWxGlMONiXLQan5GYCZxnGzQKHETd6qq66avv3224X3eAwtj+Lr0KFDKDR5zOCXX35Z4/sUDBQc3Jxxo0PBln30bGOXjzvvvDMU5B07dkx79+6dDhgwIL399tvTTTbZJL3xxhvLPiowi8oEN1IsY955502POeaYkt/jcX7c2C611FLhcYdUvg4//PB05MiRhc88//zz4XG8FIDc4FFZYz+puFCB4XUeRxgfGdiYNKDQ5f2FF164xqNz4yMzY+UoVgzLrauu41QXvrfBBhtM9Xqly61rP4cMGRJei/u01157hUpGpd+vz3EulUY8BvNvf/tbYf083vGFF17INV9U4q233kpPPPHEqV4/9thj008++aTs9+pKr9r2l0cn81hSzjkqxTPNNFPavn37wmd5ffLkyeG85FHZvNarV6/wmGyCaDzymUeN8jpBkPioztrOg1I4z3mMKdtPMINKMAEglvva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9VWTbKOk6vT+++8n55xzTnLbbbc163pHjRqVzD333Mn++++ftBaDBg1KtttuuxB4efjhh1t6c/T/DB48ONl1112T2WabLbn66qubpO5y//33N0l5mnXTTTeFG9GnnnoqaU1BqyeeeCI56KCDQlBRaspJ/plfjp844X+1MACj3Nx4440hAHL22WcnX375ZbOm9M8//5yMGDGi2dfbGuy2227JLLPMkkyaNCmX5Q8ZMiT529/+lpx55pnJ//73v6SlTJw4MQSB9ttvv+Tuu+9u0mV/8803ya+//pp89913TbrcarXQQgsle++9d/Ltt982yfJuv/325IADDkiuuOKK5LfffmuSZUqqPtzMEgA56aSTQqC3OY0dOzb5/vvvm329tdl+++1D44nXxdZlgw02SNZaa63kp59+apK6y7nnnpvstNNOTR50pM5L7+ehQ4cmrcW//vWvsK9XXXVVMnny5JbeHKlVMACj3Oy5557Jsccem3sKU5g9/vjjNV5bYIEFkjfeeKPZW9RagxlmmCGZf/75m2x5aZomDz74YOHv1VdfPTnmmGOSltaxY8fkhBNOSJZZZpkmXzb799JLLyW77LJLky+7GrVr1y7cFDQVWhJ32GGHJlueWi96GYBha8OHD2/pzVErQyD21FNPbZZ6wkMPPTRVYPmLL76Y6vWW1L59+ya91laLpm5EaWrTTTddsuiiizZZ3eWMM85IVlhhhaSp/f3vf08+/PDDUP9uLeihvOmmm7b0ZkitigEY5YqCJm+nn3568s4770z1Ol2Lu3Tpkvv620IL5WOPPVbjtemnbz3TR+WxLVSCm6qypdJaUx5SfqZMmRJ+05ss/l/KmnHGGXNPEIZQ0ihTjKGm1hNa1n333ZdcdtllSVuTV91l8cUXT1oby3upJgMwqmqMd61tPK7dHRvnySefTE477bSkrTL/SFJ1u/baa8MwiHK8zrecN998M9ljjz1CT1s1HfO01LoZgFFJjCFl+NAFF1wQfs8zzzzJIYccMtU8GXQf3mKLLULEfZtttgmT6VWCibiYgJPvLLfccsnaa68dWkGKffDBB2HirkMPPTQMWWBIyMcffxzeY4LZ//73v+H/99xzT5j7hDGmTPD5wgsvJIcffniy/vrrl5xAlmUy+dnuu++erLnmmskll1xSaJ2lIsAEoQxvWWONNcJkaXSRXnjhhZMlllgiTHJbl08++SQELo466qgwT8pGG20U0vDZZ5+teP85BiyDljt+s4xrrrmmZNdq5tlhWAcTUbFOnlRTjBZo5uRhxnDShln8zzvvvLL7wDKouDKBGulJ+jLvSzEmqv3LX/4Shhiss846yeuvvz7VZ6677rowsSBjqBkydP7551fUGk4lgoozcwRwvNZbb71wrDjGxcaPHx/SiuNE1/Ljjz9+qkoIcwPRRXffffcNeSAOpxo9enSNdL/llluSrbfeOrnoooumWg/Dsfg+eXKTTTYJ6V08Lvz5558PY5433HDDcG5w7mTXgZtvvjk58cQTw7Ej3Xr27FlrWowcOTL597//HbaL+ZXIS4xLn3POOZN11103zGPA/l566aXJSiutFPIb6Ub+zXrmmWfC6xyDvfbaK9l5551Lzu3CceQ9tp38wvaWG2JCvmO7llpqqZBPyS/1QT5jgl96re24447JDz/8UOP9us4X9pFrAHmM7tekwXzzzZf069evXsdEUuW4nnIdpFzgN0/cKx76wCTblB2cs3PMMUcok0v1WC2F857rK9/hfKbsYJLaYu+++24oy7mecU3ecsstQ90Bb7/9dmioiZOrcw1h7jDKEK6F++yzT7LiiitOtcxPP/00LJPgANcVrm3Zcot6AsNUjzjiiGTJJZcM1yDKEibP5ZpMXaQSbAcPKthss83CdZntidte322qT7pRvrM+yh/WSW/l2hpbWAcTqVL2Ue5Q5vE9JnxlyDMTytZ3e8k/7DtlLvvMsWH55VAucOyoR/z+++8hX80000zJWWedVfjM5ZdfHq7xPISBMpAe0tn0Ib2Ze4xtOvnkk8NnKQtKzbnzn//8J+Qn5pkjb7344otJpSiLqV9RZ2VdlG/se7m6y2GHHRbyzqyzzhrK2+K6C/MVMZSHMow0pS7KdvPAiYj0pI5APYlJrYtRRvJ99oW6D3WgMWPG1PjM008/nWy++ebJKqusEuqInM/ZdcT6HPMAkn7LLrtsGKJcn3Qhn3GOdO/ePdRbmW+vuK7DvQX7MddccyWrrrpqOFez+8k2rLbaaiEfUv+gF1t2Mm3y+8YbbxyGebEutpd0llqNtIoMHTqUEHn4ee+999LRo0f7k1Ma7L777unJJ59c+PvBBx9Md95558Lfb731VjrffPOlL730Uvj7yy+/TPv27ZvOPPPMNY7N/fffH47XscceW3htxIgR6corr5xeccUV4e+RI0emm222WdquXbv0lltuKXzurrvuShdZZJH0o48+Cn8PHz487dmzZ9qtW7f0q6++Krv8Z599Nj3vvPPC8uaaa64a+zV48OC0S5cu6W233VZjG2eYYYawDT/++GP6/fffh9dmnXXWdKaZZkr79euXXnvttem9994btme66aZLX3vttbJpR5occ8wxYbvWWmutdLfddkuPPPLIsI7LLrus4v1fc80104UWWqjw9w033BCWefXVVxdeGzVqVLr++uun/fv3D9vOa6TX7LPPHj7LfsTPrrvuuuk111xT+Jv1Z9Ot1M/bb78dlrPTTjvVeD2m+wYbbJDusMMO6cMPPxzSiPSad955wz7Fzx566KEhP7Gt/H3mmWeG7x588MG1rpvjzb6ddtpphdfOOuus8N3jjjuu8Noaa6wR1rvtttuml1xySfrYY4+lm2++efjcpZdeWvgceZT0POSQQwqvvf/+++ncc88d8vKnn35aSGeOeXG+4uf4448Px4pjyN/PPPNM+BzHKn6GY7j88ssX8ugTTzwR8syyyy5bOEaPPPJIjWNLnlt44YVrTY+nn3463WOPPQrrO+yww9Knnnoqvemmm0LeIk+R1/ibPEj68tkzzjijsIwHHngg5DOOFX+zPYsvvni6wAIL1FjXfffdF86zF154ofDaCSecEJZHesfX2Ef2g8/z97Bhw8K+d+jQIWxbbftD2rK8LbfcMj366KPDuRlfy+a3Ss4X3ltqqaXCdw844ICwrcsss0w4tpUeE3/ySQOOayy3KcM17dhvv/3Sc845p/D3c889l+65556FvznfuLZ88MEH4e8xY8aEc5JrSzYvxOvoqaeeWnht0qRJ6eqrrx6uZ5g8eXK6zTbbhPOe8icif3ENo7zAxIkTQ9ndvXv39Keffiq7fMo2ymOWN88889TYr1dffTXt2rVrqPdkt5HrLNvw559/pr///nt4rVevXqH82XXXXdPbb789XPfYHq4vn332WUVp+Je//CVsN3799ddw7WJ7KYvqs031SbcNN9ww1IMiPp9Nn2Icu8cffzysjzKeOgflyUMPPRTqG2xbTO/6bC/Y13XWWafWdOJactVVV4Vlkn+oY51//vlp7969C3mOcoT0nDJlSvj7wgsvDMum/hWdfvrp4bWYXyhfpp9++vC9rLPPPjsc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Liq8P2LEiPSUU05J27dvH76/5557pm+88Ub62GOPhXXwGtt0ww03lEw70mnrrbcOn2vXrl165JFHpoMHD67xmUr2/5BDDkm7du2azjbbbOlhhx2WDhs2LCyX7+y3337pqFGjwuceeuihdJVVVgnHi88eddRR6TnnnBM+e9NNNxXSnP3p1q1buu+++4bl8T5pUVdeOO+889KZZ545XWihhUL6s76VV1457F+vXr3Sf/zjH+Fz559/fjrrrLOG11dcccVwHHj9q6++CmnYs2fPsO3LLbdcev3111eUD59//vl0vfXWSzt37pz26dMn7DfL4z3S44QTTkinn376sM5tt902feGFF9KXXnopHFNe471jjz02/fHHH8N3vvnmm7Dviy++eLrjjjum/fv3D/nn22+/LazzyiuvDNvP90nPc889N+RF3vv888/TXXfdNZ1llllCWm666abpq6++WmObWdepp56azjPPPOHcWHDBBdOTTjop/f777wufYbtZ/pprrhnOr379+oVjVlta3H333ekaa6wRvrfwwgun11xzTcir//rXv8J28vomm2ySPvDAA+mHH34Y9jOeA6yfa+Zzzz2XLrHEEuF8Is88/PDD6aOPPpp27949LDPm0++++y7kP5bLPqy66qohX3POsO2cD3G7+P7qq68e8l/v3r1D2r/++uu17svll1+ezj777GHbWOYdd9yRfvHFFyEtOGd4nTSJ15O6zpfTTz89rJvvcY5yPsd8X+kx8SefNCDfVVlVQxVaYIEFwnlPmUJZzbn/1ltv1fjMgw8+GMpuzjvKTa7hnJvRLbfcki655JIhj8w111zh+jtx4sTwHuc/dQ/Oe8oPrreUWVmTJ09OzzrrrHTuuecuXNcoq4sdf/zxaZcuXdLll18+XL9ee+21cL2J18jDDz88/eSTTwqf//LLL9OddtoplAVsM2UF19xo0qRJoWyI9YQDDjggXMO4VrEOXmOb7rrrrlrT8P3330833njjUMZRrhx88MHprbfeGvabtBk3blzF2xRVkm5sN9f9Qw89NJSRO+ywQ1h+OT/99FP4XLZMofzh+k99kdeWXnrp9Mknn6z39t5zzz1hO0mvm2++ueT6f/jhh/S4444rpDfLuvfee6faRo4D9RD2faWVVkoHDRpU4zPUW6mvUrdinyn7L7744pB3KGMo68HrvE/dh8/uvPPOIV+tvfba6dVXX52OGTMmrc27776bbrTRRuG4sj7KY7YP48ePT88444xC3YW6CNfJDz74IOxXrLtQZv3555/hO7/88kt6zDHHpEsttVSot1I3J0//+uuvhXWSdpTVfJ/60iWXXBLOD1AG7r333qH85LhT//v0009rbDPror7H8eR8XWSRRdKzzz47/f333wufOfPMM8Py11133XDO77LLLqEOUpuBAweGdOR7pPGLL74Y0vfAAw8s5CfqYXFfqMORzrFOS5pQ98Jvv/0W0o5zme9RF6Cem8X2kldId5ZBmnFdmTJlSq3bqeozNBMX4P/VpB3/JFWCuS7iI2CJ5MZeEJIkqfWhOzk9GquoqiFJkpQb54CRJEmSJEnKmQEYSZKUizhWnzH5DZ3MW5IkaVphAEaSJOUiTrrIpI7Zp4dJkiS1RQZgJEmSJEmScmYARpIkSZIkKWf//+HrkiRJkiRJrdj48eOThx9+OPx/8803Tzp37pxUCwMwkiRJkiSpKowZMybML4ehQ4dWVQDGIUiSJEmSJEk5MwAjSZIkSZKUMwMwkiRJkiRJOTMAI0mSchHHZA8YMCDp0qWLqSxJkto0J+GVJEm5mHnmmcPvgQMHmsKSJKnNsweMJEmSJElSzgzASJIkSZIk5cwhSJIkSZIkqSp06dIlzC8X/19NDMBIkiRJkqSq0L1796qdX84hSJIkSZIkSTkzACNJknIxevTo8Hu11VZLRo4caSpLkqQ2zQCMJEnKxR9//BF+v/LKK8mkSZNMZUmS1KYZgJEkSZIkScqZARhJkiRJkqScGYCRJEmSJElVYeTIkWF+uWqcY87HUEuSJEmSpKowadKkML9c/H81sQeMJEmSJElSzgzASJIkSZIk5cwAjCRJkiRJUs4MwEiSpFzMOuus4ffQoUOTPn36mMqSJKlNcxJeSZKUTyVj+v9bzejbt68pLEmS2jx7wEiSJEmSJOXMAIwkSZIkSVLOHIIkSZIkSZKqQp8+fcL8cvH/1cQAjCRJkiRJqpo55vpW6fxyDkGSJEm5mDRpUvj98ssvJxMnTjSVJUlSm2YARpIk5WLMmDHh9+qrr56MGjXKVJYkSW2aARhJkiRJkqScGYCRJEmSJEnKmZPwSpIkSZKkqjBx4sTkrbfeCv9ffvnlk44dOybVwgCMJEmSJEmqCqNGjQrzy4HHUVfTE5EcgiRJkiRJkpQzAzCSJEmSJEk5MwAjSZIkSZKUMwMwkiQpFzPOOGP43a9fv6RTp06msiRJatOchFeSJOWie/fu4fedd95pCkuSpDbPHjCSJEmSJEk5MwDTxvzxxx/JM888kxx11FHJuHHjWnpzWoXXXnstOfroo5OtttoqWXjhhZNzzz23oveqxQUXXJAstNBCySeffNKky2V5LJfl18ePP/6YLL300smAAQOSaclHH32UDBw4MLnrrrtqvM5+LrXUUmG/m1tLrrs2EyZMSB555JFwbkmadvz888/JPffck+yxxx5TXR9nnXXW5Kyzzqr3MidNmhTKjI033jhprSZOnJiccsopyaGHHhr2c+WVV65XmUu63X777cmJJ56Y63ZK5j2p5RmAaWOuvvrqZL/99ktuvPHGZMqUKUlb9/XXXye77LJL8ve//z25++67k8UWWyy58sork8mTJ9f6XjX56quvkjFjxjT5TfjIkSPDckmn+qCiOWLEiOTLL79MphWcTwQ7zj777Kn264svvkh++OGH5Jdffmn27WrJddd2o3LxxReH6xDnlaRpw8cffxyugTvuuGNy00031XiPa/7o0aPDNakh1wzKsU8//TRprf72t7+FQNFll12W3Hbbbclbb72V3HvvvRV9l3L0tNNOC/UNAtNSczHvqZp16tQpzC9XjXPMtUvTNE2qxLBhw5K55por/P+9995L5pxzzpbepFaPSsv48eOTJZdcsvDaAQccEFrpea9bt25JW3b88ceHCg/5KVb0CFSQt2p7r5qw3Zw7CyywQJMvm8o052THjh3r9b3//e9/SY8ePZIuXbok04qnnnoq6d+/f3Lssccmxx13XOH1X3/9NRk7dmzh2tWcWnLdddlss83CDVt9A3itxQMPPBB6xql23333Xei9UEVVDTXSqquumrz66qtTHfPPPvssmWeeeepdXuD7778PEzpTbrQ2NEbMMcccyTXXXJPsvffe4bVvv/021BWmn770VIsEn7fffvsar/Xt2zf0nnnnnXeaZbunZaXSty1uQ0vmvda6/1JrYA+YaRitMfvvv3+4AcsqVyFoi15//fVkuun+/2lAxTAGWGp7r5qw3XkEX7Dgggs2qDI999xzT1PBF5RLh65du7ZYAKQl112Xar4ODR06NDniiCNaejOkVv3kq2IM421IeQECHK0x+BLrCvQoztYXCDSVu8YRnNlnn32mqWtia1IufZs7T5xwwglJa9Ncee++++4LvcEklWYAZhpFZYAusW+//XZLb0qrxnCYhrxXjfIaOtXQ5VbbUK7Gasn9bWtpnaeffvop2XXXXVvVsK7WLDYA7LDDDmEIitq2xlyLWut1jGtCfYZ80HNuWqtftBatIX3p1bnddtuFRtC2mDZvvvlmmAPKXo9SeQZgplEMMeIiiHPOOSfZbbfdkmeffXaqysx5552XLLHEEsl8880XhiYxZCFr1KhRyZFHHplsvfXWYTLPjTbaKHnhhRdqXTdDnnjkKGPyBg0aFCLha665ZmjB+stf/pK88sorNT7/+eefh4nrGDvO5MBMtPf8888X3n/44YdDD46ePXuGQo2Whej+++8PvSkOOeSQwmt//vln6Aq8++67J4cddlhYJ/vPJIDRddddF15jXDrDivg/Pyyvtvfq2m8+Qxdk9odCmO+xfQwBe+ihhwr7s+GGG4aeCewrLRL1SQ+6cXOsSA9+mH+E48ZrpDETBcebQ7pGM+/P+uuvX+MxsIxPZ8z58ssvHwpj8gHHl22iZZ8AHq38LJO0571bb721xmTOjz/+eLLvvvuGm9HiIQfMh3LhhRcmhx9+eDL77LOH5cdjQ/7hdbYpWzH4z3/+k2yzzTYh/V9++eWw36Qdx5x5TIo999xzYd2k1ZZbbplcf/31YbhVXRj2wr4zBIYbwoMPPjjkfyYUZgLE4mXQ9Z1zgLRg3pLVV189OfPMM8PxrgtpyMS8q6222lT5nvPvX//6V+ilxjast956ySWXXBLSCOeff37hGDOkiWFb8Xusv1evXjWOSX3WffPNN4d9JY+ts846YR2V+OCDD5KDDjoopDk31MxZQHpmkZ+YN4m8wWdJr2OOOabszTfpyP7ROs4xYOhf8Y3WN998E9J/iy22SBZffPGQT95///3C++Tzq666Ktl8882T33//PXyWvJydIJp8RV5aa621kmWWWSakb5wHi/OH84P8dMYZZ4R92nbbbcMyOFc5JyOO2fDhw8P/47WhVP7U/8XxiGUSky+rdeC84/rBdfaWW24JZTXXeXqvrLjiismLL7441XeY24RziDKO85pzo676QCwvKP922mmnksP23n333VBe77XXXskmm2wSrudcayLKfMqlUj1QaWRim9iePn36hPO2eFgjwwW5xnLdX3vttZN27dqFa0pdmHOG7eJmknWQPtnrBtc0rkVcZ8H1m79rG3ZBWUgZCT7LD3WNrFjvYIg4ZTrX+4bsdynUg7g2c+3neNBrhzpERPnHe5RLlBGkF9fzeE2mfKLspc7F0EIe5sCxmW222ZKZZ545TEQMrs8ca16jp+xjjz021baQ58h/K6ywQji2NBpWUq7WdjzLpS/XaOYe4/rPNYn0nWmmmULa8nqHDh3CciKGn5MXeY31ZP3222+hdwt5469//WvYfuofIG+QfuQNyqW4DWwT5SbLW3fddQvnBd+j3OP1WEeP5wvHl/oi5yfpS7kVgzoNOf5Nkfc4/ldccUU4J04++eRwDSAvkCax/Od8oA7KOcw6yG91nWec+yyPOgN1lqeffnqqz3E/wnr54dgceOCBU9Wfyx3n7OTfl19+edhu8i891U4//fSp5sRs6PklVSytIkOHDmVAcfh577330tGjR/tTSxoce+yxIa3uv//+Gq/vtNNO4fV+/fqlZ599djp48OB0zz33DK/xnfi5r776Kl1ooYXS++67L/w9bNiwdPnll087dOiQPvXUU2XXe8MNN6QrrrhiWN6aa66Z7r///un1118ffrdr1y7t1KlT+uabb4bPfvnll2mPHj3C+uP3991337COt99+u/DaeeedF5a3995711gX2zTnnHOmw4cPL7y27bbbpquuump4j795b+ONN047d+6cPvzwwzW+P9dcc4WfUvtR23ulftjeuJ2LLbZYussuu4S0e+KJJ9K555477dKlSzpgwID0nHPOSYcMGZJeccUVafv27cO2xWVUmh4//vhjSFvWde+994bXtt566/S6666rsU2XX355uu6664bPXXrppeG1UaNGpbfffns677zzhtd33HHH9JJLLklfeuml9K9//Wt4jWO1xx57hG0nfyy++OLp9NNPn3788cdhGaTjCSecED67xhpr1Fgn67vmmmsKf7OfMV89++yzIY3IB9m0ffnll9PDDjssLI/vc5wfeeSRwjr69+9fYx28R5q8/vrr4e/XXnstnWGGGULeWnDBBdOTTz655DH64IMP0mOOOSasv2fPnulWW22VXnTRRWH/yeusK5v2b731VjrbbLOl//jHPwqvkU7dunVLV1hhhfS7774rvM55lj2HeI/lLr300lOdh+TJ9ddfPz3ttNMKr5111lnhc8cdd1zhNbaP1zh/svvxwAMPpJtssknZvFjbukk79jX+/f3336cLL7xwnfn7rrvuShdZZJH0o48+KuwDaUhacK2I+ZdlH3LIIYXvvf/++yH/zzfffOmnn35aeJ18M9NMM4XzlW197LHH0s0337xGXo3HgO+S7nEdffv2TWeeeeZQDnzxxRfphRdeGM4vXiMfka69evVKd9555/CdQw89NN19991D3ufvM888M6zn4IMPDn9zPeJayGtcO8hvpPEFF1yQTjfddOlqq61WIy3Ydj5rGVT3dZHrRyy3KcPVOnA+k9fjNffwww9PBw0aFH7HcppzLeK6xnWCsgdTpkxJDzjggFCG8b2sddZZJyw3euGFF9IzzjgjvMZ7WbF84XqCiRMnprPOOmvavXv39Keffgrn97XXXpt27dq1xjLx6quvhrKWsh7ffPNNuA5wvRk3blx47euvvw7LY7n4888/w7WX12vDslnngw8+WHjtmWeeCeXMNttsE5YTUedh2/hdieL0ieaZZ550/vnnD9d90vTFF18sXGtYd332uxyuz9Q/Io5Ldrv32muvcF2ePHly+PuNN94I6+f6iF9++SWUJxwf1kk9gW3lOr/FFlsUyrAjjzwyfeedd8J2c72mrIjHAJdddlm43k+YMCH8fffdd4fvbrfddrVufyXHszh9uQ5dddVV4XhSXlEHOP/889PevXuH8h7xXMh6/PHHw2unnnpq4bWxY8emyy23XI08zznD52688cYax5KfrN9//73kORDrOfEYU6djn3jtwAMPDOm50UYbhTrsb7/91qjj39i8d/rpp4fX4vk6YsSIUDfcb7/9aiyv1H6WMmbMmJA3uJZElNfU77LHdNKkSaE+c8oppxSuP+utt15YD/WDlVZaqaLjfPTRR4dt5fug7sAyyK9RY9JXqpQ9YNowWj+IIBO9JzpMCwAtGxEtPYssskiIJIMZpon2E4G/9tpryy6XVg+izuC79MigBw2/iYTTChpbjJgclt4PWbQysQ56aWS3lYg8TxXItqI+8cQTyQYbbBC2HbzPDy3ucUZs3rvoootCCw6R+rye/kRvDaL4aN++fWgNY//pZUJPAVqK2Ada50lXnhTBZIVE+mOvh0rTg9YSepgwnp4WJ1pJ2C+i9FmkGy0QWbR40ZNppZVWCn+TB2j5X3TRRQuPBaZVk94DbDv5g1YJ0o9H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5xB5hJs8riXZ63j2+/TQ4LrPZO+UNWw710fKHILYXEuzgWwaARhyE4dKcI2oaxgnvWy5LjPRPctiffS248aP3iExbbJlVGwsqQu9K7n+sN/xaUJsP9tVHOCK1594farPfpdCIJvvxroG11/mBeM8ZR2UoyyDeh+9B6k7MeyKhwFQNhEQp+dntq4T0zXWH4rrGvGz8drKTS7bzo00vU3pVcFNPQ0g1DPjExHLqet4lkvfcmUEWB5lP2UCdQgCggy3AXVJ6qx8hrKM8o+6Aa+vvPLKoZ5GOmTrDmwDaUdjBGlKepOfWAbfI9DEvnLuxMAL5StpTiAgu61ZjT3+jcl7lNOcz/SipQ5BQxXbz+ukFceTMp/jy3rYJq4PzOXGvsc6YVZsyGV5LIfhXXEfSD8CRpT/1PfYZno9kZaxTs532H7K+ajccWbuGK4zPASEfacuzXWL48Yxj3MhNSZ9pYqlVWTo0KHhee38vPfee+GZ7/6UT4PvvvsuXW+99dLOnTunm266afrZZ5+lZ511Vtq1a9eQhuuuu276yCOPpO+++2665557FtL2gAMOSL/99tuwjEcffTRdffXV0xlnnDHt3bt3us0226Svv/56nel+6aWXhmXtu+++YRs22mijdNVVVw3rHzVqVOFzX3/9dbrBBhuknTp1ShdccMH04osvTr/88svw/1lnnTW95JJLplo2+WD66adPn3766ZLr/vHHH9N//vOf6VJLLZVuueWW6e67757usssu6VtvvVX4DPvNtsV95jM33nhjne/V9vPSSy+Fz/KdmWaaKT3//PPTr776Kr399tvTlVdeOby+0EILpVdddVVIg7PPPjudeeaZw+s77rhj+uSTT1aUHg8//HC6xBJLhB/WGY/1XnvtFZbVrl279KCDDkq/+eabdODAgWGdvM4yOC7Dhg1LzzvvvMK6d91115CWr776anrYYYeF16abbrr05JNPTt9///30/vvvD8eO1xdYYIH0yiuvTO+99960f//+4bX27dunxxxzTPrBBx+EbeHvbt26hTRkeVtvvXX65ptvhveeeOKJsG0xbffff//0lVdeSQcPHlxYx9xzzx3WMXz48LBc9iceB7aH5bzwwgvpIosski6++OJhXTPMMENhmbPNNltIx9qO1VxzzZXOMccc6aGHHpr+5S9/CXmUc4RtKf7sJ598Eta95JJLhrTafvvt01NPPTUdMWJE4TMc08UWWyysf84550wvuOCC8L1//OMfYXt4fYUVVkhvuummwneef/75wvnZp0+fdL/99gv5pdw233XXXWmPHj1qrLfcD8spt+4TTjghvLbmmmumAwYMSPv165eec845dS5z5MiR6Yknnpj27ds35E+Weeedd071OfIdx51jQ74mnxxxxBGFawr5j23gHGY7tt1223A8yctcX3iN94499thwLvOd2267LV1mmWXSjh07huPG8fjoo48Kx+fwww8P+Y7vsoxsOsf04BrXs2fPcG4ut9xy6fXXX194f8iQIekmm2wSvj/LLLOk5557blg36cK1j9e32GKLQv547bXXwvlE3mNfSRvLotL5hrK6yqoabcYNN9wQjg3XQcrozTffPFwXKDemTJky1ecHDRqUrrTSSuFzXLspV995553C+5RVRx11VOFaTBlAufLUU0+lf/3rXwvlxd///vdQZmHy5MmhXsB1n+vKKquskj722GOFZX788cfpGWecEcqkWF5RB4k4j7n2dujQIZ1vvvnSo48+Oh07dmzh/ZtvvrlwDTz++OPTvffeO5RtrLcu7M9OO+2UrrjiiuH6zLXsmmuuKbw/bty4UFZxLWAd8847byijKX9qQ12M8qt79+6hjOOafuSRRxbS7eCDDw7XUa5L1Ad4jXrb5ZdfXvF+11aHpozi2s8Px4XrV8Sx5zrJdZB95hzmmHJsuJ7/73//C3WbeL3lOv3pp5+GMj7WQbp06RLqLj/99FN63333hboKr1PGU5/A77//nh533HHhes41lvoaaVkq32VVcjxLpS/ritvMcaQOkzVhwoSwLK7p1A9IB8qqtdZaK5TvMb/i2WefLdSLOebUB/h+FseOdKbeTH004rjGcp8yjbxOObrDDjuEMv6XX34JxzbW26hzcdw5DlkNOf5NkfcoizlmvMY2U65zrMkfG264YSEv3XPPPSEfcV5zzMphm6l78X2269prr03HjBkT/t+rV6+wnxg/fnwo26lLU1/i87FuyA/Xph9++KHO40ye5B6H+jR1Aa5nfLdYQ9NXLRcXGDp0aFUlfzv+SaoET4aJE5Iy7i+2uqr1oasy3QVpLYvDgpoKkXai0nRFVdtEt2l6oGQfX0pPDnpo0ZLCkxuyLZTFaLkpN1dQa0VLGr1mqm2md7Vt9DSjB1UVVTXaDHqK0vWeJwtme/NJUmtCT3DuKxhyHlGm0IOLnlO33nrrVEOfNe0blokL0IO8MQ/haG7OAaOqw/AnuqyqbaKgzQ4dipgDh6AskwjWNS9INWIoYZxjRZIkaVrH0B8aXQkWZzEMieGIDD9ryJyUUksyAKOqwORwRLqZKJRxoMxHobaJMcfMB1A8T03sBUNLCXN9VDvmHOFRj4ybp4WH3j3xqSSSJEnTOuo/zEfDXDvlGuV4HLbanl69eoX55apxjjkn4VUu4qRrpR6zW19MPkvLP5OPMWEWk2NV24mmpsOTsMgTTAbLkyiYEJX8xuz0TLTKBGrZCSFL4fMEa+ozwXJzYygVQ/iY+JftLfVkL0lqqPiUkjjZpiS1NiuuuGKYIJweMPGBIPRyZvgJE/UyeXdxj2i1DR07dgwTK1cjAzBqckSj4zjNq6++OtzoMmRottlma9DymIGcm2x6PNDz5cgjj2ziLVY14QkcPLKQp1TwNCHwKGG6oV533XXhiQ3l8PjIyy+/vPC0Cp7gw5Cl2uaLaSkUKjxlh6dDDBw4MFQ6pGoTn3xCZZlu4tkn7anlcP2M80nx1D3KacpXu/JLak2o/9PDgcY15q3iujXHHHMUnkZV6ulKUmvnJLySJCkXtFgyYXY1TpInSZLU1JwDRpIkSZIkKWcGYKRWii77an1GjRoVJsitNgwxGDFiREtvhiQpR0zYXo1llCS1FQZg1Gz+/PPP5NVXX01OOeWU5KuvvjLlS+BJT+edd16ywQYbJMsss0yLpdHnn3+eXHzxxWGCMyXJlClTwjwJW265ZbLEEkuECm614JHdBxxwQLLooosm//nPfwqv//jjj8nSSy+dDBgwoKLlPPfcc8m8886b3HHHHTlurSTVjUnXmaj8/vvvN7n+XxlF3WGdddYJ82MYbFdz+eKLL0J98ZJLLqnx+vvvv5+cc845yW233dbk6/zuu+/CfIC77bZb0qVLl6Rfv37hoR/UaTbeeOMmX59a7xxzw4YNCz9xvrlqYQBGzeb2228PN4JXXHFF4ekLqqlr167hKU8t+VQKJjv729/+lpx55pllH/vX1rRv3z7kXYKIVHSrCRXyVVddNTy6O4vKCpV0JiauBAXcr7/+mnz77bc5bakk1e35559P9t133+SEE05Ivv76a5Ps/5VRRxxxRFWWUape//3vf8PDDGjIeeuttwqv8wCO/fffPznppJOSzz77rEnXyY02D07g55Zbbgnrvvvuu5P33nsvNO4SnFXbMGLEiGSuueYKP9UWdDYAo2az6667JjvssIMpXgseiUw0f84552y2dOJRzA8++GCNxzwfc8wxSWvxwAMPNPi7r7zySpP1VuEx6PQAqTbTTTddstBCC031+gILLJC88cYbJVunqMR88MEHU52/L730UqvKG5KmfZRR99xzT+Hvtddeu/AEvOZed1N78cUXkx9++KHJyiiu69WAG+ZqP3ZKwhNO6f1SjAarvM5R6oT0rolPP6KxkF44a621Vgj2ZANBEU++fPbZZz1kajUMwKhZ+QjS1oeWiscee6xVHicKUh492BD08DjwwAMdC1+LueeeOwT8siZNmhRarop7zIBhTAR0JKm5MPyzOBDfXGVUqXU3Fa6xDKGYMGFC0pbcd999yWWXXVbVx041A3/1eb2xXn755fA7WxeJgUeG3/Xo0WOq79Bj7ptvvslle6SGsCYttWFPPvlkctpppyWtEUNd9thjjxAQqC8qtHvttVd47K1qlx03S9d1hp+9/fbbFX1ekvL06KOPJscee+w0t27KKHoEt7UhnTyWnnKd3inTar5Rvuoaol9cRzn55JND0E9qTQzAqMVce+21yfLLLx9a4enGWNwNd9y4cWHC3m222SZZbrnlQrfj7EWUCgzdS7fbbrvkww8/TC699NJkvvnmC5NxZceK77TTTsmGG26YLL744mF+Fboi1tett94aIuw9e/YszIvCXCl0s+Q1lhtvYJn0lLHY2267bWjhYqIwhq6wr6UmtR0+fHjoqbHPPvskRx11VOhOOX78+JJPsbngggvCcldeeeXwc91119V4//HHH0923333ZPDgwcmgQYNCjwXSrVQQgzk9OAZ874UXXggtcay71OSrf/nLX5K+ffuG+URef/31qT7DdnAc6ALK5MHnn39+RePQb7755uTEE09Mzj777LBs0jKm48CBA0NBy2SxbBs/jG+PPWNIeyYdPPjgg5OtttoqdEmNrr/++tAlFYwP5rvkkfpsLxMiM9yG9OS4sJ2leoWUQ8WafEDeYPjO1ltvHYZEZfGkCo7pnnvuGcZRsz3khWzgiMnmrrzyymSjjTYKPZUefvjh8DnOG4JMzMtSar4lKvcEU1hu8XpJR445eXP99dcvvH7XXXeFCjKYPI90o9tuPNd23nnn5Oijj55qfU8//XTYh8MOOyzs5yabbFIjr0+cODFs93777Rf2j32iEs4+MOStOE/xPsftwgsvDNs4++yzh2Ot6jPDDDOE38xD1KFDh5beHDUh5lrg+si5zPV0qaWWqnEt5SabYYtcB5dccslwHeGa2qtXrzDM9qqrrqp1+ZS1lOuUUVxjqAtwHS721FNPJSuuuGLSuXPnZNlll53qeofLL7881AOYpHOeeeZJTj/99FrLqLrWzTBNro+Ur7S6cx195513aiyDfac3IeXq5ptvHoYYx2EQzIUX56rgMyyfOSzqs7308qR8Ie25rnK9HzNmTFIp5s+hZwDXbq7b6623XhgSVVxGsf3Uqyhv2J6//vWvNQJH1CUuuuiicI4znJl6Gp9jTjvKoVhGsb2U65StDHFln1l/xHBhynW2gzkdWB71qYjjsNJKK4V0pEwgLRlywrGnLIn5qa5jR33j+OOPDz/U6yoZWvz999+HugZBHdKZ7WD+k2yZyvZwPlxzzTWhDkZ9lO2Kw6AryTPlUJ9jctkVVlghnDtsQ3E9kb+Zc4Xyl2NFvZqJcSm3qcfhhhtuCD1ESMPYI4R6MtvFa+SFLPZjl112CfmPY7nFFls0eN4l6t4sg/XQg41jFHt/kYfIxxzX2MOlGPvAsWSbsudNHOpEPYJrTXYIP3XiWBchLfh8HpMCS/WWVpGhQ4cSMg8/7733Xjp69Gh/qiwNjj322HD8ttxyy/Too49OBw8eXHhtp512KnxuxIgR6corr5xeccUV4e+RI0emm222WdquXbv0lltuCa/x3lJLLRW+e8ABB6QnnHBCuswyy6Rzzz13eJ/PLb/88ulXX30V/n7iiSfS6aabLl122WXTH3/8sd7bvt1224V1vf3224XXXn311Rrb/uWXX6Z33XVXOsMMM4Tt2GabbdJbb701vf3229PZZpst7dKlS2F7+Pnwww/Tvn37pv/6178Kr91///1p+/btw3Kz699qq63CPsa/99tvv/CZc889N/x90003pWuvvXZ4bc8990wPP/zwdL311ks7d+4czp1S+8S+FKd93AZe32CDDdIddtghffjhh9Nrr702nWmmmdJ55503HI/42UMPPTTdfffd01GjRoW/zzzzzPDdgw8+uNb0fOSRR9KFFlqo8Pf333+fLrzwwjU+M9dcc4Wf7Guk+Ywzzpiecsophdc23njjtHv37un//ve/wmvsU/HxqnR7WQ5566ijjiq8NmTIkLD/pZZZ/PPcc8+l8803X/rKK68UXltiiSXSjh07hu3n7+HDh6errbZayCMxPb/++uuQP3v27Fn4HMvq169fWC/7+be//S199NFH07333ju8xnmUXfdJJ52ULrLIImFZ8Vxaf/31w2c513jt2WefTc8777xwPhWnbzwfyQPxtUGDBqX7779/ybxy/vnnp7POOmuNNGEb+OxZZ50V/v7ggw9C/uE10nXbbbcN50nMU/PMM0+NPLXuuuum11xzTeFvzvW47f5UVxpQVldZVUMV4PrUtWvX9MEHHyy89swzz4Syj2van3/+mf7+++/htV69eoXzfNdddw1l4VNPPZUuvvjioTz+7LPPal0P1zHyzx577FHjdZbL65tuumm62267pS+88EJYNuuZf/7508mTJxc+yzWS8nLKlCnh7wsvvDB898gjj2zQuinDF1hggXBdw5gxY0J5361bt1DW4tdff0179OgRyrWIazbbHbFcls96sirZ3nHjxoWy4uSTTy689tFHH4U6RqllFnvnnXfCPnzyySeF15ZeeulQRn366afh74kTJ6ZrrbVW2r9//0J6jh07Nl1xxRXDNT9+jmVxbFnvFltsEeopL730UihTeY2yOovX1llnnRqv/fTTT+miiy6aPv300+Hv8ePHhzpghw4d0jfeeKPwOcoJ8tPMM88cvvPbb7+lSy65ZPrFF19UdOyoj2200UaFv6kLrrTSSrWmFftOXYXyN7rgggvC8tlPUL+MdQ7WST1j5513Dnmc/FJJninnsssuSzfffPN0woQJ4e+77747rIc6acR71CfIYzHf/PHHH+FY8dlsvovbmc0jHMvi9KKeQB2B8wqc05Tf1NPqc46eeuqphdcmTZqUzjHHHGG51E2yTjvttJDX61LqvOH4U5/gmlRc3txwww3hNX5r2jI0Exeo6zxqbewBoxZBCwdPMCCaf9xxx4XeFTFCH3sw0GpOBD/O8L/33nuHFjV6A4D36BUAWtRomX/iiSdCNJ/vHnnkkaHnQrdu3cJn6IFCSwktDrRM1Vep1tvi17p37x72rXfv3uFJT0xORmsE20mLBL16shOEkQYsgx4S0ZprrhlaC7OI4LPN7FNEb4LYkgZa2Lbffvvwf9KJVoE777wz9Pyg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6hSWwfJq236Wd9hhh6U9e/ZMZ5111rDdP/zwQ7r88sunZ511VvrGG2+kX331VfhMzKdHHnlk+vHHH6eDBg0K28FrSyyxRHrPPfcUlst2s20dOnQIv6+99tp01113TffZZ5/0scceK3zu/fffT7fbbrt05plnTrt27ZquvvrqNZZzySWXpAsssEBYx3zzzZeef/75IX3rOi7nnXdeWOZCCy2U3nnnnelDDz2UrrzyymE5vXr1Sv/xj3+Ez7E89pvXV1xxxfSJJ54Ir7PPe+65Z0gXjtVyyy2XXn/99XWu94QTTgjLWnPNNUNacuzPOeecGp9h/8kzbEc8Pu+++266yiqrpDPOOGO61FJLpTfddFNI+z59+qR9+/YN+YrPffrpp2Fb2KZddtklXD/qs70sl+VzXOaaa66wbWznzjvvnN59993pqFGjat2/Cy+8MBwPtpNjfvXVV0/1mREjRoQ8ufjii6fbb7994biz7fEzd911V7rIIouEtGJ7brvttnBc+VzMZ3/729/Sr7/+upA+W2+9dcgjXbp0CcvluJJfBg4cmH755Zfh2B100EGF7++///7pK6+8Er7/3Xffpeutt17auXPndNNNN00/++yz9JZbbkk32mij8FnSjPMqro+fe++9N11jjTXStdZaK6TtNttskz7wwAOF97les298n3OR73/77bchTTi3eZ3vxzzVvn37tFu3bum+++4bzif2580332zxa5g/9U+DwYMHF/IZ56CmHVxLdtppp1Ae7Lfffmn//v3Ta665pvD+pEmT0nPPPTeczxz/Aw44IFy7KNspN3lt7rnnDte42lx22WXherDooouGMuH5558P1zO+Tx3g0ksvDZ+jjkFZweurrrpq+tprr4XXf/rpp7Buyi+uXyuttFIokytRvO7owQcfTFdYYYVwPaPcYf+pf0QvvPBC2A6u3cccc0x6yCGHpAcffHA6bty4wmdGjhwZtoXr9F577ZX+9ttv9dperrvUpSijqF9cfPHF6YknnhiuwVxLp0yZUuu+XXXVVenCCy8cyqill146vfXWW6f6DMfw7LPPDmUPZd/ee+8d9oVtjzjHKcNi3Y604dznc/Hcp7wfO3Zs+Dz1Fspfjv3NN99cWM5LL72Urr322mF7ZptttpCfPv/888L7N954YzrLLLOE18eMGRNeoxxZd911wzqox1xxxRW1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yZZbbhmWVw7DST777LPkl19+CX/fcMMN4ffyyy8fhpjcf//9yU8//ZQceOCByYILLpgMGzYsDE9hCMr888+fHHzwwU2aFnHYFcEDgkK///57mAiYfc4aOXJkYXgWc+QwNGaFFVZI1llnnRAwIA2YwPidd95JllpqqWT22WdPHn744WT48OFhWNTOO+9cSL9y6b/wwgvXma5sx5NPPpm89dZb4bPbb799stxyyyV33313WP+6664btomhXXWtpxj7/+ijj4YeJr/++mtId/Zlp512Knymtm2r7/qyPv744/B7scUWC78/+uijsAzmCGJIkiRJyp8BGEmSmhiBAwIITzzxRAg2EOjA119/HX5zgz/bbLMlu+22W7gx5nOPPPJIjRtx5u3gc/vvv3+42efG+9JLL01GjBgReitkhxdlcUPOz9lnnx3+3muvvWq8z3Kefvrpwt99+/YNw08IwDS177//PvnPf/6T7LPPPknv3r3DaxdeeGFy9dVXJ0cddVQYDhO3idd23XXXZPHFFw+vffHFF8m1114bJv7dY489QkCCNOV1AjI81WmLLbYIfzMxMMEYgjC1pX8l6cp2spyff/45+fLLL0PvkBlnnDFMXszxWXbZZQvLqm09pTz00ENhyM/6669f6I3y+uuvV7xt9V1fNGrUqPA9Ajak+R133BGCQaynS5cu9TiikiSpMZwDRpKkZkavBm6g55577mTjjTcOc7PEISJxno+77ror2WCDDQqT6PJZenrQY4XAQEOVmoQ3jzld6PHCXCUrrbRSIfgCJn/lPXqAIE3T5L///W/o0RKDLyC4wGeZ8JcgBcsg3UAQY7vttgu9aDbccMPwdzb9yqk0XQlu9evXL6TLgw8+GLaB7cwGXxqCYBKBnWiBBRZI5p133nptW0PE3i+dO3cOATCGGhGYM/giSVLzsgeMJEnNjF4VWbPMMkuYNDcimECAguFEr732WuF1emHQg4HeIK0dvX3opVLcS4On7BCUifONfPfdd+FzBFuKEfBgqBZDb3iKVOz1U/yEnm7dutVIv3Lqk678vd5664XeJsy7Qo+dxuKpRS+//HIIsBBoIQ1WXXXVem9bfTHcCAwxe/XVV5NPPvkk+eOPP5zzRZKkZmYARpKkFkZggR4WEQEJbLvttoVhOtWG4UeIvTmyspO9Mjym+LWIYVpg+Ex90q+c+qYrQ4WYC6apAl4MmWICXea6effdd8N2xF49eR1z5twhGMawLdbP/DrMo8NQp0033bTJ1iNJkurmECRJkloZej0gDtOpRpMmTQq/x4wZU+vn4hN5xo0bN9V7HTp0KDtsqjnSNU5kTBDjgQceaPT6mST48MMPT1ZZZZUwOTFz3DAvTEO2rVKffvppWDZDmQiGMaFvx44dk2effbYQ/JIkSc3DAIwkSa1MfJoPk7KWwpCc1o5hQaC3RSnxaT5MAIxSj1aOQRnmh2mJdOXJR0wAzNAd9oNgRmMwmS5BkB122CEEYujpQiCEtMjrmBc//YjjwrxDBGXuueeeBu+LJEmqPwMwkiTlIE5sG3uC1AePFaZnCPOBFM9twqOrmb+joej9UNzjJPaEqGQYT6UYWkPPFQIHzDmSxfCX2POFYUZMNss2FAdhmLQWzP/SFOlfn3RlrhS2jXlbmPCXfSFgUZz29TnOrCOaa665kh133DH8n4l5K922+qyP4xmDRjEAgzXXXDMEvph3plyATJIkNT0DMJIk5TjRLgEInmLDZLLMvxGHtGTxSGDE9+mlsPbaa4cn41x55ZXJbbfdFh6zfMUVVyRfffVVsuKKK9Z5480yx48fP1VQhScH4dFHHw3zkHDDz2OceRITPTR4jd4RfI/tLA44lHu9GBPlbrTRRuGJR//+97/DcBt6lPzrX/8Kr/H466h///7hCT33339/YbnsO71DmJw3Bg9i+vD9LPYT2W0qlf6VpuvYsWPDutl+EKxYa621wrAh0iqr1HrKYR3ZpzWRjjwamh42lW5bfdZHIIchTaRtthcRgZ44/wtDq2L6SZKkfDkJryRJOeCRyvRq4BHG9FZYaqmlQnAj9gChRwXzcjz33HMh8AECFEyUynCUzTffPNyc89Sc9957LzwpiZvwddZZp9B7pBQmXKVXQwzy8GjjRRddNKwfrHOrrbYKAQbeW2aZZcKQmJtvvjk8EpnHPTMhLL0uYmCIQMAKK6wQAh+lXo/DiEpNYsvNP9/hMcrMqcKThZZffvkan+P7RxxxRAgKXX755cmcc84Ztp+eL/EpQQzTYZvBxLhsJ9vOhLZxAtv77rsvBE0IZhSnP0Ee1JWupB89XehpQiCGbSOwE4M/HC/SgfXMOOOMZddTCsErglGkGY+AZrv333//sD2VbFupfFVufXyffAbS8umnn06WW265sEyCQDEvckyuueaakM6sK49HkkuSpP+rXdqU/Y0lSZIkSZI0FYcgSZIkSZIk5cwAjCRJkiRJUs4MwEiSJEmSJOXMAIwkSZIkSVLODMBIkiRJkiTlzACMJEmSJElSzgzASJIkSZIk5cwAjCRJkiRJUs4MwEiSJEmSJOXMAIwkSZIkSVLODMBIkiRJkiTlzACMJEmSJElSzgzASJIkSZIk5cwAjCRJkiRJUs4MwEiSJEmSJOXMAIwkSZIkSVLODMBIkiRJkiTlzACMJEmSJElSzgzASJIkSZIk5cwAjCRJkiRJUs4MwEiSJEmSJOXMAIwkSZIkSVLODMBIkiRJkiTlzACMJEmSJElSzgzASJIkSZIk5cwAjCRJkiRJUs4MwEiSJEmSJOXMAIwkSZIkSVLODMBIkiRJkiTlzACMJEmSJElSzgzASJIkSZIk5cwAjCRJkiRJUs4MwEiSJEmSJOXMAIwkSZIkSVLODMBIkiRJkiTlzACMJEmSJElSzgzASJIkSZIkJfn6P3d9ezZQHOl8AAAAAElFTkSuQmCC" alt="Figure 2. What selection reads: on the tested situations, which carry positive weight, the payoff-maximising policy is consistent under the conditions of R3(a) and R3(b); on untested situations selection does not read choices, so same-build policies that agree on the tested ones are equally fit (R3("><figcaption><strong>Figure 2.</strong> What selection reads: on the tested
+situations, which carry positive weight, the payoff-maximising policy is
+consistent under the conditions of R3(a) and R3(b); on untested
+situations selection does not read choices, so same-build policies that
+agree on the tested ones are equally fit (R3(d)). A diagram of the
+statement, with no data.</figcaption></figure>
+<p>When does selection reach beyond the tested set? A cost that depends
+on untested choices can break R3(d)’s equal-fitness result if it charges
+different amounts for otherwise equally fit policies. A cost on
+description length is an example: it can charge differently for untested
+choices and so separate policies that agree where tested. When <em>Ends,
+Rank and Conflict</em> analyses a superintelligence’s ends beyond its
+training, it takes R3(d) and Lemma L6 from here and must state which
+cost assumption it adopts.</p>
+<p>R3 also clarifies what evidence on current language models shows.
+Modelling preferences needs only what Chalmers (2026) calls a
+“quasi-subject” whose behaviour reads as beliefs and desires; such
+working states “are cheap.” I take no position on whether a coherent
+subject stands behind a model’s persona. In forced binary choices,
+Mazeika and colleagues (2025) find circular patterns “below 1% for the
+largest LLMs,” while noting that “it remains unclear whether the
+resulting preferences are coherent or merely random arrangements.” When
+Khan and colleagues (2025) allowed a neutral option, preferences proved
+frame-dependent: GPT-4o took it “in 100% of country pair comparisons”
+(Khan et al. 2025).</p>
+<p>My conjecture from R3 holds under the model’s assumptions only. Under
+the conditions of R3(a) and R3(b), a selected lineage should pass
+consistency tests on its tested set. By R3(d), under the stated fitness
+assumptions, same-build policies that agree on tested choices are
+equally fit. The unrestricted policy table lets their untested choices
+vary independently of their tested choices. A cost that reads untested
+choices can make those policies differ in fitness. I give no method for
+defining situations, outcomes, menus or the tested set for a real
+system.</p>
+</section>
+<section
+id="part-7.-by-convention-copies-of-one-version-count-as-one-actor-only-when-they-cover-the-situations-and-their-pooled-choices-contain-no-circle"
+class="level2">
+<h2>Part 7. By convention, copies of one version count as one actor only
+when they cover the situations and their pooled choices contain no
+circle</h2>
+<p>A human leader cannot be duplicated overnight into a million
+identical decision-makers. A set of trained weights can. Any strategic
+analysis of AI must therefore say who the actor is when a model is
+copied.</p>
+<p>Allison’s (1969) three lenses (the single rational actor,
+organisational routines, and bureaucratic politics) suggest three
+candidate units:</p>
+<ol type="1">
+<li>One version of a model, treating all its copies as one actor over a
+set of situations only when the copies test below holds there. This is a
+manageable Model I assumption, and the war baseline uses it.</li>
+<li>Each running instance or conversation thread. Chalmers (2026) takes
+the immediate partner in an AI conversation to be a “virtual instance”
+or a “thread,” which would make the count of actors enormous.</li>
+<li>The developer and model together, an organisational actor closer to
+Allison’s other two lenses.</li>
+</ol>
+<p>By analytical convention I adopt the first. It keeps the baseline in
+Allison’s manageable frame, while the lineage is the unit of selection
+in Part 6. The third option is set aside by assumption, because it needs
+an organisational and bureaucratic model not built here. Which later
+results would survive under it is not examined. Where the copies test
+fails, I do not say what the right unit is. Again, this fixes the
+strategic unit, not the number of moral subjects, which stays open
+between model, instance and thread.</p>
+<p>Why is unity across copies an assumption rather than automatic?
+Weights copy exactly. But each running instance has its own context
+window and cache, and differences in what they hold put copies in
+different situations. Copies run on parallel hardware using operations
+that can return different results from one run to the next can also
+drift apart in their outputs (Shanmugavelu et al. 2024). Such drift
+falls outside the same-policy simplification of the copies test
+below.</p>
+<p>Political science has argued over unity before. Allison (1969)
+criticised treating states as “black boxes covering various gears and
+levers.” Bendor and Hammond (1992) replied that the unitary assumption
+exists “to conserve the intellectual resources of scholars.” In biology,
+Szathmáry (2015) sets the benchmark for many units becoming one
+organism: “a high level of cooperation and a low level of realized
+conflicts.” Identical copies start with no reproductive conflict.
+Whether diverging contexts create working conflict, the behavioural
+check below does not measure.</p>
+<p>Lemma L5 defines when copies are <em>unitary</em> over a target set
+of situations. Each copy runs its own fixed-choice policy on the
+situations it actually meets. Two conditions must both hold:</p>
+<ol type="1">
+<li><strong>Coverage.</strong> Between them, the copies meet every
+situation in the target set. This fails whenever some situation is met
+by no copy.</li>
+<li><strong>Pooled consistency.</strong> Pool all the copies’ choices
+together; the pooled record contains no circle.</li>
+</ol>
+<p>Notice what L5 certifies and what it does not. It certifies that
+pooled choice is consistent over the situations covered. It does not
+test whether copies share an inner goal or would sacrifice for one
+another. Opposed copies, even copies run by rival operators, can pass if
+the situations they meet cover the target set and their pooled choices
+happen to contain no circle. So applying the convention to the war
+baseline takes the absence of opposed operators as a separate premise.
+Conversely, copies splitting up roles can fail if the division of labour
+produces a pooled circle. Treating copies as one actor over situations
+no copy has met goes beyond what L5 certifies.</p>
+<p>In L5, defining unity as coverage plus pooled consistency is a matter
+of definition; what L5 proves is how that test simplifies (a
+“same-policy reduction”): when all copies run the same fixed policy on
+the situations they meet, once they cover the target set they are
+unitary over it if and only if that single policy passes the ends test
+there. A single copy covering every situation is unitary just when it
+has ends.</p>
+<p>In the technical paper’s appendix, a sufficient condition is also
+proved. If distinct situations have no outcomes in common, and copies
+sharing a situation choose the same outcome there, the pooled choices
+contain no circle. Once coverage holds, L5 fails in only two ways:</p>
+<ol type="1">
+<li><strong>Overlapping menus across situations.</strong> Different
+recorded states put copies in different situations; they fail only if
+their choices across overlapping menus form a circle.</li>
+<li><strong>Different choices in a shared situation.</strong> Two copies
+choose different outcomes in the very same situation, which lies outside
+the same-policy reduction.</li>
+</ol>
+<p>So, by convention, all copies of one version are one actor over a set
+of situations only when L5 holds there. <em>Takeoff and Emergence</em>
+and <em>Many Machines</em> relax this convention when they drop unitary
+action.</p>
+</section>
+<section id="part-8.-by-convention-every-new-version-is-a-new-actor"
+class="level2">
+<h2>Part 8. By convention, every new version is a new actor</h2>
+<p>What happens when a model is retrained, trained further on narrower
+tasks, or replaced? Chalmers (2026) notes that where the underlying
+model changes within an ongoing thread, “the claim of personal identity
+between them seems less plausible.” R3 compares lineages on a fixed
+tested set. It is silent on whether a retrained version is the same
+actor, or keeps its old ends outside its new tested set.</p>
+<p>I define a <em>version</em> as any change to the trained weights,
+including further training on narrower tasks (“fine-tuning”) and small
+add-on weight modules (“adapter weights”). That is distinct from runtime
+state: the context window, the contents of runtime memory, or a cache. A
+memory feature built into the machine’s architecture belongs to its
+build and is not runtime state. I then adopt, as an explicit convention
+and not a theorem, the rule that <em>a new version is a new actor</em>.
+<em>Lineage</em> names the chain of versions. This convention rules out
+treating a retrained version as the same actor over time or assuming its
+earlier ends persist outside its new tested set.</p>
+<p>The convention has costs, and they should be stated plainly. Any
+weight change, including a change to trained weights through continual
+learning during a crisis, makes a new actor. Self-improvement through
+weight updates and the duration of a single actor therefore pull against
+each other. Across any weight change, an end that includes the actor’s
+own survival, or its commitments and reputation over time, has no
+persisting actor here.</p>
+<p>Changes to runtime memory alone leave the version fixed. Treating it
+as one actor across situations still depends on the ends test and the
+copies test. The baseline therefore fits an interaction during which the
+weights stay fixed; persistence across weight changes is left open.
+<em>The War Baseline</em>, <em>Disagreement Without Hidden
+Information</em> and <em>Ends, Rank and Conflict</em> inherit this
+convention. Like the copies rule, it fixes the unit by definition.</p>
+</section>
+<section
+id="part-9.-the-war-baselines-actor-is-narrower-than-it-first-looks"
+class="level2">
+<h2>Part 9. The war baseline’s actor is narrower than it first
+looks</h2>
+<p>We can now say exactly what the strategic actor of the war baseline
+amounts to. By convention it is one version of a model lineage. Its
+copies count as one actor over a set of situations only when L5 holds
+there, and each new version is a new actor. Coverage reaches only
+situations some copy has met, and the absence of opposed operators is a
+separate premise. Its ends are defined by the ends test on its policy,
+while the war baseline itself fixes those ends at power and
+duration.</p>
+<p>The test passed on to the war baseline has edges. It counts a belief
+update followed by a reversal over the same menu as a failure, so by
+itself it does not support bargaining under private information. It does
+not model how beliefs enter expected value, attitudes to risk, gambles,
+ties or mixing. How a randomly sampling system maps to one fixed policy
+is not settled. And R3(a) uses the selector’s valuation, so it cannot by
+itself separate a machine’s own ends from faithful execution of its
+selector’s.</p>
+<p>Within the model, the baseline’s first condition, that the machine is
+unitary and rational, gets only bounded support from selection. R3(a)
+gives consistency on the tested situations for the maximiser of a
+tie-free valuation that ignores the situation. R3(b) gives that
+maximiser a takeover against one initially present same-build rival,
+without mutation, in a fixed environment, when its weighted payoff gain
+on the tested situations exceeds its extra cost under Part 6’s fitness
+and cost assumptions. By R3(d), under those fitness assumptions,
+same-build policies that agree on tested situations are equally fit. The
+unrestricted policy table lets their untested choices vary independently
+of their tested choices. A cost that reads untested choices can make
+those policies differ in fitness. So on untested strategic situations,
+consistency is an assumption <em>The War Baseline</em> adopts, not a
+consequence I prove here. Even on tested situations, with finitely many
+outcomes, consistent choices fix the strict ranking of distinct outcomes
+only along chains of observed choices.</p>
+<p>Two parts of this conclusion hold by construction, not as
+discoveries:</p>
+<ol type="1">
+<li>That the ends test does not wait on consciousness holds in the model
+because the ends test reads only the policy, for theories that read only
+the build, even though policy and build can share hardware.</li>
+<li>Treating copies as one actor only when L5 holds is a conditional
+convention, backed by pooled consistency over covered situations. It is
+not a proof that copies lack conflict or agree on situations no copy has
+met.</li>
+</ol>
+</section>
+<section
+id="part-10.-what-i-do-not-show-and-what-would-change-the-answer"
+class="level2">
+<h2>Part 10. What I do not show, and what would change the answer</h2>
+<p>Three substantive limits of rational-choice analysis remain, and
+later papers take them up. Rationality in the thin sense fixes how a
+machine pursues its ends, not what they are; <em>Ends, Rank and
+Conflict</em> relaxes the assumption of power and duration. Rationality
+does not make a machine a single actor; <em>The War Baseline</em> and
+<em>Many Machines</em> study several machines interacting, while L5 here
+and <em>Changing the Ends</em> take up unity and shared goals across
+copies.</p>
+<p>Nor does rationality prove that a machine’s preferences stay fixed as
+situations change. For human states, history suggests they may not,
+though war data cannot easily tell changed preferences from a changed
+game. Any rational-actor model assumes stable preferences that alignment
+research is still trying to establish.</p>
+<p>Several things are not modelled, not measured, or not claimed:</p>
+<ul>
+<li>The version convention is not formalised. The
+before-and-after-training statement compares machines only when the
+build stays fixed.</li>
+<li>No empirical estimates are computed. No real system’s ends or
+consistency is measured, and there is no method for defining situations,
+outcomes, menus or the tested set for a real system.</li>
+<li>The ends test identifies consistent ends without telling a machine’s
+own ends from those of whoever’s valuation selected it.</li>
+<li>Because runtime state enters only the situation, choice reversals
+driven by changed beliefs, or by copies dividing labour, count as
+failures of the ends test and of L5.</li>
+<li>I leave open whether any machine is conscious and what kind or
+degree of consciousness any named system might have. That is the subject
+of <em>Could It Feel?</em>.</li>
+<li>I do not claim that copies share a goal in a sense that would lead
+one to sacrifice for another.</li>
+<li>The evidence on consistency in language models compares different
+models at one time, uses stated answers to hypothetical choices, comes
+from a preprint, and proves frame-dependent when a neutral option is
+offered.</li>
+<li>The ends test and L5 assume one fixed choice per situation. Systems
+that sample randomly, or copies that mix, fall outside them as
+stated.</li>
+<li>L5’s coverage condition fails whenever some target situation is met
+by no copy. Two clauses beside L6, on rankings off the chains of
+observed choice and on measuring strength of preference, are not
+established.</li>
+</ul>
+<p>Several steps are my judgments, not proven theorems:</p>
+<ul>
+<li>every verdict on the five gate readings in Part 3;</li>
+<li>my reading that training pushes behaviour toward solving a decision
+problem;</li>
+<li>my conjecture that rising capability brings learned behaviour closer
+to optimal play;</li>
+<li>my judgment that a superintelligence loosens computational limits
+further than any human state;</li>
+<li>my conditional conjecture that selection supports carrying the
+rational-actor assumption to a machine only under R3(a) and R3(b) on
+tested situations, with untested consistency and unity across copies as
+separate premises;</li>
+<li>my judgment that money-pump pressure bears on settings with several
+machines rather than one machine alone.</li>
+</ul>
+<p>The proof checks also have edges. I report them from a proof project
+with no deposit link in the current draft. They confirm that each named
+result follows from its stated assumptions, under conditions listed in
+the technical paper’s appendix. Several results are checked under
+narrower conditions than the plain statements suggest:</p>
+<ul>
+<li>R3(b) without mutation is checked under its fitness assumptions and
+a bound on fitness in two cases: with persistence set to one where
+consciousness gets a yes-or-no verdict, and with persistence positive
+and fixed by the build for both yes-or-no and degree verdicts.</li>
+<li>R3(b) with a positive mutation rate below one half is checked only
+for yes-or-no verdicts, under the same fitness assumptions and fitness
+bound, with persistence positive and fixed by the build. The cap on the
+rival’s leftover share is checked only when the maximiser’s weighted
+payoff gain on tested situations exceeds its extra cost.</li>
+<li>R3(d) is checked only for yes-or-no verdicts, at persistence set to
+one and with persistence fixed by the build, and has no version for
+degrees.</li>
+<li>The before-and-after-training comparison is checked under the
+assumptions of the without-mutation takeover theorem (the technical
+paper’s “first fixation theorem”).</li>
+<li>The rational-choice points of Part 4 are each checked in a small
+standalone model built for that claim.</li>
+</ul>
+<p>What would change the answer is visible in the conditions themselves.
+A cost that charges differently across untested choices can let
+selection distinguish policies beyond the tested set. Ties in the
+valuation, or a reward that assigns different values to the same outcome
+depending on the prompt, would take a machine outside R3(a). In the
+two-type, without-mutation comparison in a fixed environment under Part
+6’s fitness and cost assumptions, an extra cost larger than the weighted
+payoff gain on tested situations lets an initially present same-build
+rival win instead. Copies that leave some situations unmet, or choose
+differently in a shared one, would fail L5.</p>
+</section>
+<section id="part-11.-what-to-take-away" class="level2">
+<h2>Part 11. What to take away</h2>
+<p>In the model, a machine can pass the ends test whether or not it can
+feel. That holds by how the test is built, for theories of consciousness
+that read only a machine’s build. Passing means one ranking explains its
+fixed choices across the situations considered, and that ranking might
+be its selector’s rather than its own.</p>
+<p>Selection, in the model, backs consistency only on tested situations
+and only under stated conditions; it does not reward consistency for its
+own sake. Copies of one version count as one actor over a set of
+situations only when they cover those situations and their pooled
+choices contain no circle (with no opposed operators as a separate
+premise for <em>The War Baseline</em>), and each retrained version is a
+new actor, both by convention. Whether a machine can feel, whether it
+lives, and whether its ends are genuinely its own remain open for
+<em>Could It Feel?</em> and <em>Measures That Depend on Ends</em>.</p>
+</section>
+<section id="where-to-read-more" class="level2">
+<h2>Where to read more</h2>
+<ul>
+<li><em>When Is a Machine an Actor?</em>, the technical paper, with
+formal statements, a proof sketch for Theorem R3, and a table of the
+proof checks and their scope.</li>
+<li><em>The War Baseline</em>: the four baseline conditions for the
+bargaining model of war, and the actor I bound here.</li>
+<li><em>Could It Feel?</em>: the description of a machine’s build, the
+theories of consciousness, the measure of persistence, and the basic
+selection theorem that R3 extends to policies.</li>
+<li><em>Ends, Rank and Conflict</em>: the analogy with eminent human
+thinkers, and the paper that varies the actor’s ends using R3(d) and
+Lemma L6.</li>
+<li><em>Measures That Depend on Ends</em>: the practical rule on moral
+status, and the governance measures and moral protections to which I
+hand the bounded actor.</li>
+<li><em>Changing the Ends</em>: the question of whether copies share a
+goal closely enough to sacrifice for one another.</li>
+<li><em>Disagreement Without Hidden Information</em>, <em>Takeoff and
+Emergence</em> and <em>Many Machines</em>: papers that inherit the actor
+or relax its single-actor assumption.</li>
+</ul>
+<p>Full references for the works cited as (Name Year) are in the
+technical paper.</p>
+<hr />
+<p><strong>The technical paper:</strong> Allan C. Stam, “When Is a
+Machine an Actor?,” posted at
+https://updates.tacklebx.com/read/when-is-a-machine-an-actor-technical.pdf.
+It holds the models, proofs and sources behind this guide, and its
+Declarations note two source claims not yet verified against the works
+cited.</p>
+<p><strong>Proof status:</strong> Appendix A reports my Lean 4 checks
+and their conditions, and on my report the proofs leave no step
+unfinished and declare no axioms of their own. But the rational choice
+checks use small standalone models, and the appendix names claims still
+unestablished.</p>
+<p><strong>AI assistance:</strong> AI models did much of the work, under
+my direction. I decided the paper would take up a theorem and the test
+of when copies form one actor. I asked that work begin and, after a
+first draft, that it continue. AI models helped plan and check the
+paper, wrote and revised the text, drew the figures in code and drafted
+the Declarations. The safeguards were blind comparison of reviews from
+an AI workflow I assembled and a Gemini model, contrarian readings in
+each round, a check of revisions before use, figure values asserted in
+code, the Lean 4 checks and the check of cited theorem names. These are
+working practices, not guarantees of accuracy or independence. I am
+responsible for the content.</p>
+</section>
+
+</div></main>
+<nav class="wrap site-back bottom" aria-label="Tacklebx"><a href="https://www.tacklebx.com/">← Tacklebx home</a><a href="https://www.tacklebx.com/research">All research</a></nav>

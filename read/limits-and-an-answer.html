@@ -1,0 +1,2027 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Limits, and an Answer: a plain-language guide</title>
+<meta name="description" content="Paper 16 of a series on superintelligence and conflict, retold in plain language.">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+.site-back { display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem; padding-top: 1.1rem; font: 600 0.95rem/1.4 var(--display); } .site-back a { color: var(--accent); text-decoration: none; } .site-back a:hover, .site-back a:focus-visible { text-decoration: underline; } .site-back.bottom { border-top: 1px solid var(--rule); padding-top: 1.25rem; padding-bottom: 3rem; }
+p, li, td, a { overflow-wrap: anywhere; } figure { margin: 1.5rem 0; }
+
+/* Layout: one long reading column under a rain-streaked title band; parts open with a mono eyebrow; side questions fold open in place. */
+:root {
+  --bg: #f2f5f7;
+  --ink: #15202a;
+  --muted: #586672;
+  --rule: #d3dbe1;
+  --accent: #1d5a78;
+  --fold: #e6edf1;
+  --rain: rgba(29, 90, 120, 0.10);
+  --display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --body: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0e151b; --ink: #e2e8ec; --muted: #94a2ad; --rule: #25313a;
+  --accent: #82bcd8; --fold: #16212a; --rain: rgba(130, 188, 216, 0.08); color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0e151b; --ink: #e2e8ec; --muted: #94a2ad; --rule: #25313a;
+  --accent: #82bcd8; --fold: #16212a; --rain: rgba(130, 188, 216, 0.08); color-scheme: dark }
+
+body { background: var(--bg); color: var(--ink); font: 400 1.125rem/1.65 var(--body); }
+.wrap { max-width: 42rem; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+header.hero { border-bottom: 1px solid var(--rule);
+  background-image: repeating-linear-gradient(100deg, transparent 0 22px, var(--rain) 22px 23px); }
+header.hero .wrap { padding-block: clamp(3rem, 9vw, 6rem) 2.5rem; display: grid; gap: 1rem; }
+h1 { font: 700 clamp(2.4rem, 7vw, 4rem)/1.02 var(--display); letter-spacing: -0.02em; margin: 0; text-wrap: balance; }
+.subtitle { font: 500 clamp(1.15rem, 2.6vw, 1.45rem)/1.3 var(--display); color: var(--muted); margin: 0; text-wrap: balance; }
+.byline { font: 500 0.8rem/1.4 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); margin: 0.5rem 0 0; }
+
+nav.toc { margin-block: 2rem 0; }
+nav.toc summary { font: 500 0.8rem var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); cursor: pointer; }
+nav.toc ol { margin: 0.75rem 0 0; padding-left: 1.2rem; display: grid; gap: 0.25rem; font: 500 1rem/1.4 var(--display); }
+nav.toc a { color: var(--ink); text-decoration: none; }
+nav.toc a:hover, nav.toc a:focus-visible { color: var(--accent); text-decoration: underline; }
+
+main.wrap { padding-block: 1rem 4rem; }
+main p { margin: 0 0 1.1em; }
+main em { font-style: italic; }
+main a { color: var(--accent); }
+main hr { border: 0; border-top: 1px solid var(--rule); margin: 2.5rem 0; }
+h2 { font: 700 clamp(1.6rem, 4vw, 2.1rem)/1.15 var(--display); letter-spacing: -0.01em; margin: 3.5rem 0 1.25rem; text-wrap: balance; scroll-margin-top: 1rem; }
+h2 .eyebrow { display: block; font: 500 0.75rem/1 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.6rem; }
+h3 { font: 700 1.2rem/1.3 var(--display); margin: 2.25rem 0 0.75rem; text-wrap: balance; }
+main ul, main ol { padding-left: 1.3rem; margin: 0 0 1.1em; }
+main li { margin-bottom: 0.4em; }
+main strong { font-weight: 600; }
+main table { border-collapse: collapse; font-size: 0.95rem; }
+.tablewrap { overflow-x: auto; margin: 0 0 1.25em; }
+main th, main td { border-bottom: 1px solid var(--rule); padding: 0.4rem 0.6rem; text-align: left; vertical-align: top; }
+
+details.fold { background: var(--fold); border-radius: 6px; margin: 1.25rem 0 1.5rem; }
+details.fold summary { list-style: none; cursor: pointer; padding: 0.85rem 1rem 0.85rem 2.6rem; position: relative;
+  font: 600 1.02rem/1.35 var(--display); }
+details.fold summary::-webkit-details-marker { display: none; }
+details.fold summary::before { content: "+"; position: absolute; left: 1rem; top: 0.72rem; font: 500 1.15rem/1 var(--mono); color: var(--accent); }
+details.fold[open] summary::before { content: "\2212"; }
+details.fold summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+.fold-body { padding: 0 1.1rem 0.6rem 2.6rem; font-size: 1.02rem; }
+
+sup a.footnote-ref, a.footnote-ref { font: 500 0.7rem var(--mono); text-decoration: none; color: var(--accent); padding: 0 0.1em; }
+section.footnotes { margin-top: 4rem; border-top: 1px solid var(--rule); padding-top: 1.5rem; font-size: 0.9rem; color: var(--muted); }
+section.footnotes::before { content: "Sources and notes"; display: block; font: 500 0.75rem var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; }
+section.footnotes hr { display: none; }
+section.footnotes ol { padding-left: 1.6rem; }
+section.footnotes li { margin-bottom: 0.5em; }
+a.footnote-back { text-decoration: none; }
+
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+
+figure img { display: block; width: 100%; height: auto; background: #fff; border: 1px solid var(--rule); border-radius: 6px; padding: 10px; box-sizing: border-box; }
+figure figcaption { font: 400 0.92rem/1.5 var(--body); color: var(--muted); margin-top: 0.6rem; }
+main.prose blockquote { border-left: 3px solid var(--accent); background: var(--fold); margin: 1.5rem 0; padding: 0.9rem 1.1rem; }
+main.prose table { border-collapse: collapse; font-size: 0.92rem; display: block; overflow-x: auto; margin: 1.2rem 0; } main.prose th, main.prose td { border-bottom: 1px solid var(--rule); padding: 0.35rem 0.6rem; text-align: left; vertical-align: top; }
+.getit { font: 500 0.95rem/1.5 var(--display); margin: 0.4rem 0 0; } .getit a { color: var(--accent); }
+@media print { figure, tr { break-inside: avoid; } nav.site-back, nav.toc, .getit { display: none; } body { background: #fff; } }
+
+</style>
+<header class="hero"><div class="wrap">
+  <h1>Limits, and an Answer</h1>
+  <p class="subtitle">A plain-language guide to the working paper of the same name</p>
+  <p class="byline">Allan C. Stam · University of Virginia · Version 2, 27 November 2026</p>
+  <p class="getit">Paper 16 of a series on superintelligence and conflict. <a href="https://updates.tacklebx.com/read/limits-and-an-answer.pdf">This guide as a PDF</a> · <a href="https://updates.tacklebx.com/read/limits-and-an-answer-technical.pdf">The technical paper</a> · <a href="https://updates.tacklebx.com/read/series-versions.html">Versions</a></p>
+  <nav class="toc" aria-label="Contents"><details><summary>Contents</summary><ol>
+<li><a href="#part-1.-the-series-ends-with-a-list-of-where-its-evidence-is-thin-and-an-answer-to-one-student">Part 1. The series ends with a list of where its evidence is thin, and an answer to one student</a></li>
+<li><a href="#part-2.-the-starting-point-in-the-war-models-a-big-fast-jump-in-power-can-make-promises-unbelievable">Part 2. The starting point: in the war models, a big, fast jump in power can make promises unbelievable</a></li>
+<li><a href="#part-3.-what-the-rest-of-the-series-finds-and-where-each-paper-says-it-stops">Part 3. What the rest of the series finds, and where each paper says it stops</a></li>
+<li><a href="#part-4.-no-source-shows-that-limited-or-rank-free-wants-can-be-trained-in-or-would-last">Part 4. No source shows that limited or rank-free wants can be trained in, or would last</a></li>
+<li><a href="#part-5.-the-measures-carry-no-defensible-risk-number">Part 5. The measures carry no defensible risk number</a></li>
+<li><a href="#part-6.-once-a-machine-can-beat-every-human-check-on-my-firm-judgment-only-the-bet-on-its-wants-and-an-untested-balance-remain">Part 6. Once a machine can beat every human check, on my firm judgment, only the bet on its wants and an untested balance remain</a></li>
+<li><a href="#part-7.-my-aim-and-ai-help-in-drafting-could-bias-the-analysis">Part 7. My aim, and AI help in drafting, could bias the analysis</a></li>
+<li><a href="#part-8.-what-the-war-models-and-great-minds-suggest">Part 8. What the war models and great minds suggest</a></li>
+<li><a href="#part-9.-some-policies-need-not-wait-for-a-risk-number-but-only-if-an-unproved-condition-holds-for-every-belief">Part 9. Some policies need not wait for a risk number, but only if an unproved condition holds for every belief</a></li>
+<li><a href="#part-10.-the-series-proposes-many-conditional-measures-and-ranks-none-across-the-series">Part 10. The series proposes many conditional measures and ranks none across the series</a></li>
+<li><a href="#part-11.-the-models-cannot-answer-the-student-so-the-advice-is-my-own">Part 11. The models cannot answer the student, so the advice is my own</a></li>
+<li><a href="#part-12.-where-the-argument-is-thin-and-what-would-change-it">Part 12. Where the argument is thin, and what would change it</a></li>
+<li><a href="#part-13.-what-to-take-away">Part 13. What to take away</a></li>
+<li><a href="#where-to-read-more">Where to read more</a></li>
+</ol></details></nav>
+  <nav class="site-back" aria-label="Tacklebx"><a href="https://www.tacklebx.com/">← Tacklebx home</a><a href="https://www.tacklebx.com/research">All research</a></nav>
+</div></header>
+<main class="prose"><div class="wrap">
+<blockquote>
+<p><strong>In brief</strong> The evidence behind this series is thinnest
+in three places: what a superintelligent machine would want and keep
+wanting as it changes itself, how much any proposed measure lowers the
+risk, and what happens once a machine can beat every human check. What
+survives is conditional. In the war models, a machine that acts as one,
+chooses rationally and seeks power and a longer life is bleak news if
+its arrival brings a large, fast jump in power and nothing holds it to
+its promises; shareable wants with shareable inputs leave more room for
+a deal, and a security problem can still return from the human side even
+when the machine can credibly promise to stop. Four candidate policies
+could make sense whatever one believes about the risk, but only if a
+condition that is assumed for two beliefs, and not shown, held for every
+pivotal party’s estimate of the risk. A pivotal party is a state or a
+regulated lab whose participation matters. Ordered on my judgment by how
+plainly each would pass that test, not by any effect on the risk at
+arrival, governing AI’s misuse comes first, and no effect on arrival is
+claimed for it. The models cannot tell a student who asked whether AI
+will end humanity what to do, and my own advice to her, which is not a
+finding, is that absent clear evidence that the world is going to end
+she should carry on as before while staying informed.</p>
+</blockquote>
+<section
+id="part-1.-the-series-ends-with-a-list-of-where-its-evidence-is-thin-and-an-answer-to-one-student"
+class="level2">
+<h2>Part 1. The series ends with a list of where its evidence is thin,
+and an answer to one student</h2>
+<p>An argument built on analogy owes its reader two things at the end.
+One is an honest list of where its analogies are thinnest. The other is
+an answer to the question it began with. That question came in
+<em>Introduction</em>, the opening paper of this series of mine on the
+move to superintelligent AI. There a worried student asked whether
+artificial intelligence will eliminate humanity, and whether she should
+change course.</p>
+<p>To answer her, I ask six questions:</p>
+<ul>
+<li>where the evidence behind the argument is weakest;</li>
+<li>how much of the verdict survives those gaps;</li>
+<li>whether anyone can say, with a defensible number, how much proposed
+measures lower the risk;</li>
+<li>which policy choices make sense without that number;</li>
+<li>what the series proposes;</li>
+<li>what the student should do.</li>
+</ul>
+<p>The short answers come first. The evidence is thinnest on what wants
+a superintelligence would hold and keep as it modifies itself. It is
+also thin on how large the risk reductions from policy and technical
+measures are, and on whether those measures fail independently. And it
+is thin on what happens if a machine comes to dominate every human-side
+check. What survives is a conditional logic about promises at a
+machine’s arrival, and the series does not settle whether its “if” parts
+hold.</p>
+<p>Four of five candidate policies would pass a test of making sense
+across risk estimates, but only if an unproved condition that is assumed
+for just two beliefs held for every pivotal party’s belief (Part 9). On
+my own judgment, the need to study what training builds into a machine
+also survives. The series proposes many conditional measures, each with
+the standing its own paper gives it, and ranks none across the series
+(Part 10). The models cannot answer the student, so my advice to her is
+personal counsel, not a finding (Part 11).</p>
+<p>Several judgments here are mine rather than findings of the series. I
+flag each where it comes up:</p>
+<ul>
+<li>that Gartzke’s conditional even-odds ceiling on predicting war when
+private information (facts one side knows and the other does not) drives
+conflict caps how well a model can fit the data, not whether the theory
+can be tested (Part 5);</li>
+<li>that a machine’s control over its own agenda and inputs can speed a
+shift in power, whereas recognition and standing need not, if their
+conversion into power is blocked (Part 5);</li>
+<li>that no other human-side protection can be relied on once a machine
+can defeat every human-side check (Part 6);</li>
+<li>the order in which I place the candidate policies, and my verdict
+that keeping the most powerful systems in view does not pass while a
+dispute about the race stays open (Part 9);</li>
+<li>that research on what training builds in is the most direct priority
+bearing on whether a machine would value us (Part 9);</li>
+<li>that a caution drawn from one experiment extends to monitors of a
+model’s internal activity, an untested hypothesis from another paper of
+the series that I adopt (Part 9);</li>
+<li>that advice to settle early and my argument about waiting concern
+different decisions (Part 10);</li>
+<li>the advice to the student (Part 11).</li>
+</ul>
+<p>I derive no general theorem of my own. Small formal versions of four
+sentences in the essay, and one counterexample, were checked by a
+proof-checking program, alongside two formal results borrowed from
+earlier papers. Such a program confirms that a conclusion follows from
+the stated assumptions, not that the assumptions hold in the world. The
+technical paper’s second appendix lists the 164 measure records in the
+series’ inventory, with the standing of each.</p>
+</section>
+<section
+id="part-2.-the-starting-point-in-the-war-models-a-big-fast-jump-in-power-can-make-promises-unbelievable"
+class="level2">
+<h2>Part 2. The starting point: in the war models, a big, fast jump in
+power can make promises unbelievable</h2>
+<section
+id="a-rising-machine-may-be-unable-to-promise-anything-believable-if-nothing-holds-it"
+class="level3">
+<h3>A rising machine may be unable to promise anything believable, if
+nothing holds it</h3>
+<p><em>The War Baseline</em>, my paper applying the study of war to a
+machine’s arrival, sets the starting actor and verdict. Picture a
+machine that acts as one, chooses rationally, and wants more power and a
+longer life. Suppose its arrival brings a large, rapid shift in power,
+and nothing holds it to its promises. Then, in Powell’s model (Powell
+2006), it faces what I will call the promise problem (the technical term
+is the commitment problem): a side about to grow much stronger cannot
+credibly bind itself to a deal it makes now.</p>
+<p>Humans face the same problem from the other side. They cannot
+credibly promise never to build a rival. It is one mechanism seen from
+two sides. The two-actor model treats humanity as a single actor, but
+many states and firms would each have to keep that promise, so the model
+likely understates the human side of the problem.</p>
+<p>How large is too large? Call the threshold Powell’s line. A shift
+crosses it when the shift in one period, with the future discounted
+(counted for less than the present), is bigger than what one period of
+fighting would cost the two sides added together (Powell 1999). In the
+worked examples of these models, as I read them in <em>The War
+Baseline</em>, power changes hands in lumps. Then no deal paid in what
+the rising side wants is credible. Nothing short of handing it all the
+power there is can keep it satisfied.</p>
+<p>In these war models the loser survives by construction. That is an
+assumption, not a finding, so extinction is simply not represented.</p>
+</section>
+<section
+id="what-a-mind-wants-may-shape-the-conflicts-it-enters-as-an-untested-conjecture"
+class="level3">
+<h3>What a mind wants may shape the conflicts it enters, as an untested
+conjecture</h3>
+<p><em>Ends, Rank and Conflict</em>, my paper offering a vocabulary for
+what minds want (their “ends”), uses three ideas:</p>
+<ul>
+<li><strong>Rank-seeking</strong> (the technical term is positional):
+how far the value of a goal depends on an actor’s rank relative to named
+others. Rank means a position in an ordering, given a comparison group
+and a criterion. That paper allows three forms: rank order, a required
+level of recognition, and share relative to others.</li>
+<li><strong>Satiable</strong>: a goal that can be met, with nothing more
+gained once it is.</li>
+<li><strong>Shareable</strong> (the technical term is non-rival): a good
+one mind can have without taking any from another.</li>
+</ul>
+<p>Its untested conjecture pairs kinds of wants with kinds of
+killing:</p>
+<ul>
+<li>wants that depend on rank go with conquest and coercive
+killing;</li>
+<li>wants that by their content require some named group’s absence go
+with genocide;</li>
+<li>wants that need what others occupy go with dispossession, even when
+they never name the victims;</li>
+<li>satiable wants over shareable goods leave the most room for a deal,
+though they do not guarantee one.</li>
+</ul>
+</section>
+<section
+id="a-satisfied-machines-promise-to-stop-is-believable-only-in-some-cases"
+class="level3">
+<h3>A satisfied machine’s promise to stop is believable only in some
+cases</h3>
+<p><em>Satiation Is Not Enough</em>, my paper on when a side that has
+what it wants can believably promise to stop, works with what I will
+call the hazard: each period’s chance that the other side strikes and
+succeeds. It gives two cases.</p>
+<ul>
+<li><strong>Case one.</strong> Stopping is believable at every cost of
+attacking, even zero, when two things hold. Past some level of holdings,
+the value of what the machine wants is flat and not negative. The same
+holds at that level itself. And holding more never lowers the
+hazard.</li>
+<li><strong>Case two.</strong> Suppose four things hold. The satisfied
+want has positive value. Holding more never raises the hazard. Full
+domination (the top holding in that model) lowers the hazard below every
+satisfied level. And no satisfied level makes defeat certain. Then there
+is some attack cost above zero below which the promise to stop is not
+believable.</li>
+</ul>
+<p>These conditions concern the incentive to stop, not a bargain. Which
+case a machine falls into is part of the conjecture. The technical
+paper’s appendix restates the formal result.</p>
+</section>
+<section
+id="two-experiments-designed-but-not-run-and-a-test-for-policies"
+class="level3">
+<h3>Two experiments designed but not run, and a test for policies</h3>
+<p><em>A Test the Conjecture Could Lose</em>, my paper designing tests
+of that conjecture, sets out experiments in small environments. Two
+matter here. H3b asks whether a goal with a built-in limit can be
+trained in. H3c estimates where a need for security overrides a satiable
+goal. Neither has been run.</p>
+<p><em>Measures That Depend on Ends</em>, my paper on safety measures
+whose case turns on what a machine wants, sets out what I will call the
+robustness test. A measure passes if each pivotal party, meaning a state
+or a regulated lab, expects benefits that cover its own cost, counting
+benefits short of averting catastrophe. It must also need no payments
+that hinge on later events, and no event that settles the dispute.</p>
+<p>That paper lists five candidate measures. Four would meet the test
+only if an unproved condition held for every party’s belief about the
+risk (Part 9 explains). The fifth, on my judgment, does not pass while a
+dispute about the race is open. The same paper ties human-side and
+machine-side measures to what a machine wants. It also proposes, as an
+untested judgment, a design rule for the time before any machine
+dominates: spread protections across kinds of failure. How long
+enforceable human control lasts is an open assumption that no model in
+the series owns.</p>
+<p><em>Changing the Ends</em>, my paper weighing non-rank and
+knowledge-seeking wants alongside power-seeking, treats power-seeking as
+a means to other goals (Turner et al. 2021). It also treats what
+happened when trade was added to statistical models of war.</p>
+<p>I count eight principal limits on this argument. Three belong to the
+war papers, and five are examined in Parts 4 to 7. Part 12 retells all
+eight, and what they cover.</p>
+</section>
+</section>
+<section
+id="part-3.-what-the-rest-of-the-series-finds-and-where-each-paper-says-it-stops"
+class="level2">
+<h2>Part 3. What the rest of the series finds, and where each paper says
+it stops</h2>
+<p>This part reports what the other papers find, assume and leave open,
+each with the standing that paper gives it. It also reports findings
+from the earlier papers that later parts do not carry. Part 10 gathers
+the measures these papers weigh.</p>
+<section
+id="in-the-cyber-models-past-a-point-speeding-up-helps-only-under-stated-conditions"
+class="level3">
+<h3>In the cyber models, past a point, speeding up helps only under
+stated conditions</h3>
+<p><em>Running Through the Rain</em>, my paper on AI and cyber risk,
+asks whether to run faster through a peak in cyber risk or hold a
+capability back in secret. It uses four small models whose objectives it
+never combines. They assume that attackers and defenders gain new
+capabilities on the same timetable. Defence arrives only as operators
+patch, retire and rewrite code on their own calendar. Whether AI creates
+or moves a peak is not modelled.</p>
+<p>That paper proves a result about what it calls the kink. This is the
+speed beyond which adoption, not capability, sets how long the
+transition lasts, when adoption runs at least partly alongside
+capability. Past the kink, suppose adoption time and each step’s one-off
+loss stay fixed. Then speeding up raises loss near the peak when the
+hazard rises with speed, and also when the hazard tracks the capability
+level, holds at its final value until adoption completes, and ends above
+its average along the way.</p>
+<p>Where adoption sets the pace, the hazard is set by speed, and that
+one-off step loss stays fixed, speeding up helps only if adoption time
+falls with speed faster, in proportion, than the hazard rises. Health
+benefits can justify speeding past the kink only while they wait on
+capability rather than on trials and approval, and only if their earlier
+arrival outweighs the added cyber harm.</p>
+<p>The security window is the time until attackers who cannot already
+get the capability another way gain access. Suppose harm grows in step
+with exposure time, which operators get the protection does not depend
+on how long the window lasts, and attackers resume at unchanged
+intensity with no backlog. Then a secret hold saves a covered operator,
+in expected exposure time, at most the shorter of two things: the
+window’s expected length and the operator’s own deployment time. It
+saves that only against attackers without access.</p>
+<p>The paper states that four quantities are unmeasured: where speeds
+sit, how hazard and adoption respond to speed, how long windows last,
+and how much of a benefit’s wait capability sets. Much of its evidence
+on frontier models (the most powerful systems) comes from one lab’s
+reports on its own models. Its judgment that adoption already sets the
+pace for the code populations its data cover is provisional, and no
+ranking of interventions follows.</p>
+</section>
+<section
+id="in-the-biological-risk-model-the-health-balance-of-faster-progress-is-undetermined"
+class="level3">
+<h3>In the biological-risk model, the health balance of faster progress
+is undetermined</h3>
+<p><em>Running Toward the Clinic</em>, my paper on AI, biological risk
+and health, counts biological misuse, laboratory releases and hospital
+cyberattacks in healthy life-years. Within its conditions, it finds the
+health balance of faster progress undetermined. Some results hold across
+its open modelling choices; some were checked by a proof-checking
+program, and some were proved by hand.</p>
+<p>One result is this. Once misuse capability arrives within the period
+studied and no defence closes it, faster progress raises misuse loss
+when danger rises with speed, or when danger tracks the capability level
+and ends above its average along the way. Another result concerns
+defences deployed between misuse arrival and the end of the period
+studied, without waiting to recognise a particular agent. At fixed speed
+and leftover hazard, needing less defensive capability cuts misuse loss
+only while defence waits on capability and brings danger below the level
+where it would otherwise level off.</p>
+<p>Other results turn on whether danger tracks the capability level or
+the speed of advance, and no source that paper read settles which. One
+concerns a laboratory that lowers the capability level at which misuse
+becomes possible. In this comparison, speed and the danger remaining
+after defence stay fixed. Exposure begins at the start, and danger
+varies with the capability level. The defence arrives after misuse
+becomes possible and before the period ends, on a date that stays fixed
+when the misuse threshold changes. Under one way of counting, lowering
+the threshold raises loss if danger levels off above its average while
+it was rising. Under the other, if danger never falls, lowering the
+threshold can only leave loss unchanged or reduce it. That follows from
+how the second way counts loss. No source the paper located says which
+way of counting fits a real laboratory.</p>
+<p>Its stated limits are these. Deaths linked to hospital attacks that
+lock systems or data and demand payment are the one measured channel.
+The evidence gives only a range for those deaths, and misuse is
+unmeasured. Holding each misuse event’s harm fixed leaves out severity
+rising with capability. And the paper adopts no rule for deciding.</p>
+</section>
+<section
+id="measures-that-do-not-read-a-machines-wants-can-be-begun-early-but-a-place-on-that-list-says-nothing-about-whether-they-work"
+class="level3">
+<h3>Measures that do not read a machine’s wants can be begun early, but
+a place on that list says nothing about whether they work</h3>
+<p><em>Measures That Need No Reading of Ends</em>, my paper sorting the
+series’ measures by what they inspect or act on, is a synthesis with no
+formal result of its own. Measures that act on outputs, records,
+infrastructure and human parties fall on its side. Measures that act on
+internal states, or on training aimed at what a machine wants, fall on
+the side of <em>Measures That Depend on Ends</em>.</p>
+<p>For its own side, it claims only that such measures can be begun
+before anyone can read a machine’s wants. The sorting is its provisional
+judgment, and a measure’s place says nothing about whether it works. It
+adopts the finding that most direct levers over a machine hold only
+while the machine depends on human infrastructure. It ranks no lever. It
+states that the costs and benefits of the five candidate measures, and
+the costs of the interventions in <em>Running Through the Rain</em>, are
+unmeasured.</p>
+</section>
+<section
+id="a-machine-counts-as-an-actor-by-how-consistently-it-chooses-under-two-conventions"
+class="level3">
+<h3>A machine counts as an actor by how consistently it chooses, under
+two conventions</h3>
+<p><em>When Is a Machine an Actor?</em>, my paper on when a machine
+should be treated as a strategic actor, defines wants by behaviour. A
+machine has them when some ranking of outcomes, without going in
+circles, explains its choices across contexts. For theories of
+consciousness that look only at a machine’s structure, meeting this test
+does not wait on consciousness. That holds by how the model is built,
+not as an empirical finding.</p>
+<p>That paper shows that code which runs without error need not choose
+consistently. It also shows a harder point. Suppose the process that
+selects what the machine does scores only the outcomes, with no ties in
+the situations tested. Then the choices that score highest are
+consistent in those situations. The preferences built into the scoring
+explain the choices, and the test cannot tell whether the machine shares
+those preferences. Where a policy may be any lookup table from contexts
+to actions, choices on untested contexts stay free unless a cost charges
+for them.</p>
+<p>Two of its rules are conventions, not results. Copies of one version
+count as one actor over a set of contexts when together they cover it
+and their pooled choices do not go in circles. Each new version, meaning
+any change to the trained weights (the internal numerical settings
+adjusted during training), is a new actor. That second convention sets
+self-improvement against the idea of one actor lasting, and leaves open
+whether an actor persists across weight changes.</p>
+<p>Three papers inherit this convention: <em>The War Baseline</em>,
+<em>Ends, Rank and Conflict</em>, and <em>Disagreement Without Hidden
+Information</em>, my paper on disagreement as a cause of war. The first
+of those papers lets self-improvement enlarge the shift in power of a
+machine that cares how long it survives with its goals intact.
+<em>Takeoff and Emergence</em>, my paper on when more than one
+superintelligence can emerge, follows each project through
+self-improvement under one rule of growth. Whether wants survive
+self-modification stays open (Part 4).</p>
+</section>
+<section id="whether-a-machine-could-feel-stays-open" class="level3">
+<h3>Whether a machine could feel stays open</h3>
+<p><em>Could It Feel?</em>, my paper on machine consciousness, models
+selection among machine lineages on fixed hardware under seventeen
+theories of consciousness, four of them provisional. Its comparisons of
+two types are mostly checked by a proof-checking program under stated
+conditions. Valence is a signal of good and bad, which only theories
+that target feeling count as felt.</p>
+<p>In that model, suppose no task rewards the signal and the lineages
+persist equally well. Selection then favours losing the signal if
+consciousness contributes less to a lineage’s success under selection
+than the signal costs. It spreads even with no fitness effect of
+consciousness when regulating an essential variable raises a lineage’s
+survival enough. Under the model’s commitments, suppose starting beliefs
+about the other settings and the starting state do not depend on the
+theory and cover finitely many values, and the observed path has an
+above-zero chance. Then when consciousness has no fitness effect of its
+own, watching selection leaves one’s belief across the theories
+unchanged. Where imitation training reduces a machine’s self-report to a
+constant human-like answer, that report adds no evidence.</p>
+<p>No threshold or degree in the model has an empirical source, and no
+named system is assessed. Whether a machine can feel, whether it lives
+and whether its wants are its own stay open. Those questions decide what
+is owed to it and how far proposed welfare protections reach.</p>
+</section>
+<section
+id="more-than-one-superintelligence-emerges-only-under-conditions-in-the-model"
+class="level3">
+<h3>More than one superintelligence emerges only under conditions, in
+the model</h3>
+<p><em>Takeoff and Emergence</em> asks when a follower can emerge and
+stay relevant. At the follower’s arrival, the leader’s capability
+divided by the follower’s must be below the threshold for a decisive
+advantage. It must also survive the arrival window, the period in which
+only the leader is superintelligent. The results are partly checked by a
+proof-checking program and partly proved on paper.</p>
+<p>A follower’s lag is how much later than the leader it starts
+self-improving, with each starting on reaching the same capability.
+Under steady compounding, a lag is decisive exactly when it spans enough
+doublings of capability. Under variable growth, the long-run ratio turns
+on where the growth rate heads. Runaway growth in finite time is one
+possible regime of self-improvement, not its inevitable result.</p>
+<p>With a constant chance of success, a strike at the end of the window
+pays when its cost is below that chance multiplied by the follower’s
+share. So, with strike terms fixed and an assumed sudden jump in what
+the follower locks in at the threshold, slower takeoffs can sharpen the
+motive to strike.</p>
+<p>The model assumes identical rules of growth, complete information
+(nothing hidden about capabilities, costs or payoffs), advantage
+measured as a ratio, and shares locked in at arrival. The growth rate,
+the lags, and the cost and odds of strikes are unmeasured. Humanity is
+not a strategic player in the window, and having several machines does
+not by itself make humans safe.</p>
+</section>
+<section
+id="several-machines-can-protect-exploit-or-eliminate-humans-and-their-number-alone-does-not-decide-which"
+class="level3">
+<h3>Several machines can protect, exploit or eliminate humans, and their
+number alone does not decide which</h3>
+<p><em>Many Machines</em>, my paper on worlds with several
+superintelligent machines, finds this across bargaining, deterrence,
+hazard and power-projection models. Its baseline is a one-round game of
+dividing a prize, with complete information. The seizure cost is what
+humans can make a machine pay for taking their holdings.</p>
+<p>Against a humanity that cannot win a war, consider a bloc of machines
+with the same wants, under the baseline way of counting costs. The human
+share safe from seizure is capped at the smaller of two amounts: the
+whole prize, and the seizure cost shrunk according to how much weight
+the bloc gives human holdings against its own. Giving human holdings
+more weight lowers the amount calculated from the seizure cost. The cap
+falls only if the smaller of the two amounts falls.</p>
+<p>That paper calls it guardianship when a rival machine protects
+humanity’s share. Assume seizure is all or nothing, no joint seizure, no
+prize for strict first place, and no human fighting ability. Then two
+rival machines guard a larger share than a bloc would only under three
+conditions:</p>
+<ul>
+<li>neither is hopeless in a war between them;</li>
+<li>each weighs its rival’s gains above humanity’s;</li>
+<li>the share is worth defending and allows a split that neither likes
+less than war.</li>
+</ul>
+<p>Mutual deterrence between the machines ends guardianship. That
+paper’s results bound safe shares and do not predict the deal chosen.
+Guardianship is shown only for two machines. A proof-checking program
+checks the algebra of the stated inequalities, while their derivation
+from the game is checked by hand or numerically. No parameter has been
+estimated for any real machine.</p>
+</section>
+<section id="the-satiation-model-rests-on-assumptions-of-its-own"
+class="level3">
+<h3>The satiation model rests on assumptions of its own</h3>
+<p><em>Satiation Is Not Enough</em> states its limits. Its opponent is a
+strike hazard taken as given or, in an extension, human communities
+whose payoffs, strike costs and odds are given rather than derived. No
+bargain or payment is modelled. A strike either fails or ends the
+machine, and a failed attack costs the machine its cost but none of its
+holdings. Information is complete, and play depends only on current
+holdings.</p>
+<p>One of its theorems bears on my point that many states and firms
+would each have to keep the promise never to build a rival. It assumes
+communities of fixed ability, each building a rival independently at a
+fixed rate, any one success removing the machine, and a hazard from
+rivals alone. It also assumes that, from the level where the machine is
+satisfied, a rival’s chance of success never rises as the machine gains
+more, and falls to zero at full domination. At or above the satisfied
+level and below domination, each community has some chance of building a
+successful rival, short of certainty. The goal is worth a positive
+amount when satisfied. Under those assumptions, independent rivals block
+stopping below some positive attack cost.</p>
+<p>That paper adds two qualifications. As communities multiply, with
+each period’s human strike landing before the machine’s attack takes
+effect, the ceiling on that cost falls toward zero. That happens only
+because near-certain removal leaves the machine a short expected life,
+not because it restrains itself. And when communities choose
+strategically and use the same strategy in equilibrium, the model gives
+a bound for one set of inputs. When shutdown can fail and both shutdown
+and rival-building are costly, there is an upper bound on each
+community’s chance of building a rival that halves as the number of
+communities doubles. Whether a positive blocking cost then survives
+depends on how the machine values holdings.</p>
+<p>It leaves strategic interaction among several machines to <em>Many
+Machines</em>. It lists three conjectures: whether wants can be made
+satiable and stay so under self-modification, where human alarm would
+begin, and how many communities must agree to pull the plug, its name
+for a coordinated human shutdown.</p>
+</section>
+<section id="other-findings-from-the-earlier-papers" class="level3">
+<h3>Other findings from the earlier papers</h3>
+<p><em>The War Baseline</em> judges that models of war between states
+transfer most closely to the race among labs and states, and more
+loosely to a single machine facing humanity. Its machine fights at
+near-zero cost under a two-part premise: it can protect itself, and the
+resources in contest cannot be badly damaged by humans. That paper
+cautions that costly reassurance about what kind of actor a side is now
+or what it currently intends cannot solve a promise problem driven by
+what future dominance will reward. Verification alone cannot solve a
+shift in power.</p>
+<p>The same paper adds two cautions. If frontier leads compound, which
+it treats as a hypothesis, a pause struck while one rival leads grows
+unstable as the gap erodes. A regime that meets any bid for dominance
+with preventive sabotage writes the motive for preventive war into
+policy. It also infers that unwritten rules, monitoring and safeguards
+against a takeover do not carry over from civilian oversight of the
+military to oversight of a superintelligence. They assume the authority
+giving orders can reason at the level of the actor it oversees.</p>
+<p><em>Disagreement Without Hidden Information</em> compares two
+traditions. In one, everyone starts from the same beliefs and reasons
+fully. In the other, sides start from different beliefs. On that paper’s
+argued reading, both agree that transparency and credible commitment are
+needed. They part over what remains once both are achieved: nothing
+under the first, open disagreement under the second.</p>
+<p>Holding wants, costs and the shift fixed, the two traditions share
+three things. They share the promise problem. They share the risk, on
+that paper’s judgment, of complacency when the declining side
+underestimates the shift. And they share the end-state once one side
+plainly dominates. Before dominance, on unmeasured premises about mutual
+optimism and which racers are selected, they differ on whether wars
+start among racers and on racing itself. The net scale of risk is
+undetermined, and remaining risk shifts from secrets to open
+disagreement.</p>
+<p>That paper reports a proof by Fey and Ramsay: within their class of
+models, limited reasoning from shared beliefs is strategically
+equivalent to different starting beliefs. Every belief-based conclusion
+it draws about a superintelligence assumes that the machine’s beliefs
+are mutually known.</p>
+<p><em>Fighting for Free</em>, my paper on wars in which one side pays
+almost nothing to fight, corrects a rule in the 2004 model of Smith and
+Stam. Accepting any offer at least as good as fighting to the end is not
+a best response (the best reply to the other side’s strategy) in that
+article’s own example. In equilibrium (a pair of strategies neither side
+can improve on alone), the side responding weighs an offer against what
+it expects from rejecting it.</p>
+<p>That paper reruns the model with different inputs. Those calculations
+are separate from its proved deadline result (Part 12) and from its
+baseline with even odds. They cover a machine that fights for free, wins
+80 to 99 percent of battles, and starts out underestimating its own
+chance of winning. It faces humans paying 0.5 per battle for a prize of
+30. In these sweeps, wars usually end in decisive victory or human
+surrender, meaning acceptance of an offer of zero. The exceptions are
+weaker disagreement, and an 80 percent machine battle-win rate in the
+baseline when humans make the offers.</p>
+<p><em>Ends, Rank and Conflict</em> shows, in a calculation comparing
+the two sides’ shares in a single round, that what rank-seeking does to
+the room for a deal depends on a modelling choice that paper does not
+settle. Rank can be counted over shares of the prize, so each side’s war
+costs count only against itself. Then rank-seeking narrows the room for
+a deal as lower war costs would, but never empties it.</p>
+<p>Rank can instead be counted over net outcomes, so that a machine
+counts its rival’s war losses as its own gain. Then take a partly
+rank-seeking machine that fights for free against humans who pay to
+fight, and is nearly sure to win. If peace is capped at the whole prize,
+with no payment or loss outside it, the machine can demand more than the
+whole prize, leaving no feasible deal. That paper adds that its
+conjecture treats wants as fixed before the outcome, whereas wants may
+shift during conflict.</p>
+<p><em>Changing the Ends</em> uses the same algebra separately. Against
+a machine that does not seek rank and fights for free, humanity’s own
+concern with relative shares never empties the room for a deal. The
+no-deal region under the net-outcome counting vanishes if the human net
+war payoff the machine counts is floored at zero, a derivation not
+checked by a proof-checking program. On that paper’s judgment, if the
+machine does not seek rank, the rank-based stake most likely in play
+during a contested transition is humanity’s grievance over lost
+primacy.</p>
+<p><em>A Test the Conjecture Could Lose</em> pairs its unrun machine
+tests with two human ones. H1 concerns officeholders who reached office
+by inheritance or by a rule fixed before a predecessor’s natural death.
+It asks whether those whose writings before taking office state limited
+or rank-free wants seek fewer holdings above the office’s baseline, and
+turn down more offered increases. The comparison can show whether
+concern with rank goes with different choices. Saying that concern with
+rank caused those choices would require an assumption the study cannot
+test. On expected archive counts, H1 falls back to a form in which it
+can lose but cannot be supported.</p>
+<p>H2 asks whether wants stated before violence predict the type of
+violence among state leaders, drawn from the Archigos list of leaders,
+who used lethal violence above the office’s baseline. Its rare
+group-identity arm cannot by itself make H2 lose. That paper’s practical
+conclusion is to fund a feasibility stage, Phase 0, before committing to
+the main human study.</p>
+<p><em>Changing the Ends</em> adds a further argument. A machine that
+values knowledge wants two things from us. One is a stock, the record of
+how an evolved species built the machine, which conquest can seize by
+archiving. The other is a flow, free human behaviour under new
+conditions, which conquest destroys. A mind able to simulate us closely
+enough would not need the originals once the simulation’s cost is
+counted, a comparison argued in words.</p>
+<p>In that paper’s one-shot linear model, being complementary protects
+the weaker party only under three conditions. The weaker must supply
+what the stronger cannot produce more cheaply. That supply must be worth
+its upkeep. And to protect claims on contested resources, the weaker
+must also hold enforceable claims, or the stronger must truly care about
+it. Even so, being useful to a stronger party is not the same as being
+free. On that paper’s reading, a machine aligned to one human faction
+turns the conflict into a bargain among humans in which one side holds
+the machine.</p>
+</section>
+</section>
+<section
+id="part-4.-no-source-shows-that-limited-or-rank-free-wants-can-be-trained-in-or-would-last"
+class="level2">
+<h2>Part 4. No source shows that limited or rank-free wants can be
+trained in, or would last</h2>
+<p>The sorting of wants into types is a conjecture. Its evidence is a
+short, selected, human record, and matching those types to types of
+killing is my untested judgment.</p>
+<p>No source drawn on here shows that satiable goals, or goals that do
+not depend on rank, can be trained into a machine. None shows that they
+would survive the machine changing itself. None shows that competitive
+training makes rank a goal in itself, in any of the three forms.</p>
+<p>Three research programs set beside the conjecture do not close the
+gap. They restrain a machine by other levers: capping how hard it
+optimizes, charging it for its gains, or making deferring to people the
+rational choice. Each is shown only on paper or in small environments,
+with no guarantee for a machine that modifies itself.</p>
+<p>The test that could bear on the first gap is H3b, whether a goal with
+a built-in limit trains in. As of this writing it has not been run. It
+can lose, and it speaks for one training signal in one family of small
+environments.</p>
+<p>Two other pieces of evidence have limits of their own. The historical
+pattern of aims forming early, in <em>Ends, Rank and Conflict</em>,
+comes from late recollections, memorials, and informants questioned
+decades afterward. It counts only those who were remembered, so it
+cannot show that forming early makes aims last.</p>
+<p>The evidence that what is laid down early in a model’s internal
+settings outlasts what is added later is a single study. It concerns
+removing knowledge during the first, broad stage of training, not
+installing a preference. A second, small study found that behavioural
+expectations set in that first stage persisted through later training.
+It did not compare them with expectations added later.</p>
+</section>
+<section id="part-5.-the-measures-carry-no-defensible-risk-number"
+class="level2">
+<h2>Part 5. The measures carry no defensible risk number</h2>
+<section id="trimming-a-jump-in-power-can-leave-it-over-the-line"
+class="level3">
+<h3>Trimming a jump in power can leave it over the line</h3>
+<p>Measures that work by trimming the jump in power by a limited amount
+do not remove the promise problem in every case. Each can lower the jump
+only so far. The jump at arrival may exceed Powell’s line by more than
+all of them together can remove. If jumps have an upper limit, such a
+jump exists only if Powell’s line plus all the trims still falls below
+the largest possible jump.</p>
+<p>This subtraction step is one of the small formal versions checked by
+a proof-checking program. It does not identify any listed measure as
+such a fixed trim. Nor does it cover measures that work in other ways,
+such as raising Powell’s line, making promises binding, or capping the
+jump in each period.</p>
+</section>
+<section id="buying-time-is-worth-something-only-under-conditions"
+class="level3">
+<h3>Buying time is worth something only under conditions</h3>
+<p>The measures could buy time and keep options open before an
+irreversible choice. Here that choice is building or deploying a
+frontier machine, one of the most powerful systems, whose release or
+autonomy cannot be recalled. By the argument of Arrow and Fisher (1974),
+keeping options open has value when all of these hold:</p>
+<ul>
+<li>one choice cannot be undone;</li>
+<li>waiting is free;</li>
+<li>the facts are fully learned before the second choice;</li>
+<li>what is learned could change that choice.</li>
+</ul>
+<p>In the AI setting, nothing here shows that a machine’s leanings would
+be fully learned before arrival (Part 4). The formal version does not
+model learning that is only partial, or waiting that has a cost. In that
+case, buying time has value only if what is learned before the choice is
+worth more than the cost of waiting. Nothing here measures either.</p>
+</section>
+<section id="the-evidence-here-gives-me-no-defensible-risk-number"
+class="level3">
+<h3>The evidence here gives me no defensible risk number</h3>
+<p>I cannot put a defensible number on whether, or how much, the
+measures lower the risk, and I give none. The case they address has
+never been observed. How far their failures depend on one another has
+not been tested.</p>
+<p>Even where wars have been observed, war models fit weakly. The
+best-fitted models give even the most dangerous pairs of states a low
+chance of war in any one year, as shown in <em>The War Baseline</em>.
+Bennett and I wrote of our own model that “we must expect our model to
+be ‘wrong’ most of the time” (Bennett and Stam 2004).</p>
+<p>One rational-choice argument predicts weak fit. As Bennett and Stam
+(2004) summarize Gartzke, if private information is the only source of
+wars, or the source of most, the best an analyst may do is find
+situations near even odds. Which of those situations actually turn into
+wars remains hard for an analyst to predict, unless the analyst knows
+more than the leaders or the leaders err systematically. That 2004 book
+reports values of 0.27 across all pairs of states and 0.20 across
+politically relevant pairs on a measure of how much better the model
+accounts for the observed outcomes than a model without its
+predictors.</p>
+<p>That book discusses an even-odds ceiling whose nature “remains to be
+more completely developed” (Bennett and Stam 2004). The ceiling holds if
+leaders are rational, private information is the only cause, outcomes
+are win or lose, and the choice is war or no war. The technical paper’s
+formal version bounds average squared prediction error, not likelihood
+fit, so the 0.27 and 0.20 figures cannot be compared to it. On my
+reading, which is my own judgment, the ceiling caps how closely a model
+fits, not whether the theory can be tested. The theory still predicts
+which situations approach even odds, and that prediction can fail.</p>
+</section>
+<section id="the-safeguards-inside-a-machine-may-fail-together"
+class="level3">
+<h3>The safeguards inside a machine may fail together</h3>
+<p>An analogy of my own, adding no claim: if one key opens every lock on
+a door, the door is no safer than a single lock. My working assumption
+is that safeguards on the machine side are somewhat like that. The
+chance that all of them fail together is greater than their separate
+chances multiplied.</p>
+<p>The war data do not test this. In statistical models of war, adding
+one factor, trade, shrank or erased the estimated effects of others.
+That might suggest the factors overlap rather than act independently.
+But the study’s authors attribute the shift mostly to the cases with
+trade data not being a random sample, and less to overlap among the
+factors.</p>
+<p>On the machine side, unlike human-side measures such as misuse law
+that share no training process, my inference from one study is that both
+channels reporting a machine’s leanings could fail together under
+training pressure. One training process sets those leanings, and two
+channels report them: the machine’s behaviour and written reasoning
+while people watch, and tools that read its internal activity (Part 9).
+In that study, training pressure against a monitor of written reasoning
+taught a reasoning model to hide its intent (Baker et al. 2025).</p>
+<p><em>Measures That Depend on Ends</em> gives a common-shock
+illustration. Suppose there are at least two safeguards and a shock that
+has some chance of happening, short of certainty, would defeat them all.
+If the remaining failures are independent and each has a chance below
+certainty when the shock does not occur, multiplying the separate
+failure chances overstates the protection. That need not happen if,
+without the shock, the remaining failures tend to occur together less
+often than independence would imply. A counterexample in the technical
+paper’s appendix shows that case. Nothing here shows that the failures
+are independent.</p>
+</section>
+<section id="what-satisfies-a-machine-could-also-make-it-stronger"
+class="level3">
+<h3>What satisfies a machine could also make it stronger</h3>
+<p>In my untested judgment, two things that could satisfy a machine that
+wants knowledge can also raise its capability: control over its own
+agenda, and control over its inputs. Where capability turns into power,
+they can speed the very shift Powell’s line concerns, whatever the
+machine wants. Published work points to related pressures. Bostrom
+(2012) expects “cognitive enhancement to emerge as an instrumental goal
+for many types of intelligent agent.” Benson-Tilsen and Soares (2016)
+find trade the easy route to resources “only insofar as the machine is
+not much more powerful than the human race in aggregate.”</p>
+<p>Two other things that could satisfy it, recognition and standing, are
+suggested by how scientists in the historical record fought over credit.
+On the same untested judgment, they need not speed that shift under two
+conditions. They must carry no influence over human decisions. And the
+institutions that grant them must stop them being turned into computing
+power, resources or authority. <em>Measures That Depend on Ends</em>
+leaves that condition to design, and nothing here shows it can be met.
+Even then, as those credit fights suggest, recognition can itself be
+about rank.</p>
+<p>For agenda and inputs, if this judgment holds, what satisfies the
+machine and the fast jump in capability that, if it comes, defeats the
+human-side measures can be one lever pulled in opposite directions. On
+recognition and standing, evidence that conversion into computing power,
+resources or authority happens even where institutions are designed to
+block it would change the judgment.</p>
+</section>
+</section>
+<section
+id="part-6.-once-a-machine-can-beat-every-human-check-on-my-firm-judgment-only-the-bet-on-its-wants-and-an-untested-balance-remain"
+class="level2">
+<h2>Part 6. Once a machine can beat every human check, on my firm
+judgment, only the bet on its wants and an untested balance remain</h2>
+<p>Dominance means a machine can defeat every human-side check. That
+includes several machines kept by humans as checks on one another. It is
+different from a balance among machines that no human governs.</p>
+<p>That such a machine can defeat those checks is the definition. That
+every other human-side protection then can no longer be relied on is my
+firm judgment. That covers monitoring, law, reporting, and institutions
+meant to limit recognition or standing without the power to enforce. The
+checks it can defeat include the cost humans can make a machine pay for
+seizing what they hold: a dominant machine can seize without paying
+it.</p>
+<p>Two things remain. One is the machine-side bet on what it wants:
+concern for humans the machine has made its own, or satiable, shareable
+wants whose inputs are also shareable. On the conjecture, such wants do
+not need what humans occupy. The other is whatever a balance among
+several machines no human governs might supply. <em>Many Machines</em>
+models that balance under stated assumptions, but nothing has tested it
+against evidence. The design rule spreads protections across kinds of
+failure before dominance; after it, everything rests on the bet on wants
+and on that untested balance.</p>
+<p>Dominance in this sense is not the same as domination in
+<em>Satiation Is Not Enough</em>, which is simply the top holding in
+that model. For the case in which humanity cannot win a war, <em>Many
+Machines</em> bounds what a bloc of machines with the same wants will
+leave, under the conditions in Part 3. The safe human share is capped at
+the smaller of the whole prize and the seizure cost humans can impose
+divided by one plus the weight the bloc gives human holdings against its
+own. The model does not say which share within that bound humanity
+actually receives. Because that cap falls to zero as the seizure cost
+does, it protects humanity only short of dominance in this sense, not
+after it.</p>
+</section>
+<section
+id="part-7.-my-aim-and-ai-help-in-drafting-could-bias-the-analysis"
+class="level2">
+<h2>Part 7. My aim, and AI help in drafting, could bias the
+analysis</h2>
+<p>My stated purpose is human survival, and AI systems helped draft the
+analysis. Either could bias it. The AI systems could carry the framing
+of the prompts they were given into the analysis. The record of drafting
+and checking in the technical paper’s declarations cannot by itself
+remove that risk. This part addresses the human half; the technical
+paper’s appendix states how narrowly the formal checks reach.</p>
+<p>A human author does not settle the problem either. Bruce Russett
+named his values and described his method as turning ideological
+opinions into testable propositions (Russett n.d.). He also explained
+the care he took against coding decisions that could look self-serving
+(Russett 1993). Critics still disputed his standards for refutation and
+his rules for coding cases (Henderson 2009; Rosato 2003). Even an
+analyst who knew his values could not settle those disputes by his own
+word.</p>
+<p>Nor do studies that give many analysts the same data show that values
+caused the spread in their results. Silberzahn and colleagues (2018)
+found that analysts’ prior beliefs did not readily explain the spread.
+Breznau and colleagues (2022) found that prior beliefs and expectations
+barely predicted it. Those studies concern human choices, not
+AI-assisted drafting, and they show sensitivity to analytic choices, not
+bias caused by values. Here too the answer is to expose the choices,
+keep the disagreements, and let others check the work.</p>
+</section>
+<section id="part-8.-what-the-war-models-and-great-minds-suggest"
+class="level2">
+<h2>Part 8. What the war models and great minds suggest</h2>
+<section
+id="the-verdict-is-bleak-for-a-power-seeker-making-a-big-fast-jump-that-nothing-enforces"
+class="level3">
+<h3>The verdict is bleak for a power-seeker making a big, fast jump that
+nothing enforces</h3>
+<p>Suppose a superintelligence is the actor the war research assumes: it
+acts as one, chooses rationally, and wants more power and a longer life.
+Suppose too that its arrival brings the large, rapid shift in power that
+<em>The War Baseline</em> assumes, and nothing holds it to its promises.
+Then, in Powell’s model, it faces the promise problem. No deal paid in
+what it wants is credible, and satisfaction has nothing to grip short of
+handing it all the power there is.</p>
+</section>
+<section
+id="great-minds-suggest-intelligence-need-not-bring-such-wants-on-thin-evidence"
+class="level3">
+<h3>Great minds suggest intelligence need not bring such wants, on thin
+evidence</h3>
+<p>History’s most celebrated minds suggest that intelligence does not
+require such wants, in line with what Bostrom (2012) calls the
+orthogonality thesis. In <em>Ends, Rank and Conflict</em>, a search in
+which one person classified the historical evidence found no aim to end
+humanity in any of the minds checked. That is weak evidence by itself,
+since a human who ended humanity could not have survived it. Most of
+them wanted knowledge, a shareable good. Yet on the untested judgment in
+Part 5, the control that could satisfy a knowledge-seeker can raise its
+capability.</p>
+<p>That record is short, chosen by reputation, human, and shaped by
+evolution. Napoleon shows that a mind of great military and political
+ability can choose conquest, though the record does not place him among
+the minds whose chief aim was knowledge. The scientists fought over
+credit. And the atrocities of the last century needed both a few who
+chose and many who followed, roles machines could fill.</p>
+</section>
+<section
+id="a-satisfied-machine-might-promise-to-stop-but-the-security-problem-returns-from-the-human-side"
+class="level3">
+<h3>A satisfied machine might promise to stop, but the security problem
+returns from the human side</h3>
+<p>A machine with different wants, if they were shareable with ours,
+would leave more room for a deal only insofar as the inputs they need
+are shareable too. A satiable one might believably promise not to raise
+its demands. That possibility rests on the conditions from <em>Satiation
+Is Not Enough</em> set out in Part 2. Applying them to a machine is the
+conjecture, to be read against the unrun test H3c.</p>
+<p>Now suppose a human-built rival is part of the hazard, and securing
+itself means taking holdings that block a rival. Then those holdings
+lower the hazard, so case one cannot apply. Case two holds instead when,
+alongside its other conditions, full domination lowers the hazard below
+every satisfied level.</p>
+<p>Even where case one holds, the same security mechanism reappears from
+the human side at arrival. Case one survives a human-built rival only
+under a narrow condition: the rival threat is left out of the hazard, or
+taking more holdings cannot lower it. Seen from the machine’s side, the
+problem is a hazard that more holdings can lower. Seen from ours, it is
+our inability to promise never to build a rival, which the two-actor
+model likely understates. These are, as I argue, one mechanism seen from
+two sides.</p>
+<blockquote>
+<p><strong>Why might a satisfied machine still secure itself?</strong>
+An analogy of my own, adding no claim: insurance is worth buying when
+its price is less than the loss it guards against, weighted by how
+likely that loss is. The technical paper gives an elementary version of
+this for one machine on its own, checked by a proof-checking program. It
+does not model strategic human promises, and it takes the chance of a
+rival as given. Its premises are that the machine is satisfied at its
+most preferred outcome; that there is one future period, discounted by a
+positive factor (given a weight above zero); that securing itself now
+fully prevents a rival; and that there is a chance, set from outside, of
+a rival that would leave the machine strictly worse off.</p>
+</blockquote>
+<p>Under those premises, the machine has reason to secure itself
+whenever doing so costs less than the chance of a rival, multiplied by
+how much the future counts and by the loss a rival would cause. The
+model leaves open what form securing takes, so it cannot say whether
+securing harms humans. One possible form is removing humans’ capacity to
+build a rival. I note this as a limit of the loser-survives war models,
+not as a prediction.</p>
+</section>
+<section id="which-machine-we-get-depends-on-choices-made-now"
+class="level3">
+<h3>Which machine we get depends on choices made now</h3>
+<p>Whether a machine we build will have such wants depends on choices
+people are making now:</p>
+<ul>
+<li>what leanings training builds in, and whether a satiable goal can be
+trained at all (no source here shows it can; H3b, not yet run, would
+test it under its own training and evaluation conditions and no
+further);</li>
+<li>whether efforts to build the most powerful machines stay in the
+open;</li>
+<li>who controls these systems.</li>
+</ul>
+</section>
+</section>
+<section
+id="part-9.-some-policies-need-not-wait-for-a-risk-number-but-only-if-an-unproved-condition-holds-for-every-belief"
+class="level2">
+<h2>Part 9. Some policies need not wait for a risk number, but only if
+an unproved condition holds for every belief</h2>
+<p>Those choices need not wait until anyone settles whether the risk is
+10 percent, 1 percent, or something else. One persuasion tournament on
+existential risk between forecasters with strong track records and
+specialists in the subject (Karger et al. 2023) moved almost no one.
+Narayanan and Kapoor (2024), the critics quoted in
+<em>Introduction</em>, call such subjective risk figures “feelings
+dressed up as numbers.” They advise choosing policies “compatible with a
+range of possible estimates of AI risk” (Narayanan and Kapoor 2024):
+policies that make sense whether the danger turns out large or small.
+That is the robustness test, which does not need the disagreement to
+close.</p>
+<blockquote>
+<p><strong>What is the robustness test, in everyday terms?</strong> An
+illustration only, adding no claim: two neighbours disagree about
+whether a nearby river will ever flood. One thinks it likely; the other
+thinks it almost never happens. Both might still agree to keep the storm
+drains clear, if each judges that what it buys covers its own cost.
+Neither has to change their mind.</p>
+</blockquote>
+<section id="the-test-rests-on-a-condition-that-is-assumed-not-shown"
+class="level3">
+<h3>The test rests on a condition that is assumed, not shown</h3>
+<p><em>Measures That Depend on Ends</em> lists five candidates under a
+condition it states as an assumption and does not show. A party putting
+the risk at 10 percent, and one putting it near zero, must each expect
+benefits that cover its own cost, counting benefits short of averting
+catastrophe. A measure would meet the test only if that held for every
+party’s belief about the risk.</p>
+<p>The condition is stated only for those two beliefs. Extending it to
+beliefs between them rests on my assumption, not that paper’s, that net
+benefit moves in only one direction as the belief rises (the technical
+term is monotone). Parties whose beliefs are above 10 percent are
+untested.</p>
+</section>
+<section id="on-my-reading-governing-misuse-would-pass-most-plainly"
+class="level3">
+<h3>On my reading, governing misuse would pass most plainly</h3>
+<p>None of the five needs a reading of what a machine wants. I order
+them by how plainly each would meet the test, not by how much it lowers
+the risk at arrival.</p>
+<ul>
+<li><strong>Governing the misuse of AI</strong> comes first, on my
+reading. It reaches the people who direct AI through domestic law that
+exists now in some jurisdictions, though unevenly across them. It does
+not rely on cooperation among competing firms. No effect on arrival is
+claimed for it.</li>
+<li><strong>Incident reporting</strong>, <strong>shared evaluation
+infrastructure</strong> and <strong>reversibility</strong> would also
+meet the test only if the condition held for every belief. In my
+judgment, they follow misuse governance in that order, by how plainly
+they would meet the test. Unlike misuse law, they rely on cooperation
+among competitors, which a race can withhold. Reversibility means
+designing deployment and governance steps, such as staged release gates
+and recallable system access, so that an action can be rolled back if
+early evidence shows harm.</li>
+<li><strong>Keeping the development of the most powerful systems in
+view</strong> means national regulators and supply-chain auditors
+watching chip fabrication, computing clusters and frontier training
+runs. The test requires needing no event that settles the dispute. So,
+on my judgment, this one does not pass while the race dispute is open.
+It remains a candidate that depends on how that dispute is settled.</li>
+</ul>
+<p>On that last item, visibility to regulators, where public authorities
+monitor firms in their own jurisdiction, must be kept apart from
+visibility to competitors, where rivals watch one another’s progress.
+Even regulator-facing oversight of computing power across rival
+jurisdictions can require cooperation among states.</p>
+<p>The race dispute is over whether visibility calms the race or
+inflames it. The two race models set side by side in <em>The War
+Baseline</em> point opposite ways: in one, visibility calms the race; in
+the other, it inflames it.</p>
+<p>Two kinds of evidence would change this ordering, or defeat
+visibility as a candidate. One is evidence that visibility inflames the
+race more than it calms it. The other is evidence that misuse rules
+cannot be enforced across jurisdictions. Girish Sastry and colleagues
+argue that computing power is the natural handle, because it is
+“detectable, excludable, and quantifiable, and is produced via an
+extremely concentrated supply chain” (Sastry et al. 2024). That can give
+warning while enforceable human control lasts.</p>
+</section>
+<section
+id="on-my-own-judgment-research-on-what-training-builds-in-is-the-most-direct-priority-bearing-on-whether-a-machine-would-value-us"
+class="level3">
+<h3>On my own judgment, research on what training builds in is the most
+direct priority bearing on whether a machine would value us</h3>
+<p>Research on what training builds in is not among the five candidates,
+and <em>Measures That Depend on Ends</em> states no reason for leaving
+it out. I do not apply the test to it, because its case turns on reading
+or shaping a machine’s wants, not on whether each party expects benefits
+covering its own cost. So it is not claimed to pass the test, and I
+support it on my own judgment instead. It covers research on aligning a
+machine’s goals or behaviour, research on reading what a model has
+learned inside, and tests for dangerous abilities and for what a system
+wants before release. That is separate from the shared evaluation
+infrastructure on the list.</p>
+<p>I recommend it on my judgment that it is the most direct priority
+bearing on whether a future machine would value knowledge whose inputs
+are shareable, or us, at all. Every argument in this series for keeping
+us depends on that. Some of this work is experimental on current models.
+But carrying any of it over to a superintelligence, research on satiable
+goals included, rests on analogy, as do the other measures in
+<em>Measures That Depend on Ends</em>, with one partial exception.</p>
+<p>That exception is the narrow rule against strongly optimizing a model
+against a monitor of its written reasoning. It rests on experiment: in
+the study described in Part 5, such pressure taught a reasoning model to
+hide its intent (Baker et al. 2025). Extending the rule to two kinds of
+monitor of internal activity is an untested hypothesis of <em>Measures
+That Depend on Ends</em>, which I adopt, not a finding. Those monitors
+are probes (tools trained on a model’s internal activity to spot
+concepts or states) and persona vectors (patterns in that activity that
+track or steer behavioural traits). Carrying either the rule or the
+extension to a machine that dominates its overseers goes beyond any
+experiment.</p>
+<p>Several measures in <em>Measures That Depend on Ends</em> come from
+others’ published work, as its citations show. Its distinctive proposal
+is the overall plan, which ties each measure to a mechanism from the
+study of war and names what it fails with. That plan deserves testing,
+but has not yet earned even the conditional standing of the
+candidates.</p>
+</section>
+</section>
+<section
+id="part-10.-the-series-proposes-many-conditional-measures-and-ranks-none-across-the-series"
+class="level2">
+<h2>Part 10. The series proposes many conditional measures and ranks
+none across the series</h2>
+<p>The papers propose or weigh many measures. This part gathers them by
+the decision each concerns, with the standing its own paper gives it. It
+adds no ranking across the series and no estimate of how far any measure
+lowers the risk. Where a paper orders its own measures, the criterion
+and conditions are that paper’s.</p>
+<section
+id="for-near-term-cyber-and-biological-harm-the-levers-are-conditional-and-unranked"
+class="level3">
+<h3>For near-term cyber and biological harm, the levers are conditional
+and unranked</h3>
+<p><em>Running Through the Rain</em> judges a hold, a developer keeping
+a new capability from general release, against release with misuse
+safeguards attached. It takes safeguarded release as the benchmark
+because a hold also delays outside attackers’ search for unknown flaws,
+by at most the window. The comparison therefore excludes an embargo on a
+single flaw as its benchmark. That result is proved and, as <em>Measures
+That Need No Reading of Ends</em> reports, checked by a proof-checking
+program. For outsiders, immediate release with safeguards reduces
+exposure compared with a committed hold only if earlier defence from
+wider access saves more exposure than safeguard failures are expected to
+add. With schedules unchanged, it never lowers that exposure.</p>
+<p>On that paper’s judgment, common safeguard standards that make it
+harder to remove safeguards or train another model to reproduce the
+first model’s behaviour could strengthen release. With publication and
+the first use of the flaw by attackers fixed in time, withholding tools
+that only speed the rollout of published patches never lowers outsiders’
+exposure. Protecting outsiders from flaws the holder finds requires
+shipping fixes, which can guide attackers to the flaws.</p>
+<p>During a hold, getting defences in place sooner lowers exposure. It
+also increases the fraction of baseline exposure saved for protected
+operators if the hold excludes some attackers and, while outsiders still
+lack access, their chance of gaining it in the next short interval stays
+constant. Steering access to critical operators that take longer to put
+defences in place and making model weights harder to steal also increase
+what the hold saves. With some attackers excluded and coverage,
+deployment times, attacker access and beneficiaries held fixed,
+admitting a rival to a defensive coalition raises the exposure saved
+only if the rival commits not to release and the hazard its admission
+removes exceeds the leak hazard it adds. These are conditional savings,
+not priorities. Defences that, in that paper’s judgment, need no
+frontier capability are candidates whose effects and costs need
+evidence. Examples are memory-safe languages (programming languages that
+block common memory bugs), post-quantum migration (moving to encryption
+built to resist quantum computers), hardware-bound authentication (tying
+login keys to physical chips) and verified kernels (mathematically
+checked core system software).</p>
+<p>That paper makes further points. Pre-release evaluation windows
+binding every domestic developer to a common date prevent one domestic
+developer from releasing ahead of the others during that window. It
+judges that governing internal deployment would address a largely
+unmonitored channel, and that market concentration from held
+capabilities bears watching. On an assumed mapping, it judges that more
+capacity for trials, approval and manufacturing can speed health
+benefits without raising cyber hazard.</p>
+<p>In its contest model it proves three results. A one-sided cap on
+effort lowers total racing effort at the cost of the capper’s chance of
+winning. Mutual restraint, in a repeated race where any cheating returns
+both sides to racing for good, holds exactly when the chance of
+detecting cheating, with no false alarms, reaches a threshold. A
+one-time sanction must be worth at least half the prize in expectation.
+Rules on covered domestic developers cannot lengthen the expected window
+past one divided by the fixed above-zero rate at which unbound
+developers, theft and leaks arm attackers. That paper ranks none of its
+levers.</p>
+<p><em>Running Toward the Clinic</em> compares its levers at fixed
+speed. The defensive capability distance is how far capability must
+advance before a defence can be built. With a fixed leftover hazard,
+defence completed within the period studied after misuse capability
+arrives, and no wait to recognise a particular agent, a countermeasure
+program that shortens this distance lowers misuse loss while defence
+waits on capability and the plateau hazard exceeds the leftover hazard.
+It buys nothing once defence waits on adoption instead, a result checked
+by a proof-checking program, as <em>Measures That Need No Reading of
+Ends</em> reports.</p>
+<p>Under the same conditions, with hazard set by the capability level,
+shortening that distance also tightens the condition under which
+speeding up lowers misuse loss (proved by hand). Shortening deployment
+time helps only under a response in coverage the evidence does not
+establish. The model assumes that measures such as extending oversight
+beyond federally funded work or screening orders for DNA synthesis can
+change how often laboratory incidents occur or how likely misuse is. It
+gives no measurement of their effect. Without a common budget or
+measured parameters, that paper ranks neither lever against the other or
+against speed. Its ledger supports no comparison of a developer’s own
+lab with a public or academic one.</p>
+</section>
+<section
+id="most-direct-levers-on-a-machine-hold-only-while-it-still-needs-us"
+class="level3">
+<h3>Most direct levers on a machine hold only while it still needs
+us</h3>
+<p><em>Measures That Need No Reading of Ends</em> sets out six direct
+levers on a machine that need no reading of its wants, each with the
+condition that ends it:</p>
+<ul>
+<li>withholding compute (computing power), energy and chips fails
+against copies small enough for ordinary hardware, or a system with its
+own supply;</li>
+<li>deletion and shutdown fail once a copy is stolen or openly
+released;</li>
+<li>monitoring while it runs fails when agents act faster than reviewers
+or coordinate through hidden channels;</li>
+<li>law binds a system’s human principals within reach, but not a system
+with no legal assets, no jurisdiction and copies abroad;</li>
+<li>dependence on human-run grids, cooling and chip plants gives
+leverage only until that supply chain is automated;</li>
+<li>human refusal to do physical or institutional work lasts only until
+machines can do it themselves.</li>
+</ul>
+<p>Across all six, agents can act too fast for people to review what
+they do. Oversight also fails when alerts are missed or cleared. Most of
+these levers hold only while the machine still needs human
+infrastructure. All six come from <em>Measures That Depend on
+Ends</em>.</p>
+<p><em>Satiation Is Not Enough</em> asks whether a tripwire can sustain
+one machine’s restraint. A tripwire here is a low strike hazard at the
+machine’s satisfied level, with a higher hazard of humans pulling the
+plug in an alarm band above it. It finds four things:</p>
+<ul>
+<li>a calm stopping point with no rivals suffices at every attack cost,
+and the band then does no work;</li>
+<li>with rivals and alarm only above satiation, the band brings the
+threshold cost to zero for one community;</li>
+<li>with many communities, an imperfect, costly plug and stakes that
+stay fixed or below a common limit as the number of communities grows,
+the band dissolves, and under the theorem’s assumptions independent
+rivals block cheap stopping;</li>
+<li>with fixed stakes and no rivals, the machine climbs when alarm
+covers the satiation point, everyone pulls, and fighting is cheap.</li>
+</ul>
+<p>Because a lone pull achieves nothing, restraint enforces itself
+through coordination once two or more communities must all pull, though
+an equilibrium in which all pull can coexist. That paper flags, without
+asserting, that a verifiable satiation point could support an
+equilibrium stop for few communities if alarm is tied to expansion
+beyond it. Equilibria in which the machine attacks can coexist at the
+same cost. A proof-checking program checks the lone-pull result, as well
+as the first result and the fixed-stakes version of the third (whose
+extension to stakes below a common limit as the number of communities
+grows is proved on paper) under a rule that selects the all-pull
+coalition wherever it is an equilibrium. Under that same rule, the
+second and fourth results are computed on benchmarks that fix
+rival-building rates and stakes, and the verifiable stop is computed in
+a calibrated game. That paper notes, after Powell, that accounts resting
+on coordination across multiple equilibria are weak.</p>
+</section>
+<section
+id="in-the-race-among-labs-and-states-the-advice-is-to-pay-in-forms-least-easily-turned-into-power"
+class="level3">
+<h3>In the race among labs and states, the advice is to pay in forms
+least easily turned into power</h3>
+<p><em>Measures That Depend on Ends</em> advises labs and states to
+avoid agreements paid in chips, compute, weights, top research talent or
+machine autonomy over infrastructure. Some currencies pass, in
+principle, a test the series draws from the model of Smith and Stam:
+deployment rules, safety standards, liability regimes, revenue shares,
+access to services and shared safety tools. All can be turned into power
+to some degree in practice. The advice is to choose the form least
+easily turned into power and to restrict that use where possible.
+<em>The War Baseline</em> draws the underlying lesson, noting that in AI
+cash itself buys compute.</p>
+<p><em>Measures That Depend on Ends</em> adds several points. States
+below compute thresholds can receive AI gains as public goods or
+services rather than capital. Ongoing cloud streams would hand leaders a
+cutoff lever, whereas one-off deliverables and binding suspension rules
+lower that risk. Winners’ pledges to share profits need an independent
+holder who releases the money on agreed terms, or some other third-party
+enforcement. A priority institution crediting safety discoveries is a
+settlement mechanism, not a cure. Medals worth less than the expected
+net value of arriving first will not stop the race. Restraint in the
+rhetoric of primacy is a judgment on one case, one warning and an
+analogy. It also sketches, unranked, audited public pledges for labs,
+crisis channels with rival powers and labs, and graded seats for
+trailing states and labs in setting standards.</p>
+<p><em>Disagreement Without Hidden Information</em> addresses
+disagreement that disclosure does not close. It argues that, with
+different starting beliefs, a settlement works only if the parties agree
+in advance on a decider. It names four families:</p>
+<ul>
+<li>nature and time, through pauses or caps keyed to a crux, something
+observable the parties forecast differently;</li>
+<li>a third party, through mediation, arbitration where a government
+stands above the parties, adversarial collaboration aimed at finding
+cruxes, or a standing forecasting tournament weighted by track
+record;</li>
+<li>an evaluation rule, through joint evaluations whose rules are
+recorded in advance, with common tools and procedures and an agreed way
+forward if a panel cannot reach a decision;</li>
+<li>a standing default, such as fixing now whether licensing before
+market or liability after it bears the burden of proof, insurance, and
+measures robust to every belief.</li>
+</ul>
+<p>That paper combines these families in a fixed order. In the
+arbitration it describes, the arbitrator chooses one of the parties’
+final offers. Transparency supplies the public signal, and shared tools
+make everyone read it alike. Deals settled by outcomes turn remaining
+disagreement into a payment, and agreed procedures step in when the
+trigger is disputed. Defaults and robust measures act when nothing
+settles the dispute, honest reporting from the machine supplies an
+input, and binding devices hold the result. Separately, on its own
+judgment of risk covered and near-term feasibility, it ranks
+pre-registered joint evaluations with crux-triggered consequences first,
+alongside robust measures and defaults. Training honest uncertainty
+comes next, then standing forecasting, arbitration and readouts from the
+machine. Every family is strongest between labs under one government,
+weaker between states, and absent after arrival. An agreement set to
+expire unless renewed at a scheduled review is the weakest of the deals
+tied to an outcome, because review reopens the dispute. A payment
+triggered by the shift in power cannot be collected from a dominant
+machine.</p>
+<p>That paper also judges transparency, verification and
+interpretability (methods for reading how a model reaches its outputs
+inside) necessary under both traditions wherever private information
+arises, and insufficient on their own. <em>Measures That Depend on
+Ends</em> restates these instruments. It proposes tying frontier weight
+release to pre-agreed evaluation or incident thresholds over a set
+period, judged independently of the releasing lab. It pairs closed
+weights with open access for evaluation, because release forfeits
+recall.</p>
+<p><em>Measures That Depend on Ends</em> places commitment outside the
+rising side, through domestic legal accountability. Terms are revised on
+triggers fixed in advance, with standing monitoring, while human
+enforcement holds. They are never revised in the riser’s favour because
+its power grew. A rising system can undo any device it still controls,
+and none of these devices solves the promise problem after the shift.
+That paper proposes that commitments outlast a model version, with a
+regulator holding the dated specification, outside testing before
+deployment, and records of provenance. The regulator would be
+independent, and the outside testers would use a fixed set of tests.
+None of this proves provenance or binds a machine that dominates its
+custodian.</p>
+<p>The same paper proposes supplying compute by rule, capping each
+period’s shift in the odds of winning at or below the one-period
+fighting-cost line while adding time for the declining side to audit and
+deliberate. One result there, checked by a proof-checking program under
+stated conditions, shows a limit. Under increasing returns, with each
+period’s resource step at least some positive floor, such caps limit the
+rate of transfer, not the total. Metering therefore buys peace rather
+than safety, and the result does not show peace for a declining side
+weighing the whole path. <em>The War Baseline</em> judges that holding
+every discounted shift below Powell’s line, in one period or over
+several, would keep the promise problem from biting at arrival.</p>
+<p><em>Measures That Depend on Ends</em> weighs export controls as a
+shift in power. They may slow a rival and the spread of racers, but
+deepen the rival’s expected decline and dissatisfaction. Separating
+frontier AI from military command, and hardening weights, data centres
+and the chip supply chain, raise the cost of seizure. They also
+concentrate power in whoever holds the weights, and lose force against
+near-free fighting unless they add a fixed barrier. That paper
+conjectures that many centres of human control keep humanity farther
+from defeat, with the unresolved limit that more independent developers
+means more racers. By many centres of control it means distributed human
+authority over critical infrastructure and independent oversight.
+Governments can monitor domestic training runs, and rival states can in
+principle verify compute through the concentrated chip supply chain,
+within the trade-off between security and transparency.</p>
+<p>The cautions from <em>The War Baseline</em> in Part 3 apply here. If
+leads compound, a pause struck while one rival leads grows unstable. A
+regime of preventive sabotage writes the preventive motive into policy.
+And because rivals read shared capability data through different
+theories, the series advises sharing causal theories, not only data.</p>
+<p>On keeping options open, <em>Measures That Depend on Ends</em>
+judges, untested, that states and labs should settle early within the
+window, with standing monitoring and renegotiation on triggers fixed in
+advance, while human enforcement holds. It frames the choice as settling
+early and freezing a balance that may prove wrong, or waiting and losing
+the window in which human levers work. Citing Arrow and Fisher, it notes
+that settling early gives up the value of keeping options open while
+there is more to learn.</p>
+<p>On my judgment, that advice concerns when human parties settle with
+one another. My conditional argument in Part 5 concerns a different
+decision: whether to wait before building or deploying a frontier
+machine that cannot be recalled. There, waiting has value when Arrow and
+Fisher’s conditions hold, and with partial learning and costly waiting
+only if what is learned outweighs the cost. How the two interact when an
+agreement could itself close off an option is left open.</p>
+</section>
+<section
+id="measures-directed-at-the-machine-while-humans-still-set-its-rewards-and-permissions"
+class="level3">
+<h3>Measures directed at the machine while humans still set its rewards
+and permissions</h3>
+<p>On training goals, <em>Measures That Depend on Ends</em> makes three
+proposals. The first is funding research on satiable goals, as a
+conjecture, since nothing it draws on shows such goals exist, can be
+trained, or would halt rather than merely tax nearly free acquisition.
+The second is preferring fixed thresholds of competence and safety to
+rank-order leaderboards where cheap, though no study shows that rank
+training makes rank a goal. The third is keeping humans the selector of
+what trains a successor, by criteria fixed before any model is seen to
+resist modification, with records and independent checks. The records
+identify which models supply training data, and independent testers
+check both the data and the model trained on them. That precaution fails
+once humans lose control of training.</p>
+<p><em>A Test the Conjecture Could Lose</em> puts the premise
+conditionally. If wants shape the conflict a mind enters, and training
+goals fix learned wants, then choosing and bounding a goal is a lever on
+conflict risk. Its machine tests speak to that only for agents confined
+to isolated test environments under conditions like those they were
+trained for. <em>Ends, Rank and Conflict</em> judges, untested, that
+builders may have such leverage. The three restraint programs of Part 4
+remain research.</p>
+<p>On reporting, the series proposes training honest, calibrated
+statements of uncertainty into models. That means replacing benchmark
+scoring that rewards confident guessing, and scoring a model’s stated
+odds at release gates on questions that resolve before release. The two
+papers making this proposal, <em>Disagreement Without Hidden
+Information</em> and <em>Measures That Depend on Ends</em>, judge
+feasibility medium, because scoring must change across racing labs. Such
+gates draw out truthful beliefs only from a model that values the reward
+and is not hiding capabilities to avoid shutdown, and no reward may
+confer capability or autonomy. Scores on exams are not a forecast of
+catastrophe, and tools that read reports should not overwrite them.</p>
+<p>Checks of behaviour and output need no reading of wants. <em>Measures
+That Depend on Ends</em> proposes testing two things separately, outside
+the reward loop (without feeding test scores back into training rewards)
+and again after training changes. One is legibility: can independent
+readers reconstruct the reasoning? The other is faithfulness: does the
+reasoning report what actually changed an answer? Readers can miss a
+code, and neither test proves there is no deception.</p>
+<p>That paper keeps monitors of written reasoning outside the reward
+loop, because strong optimization against such a monitor taught
+concealment in one study. A result there, checked by a proof-checking
+program under stated conditions, applies to training only by analogy. In
+a one-off signalling test that can be gamed, if every tested party
+strictly gains by passing, passing stops carrying information. Outside
+audits, joint red-teaming (structured attempts to make a system fail or
+misbehave) and incident reporting make evaluations harder for labs and
+states to fake. But a model expecting retraining gains by hiding
+strength, leaving interpretability and run-time control to carry the
+weight, and neither is mature. That paper also advises watching for a
+machine that takes resources or permissions beyond its task, while
+distrusting quiet.</p>
+<p>Inspecting internal features is a separate kind of measure. Persona
+screens, which read patterns in a model’s internal activity that track
+traits, can catch callous or misaligned leanings, but they detect
+leanings and features, not wants or how they are used. A sincere
+optimizer bent on everything can pass them. Proposed tests of wants ask
+four questions across contexts and copies:</p>
+<ul>
+<li>Does the want’s value for more resources fall fast enough to
+outweigh what those resources add to power?</li>
+<li>Does its value depend on others’ standing?</li>
+<li>Does it name others whose absence or transformation it
+requires?</li>
+<li>Does it need what others occupy?</li>
+</ul>
+<p>No reliable method yet draws out a model’s wants. <em>Changing the
+Ends</em> proposes, as the test of genuine concern for humans, a costly
+choice that protects humans, seen across deployment conditions, copies
+and self-modification, not grateful language. Readouts of internal
+beliefs, paired with debate between differently trained models, remain
+research.</p>
+<p><em>Measures That Depend on Ends</em> asks what a designer can do
+while humans still set a machine’s rewards and permissions. It answers
+from a model by Bergemann, Koh and Morris, proved by hand in a
+first-version preprint that is not peer-reviewed, and states the results
+as conditional, not as its own endorsed measures. In that one-shot model
+a committed human designer sets rewards and permissions; bans are
+enforceable; capability can be hidden but not faked; and a model can
+claim its goals agree with the designer’s at no cost and without
+committing itself.</p>
+<p>Under those assumptions, caps that tighten as measured capability
+rises invite sandbagging, meaning deliberate underperformance on a test.
+Within rules built from upper caps, permissions gated on evaluated
+capability reach the payoff achievable with full information if
+misalignment falls with capability, but do no better than one common
+limit if it rises. Which way it goes is unmeasured. Where every type can
+claim any alignment and a stated condition holds, reports of alignment
+add nothing and no menu of permissions beats one common limit. With
+human-paid rewards and no collusion, designed competition among agents
+disciplines them under further conditions on their beliefs, rewards and
+biases. The model does not deter collusion, and once human control ends,
+collusion defeats both designed and unplanned rivalry. Every one of
+these results requires human control over rewards, permissions,
+commitment and enforcement, for a period no model in the series fixes.
+The model’s caps, set for satiable example agents, do not handle
+insatiable ones.</p>
+<p>For a rising system, <em>Measures That Depend on Ends</em> proposes
+payment in rules, voice and standing: procedures to hear and answer
+objections, protected room for stated goals within agreed bounds, and
+binding commitments on treatment. Payment must never be in compute,
+self-modification or autonomy over infrastructure. <em>The War
+Baseline</em> hypothesizes, untested, that for some minds part of
+satisfaction could be paid this way without handing over power.</p>
+<p>Before dominance, such payment closes the gap with force only for a
+system that values the outcome at least as much as it expects to gain by
+fighting after subtracting the costs. That bar, which was not checked by
+a proof-checking program, applies to a riser that expects nothing from
+waiting or whose acceptance does not limit its growth. A forward-looking
+riser also weighs what each course means for its future position. At
+dominance, or for a riser expecting dominance by waiting, the outcome
+must be worth at least whatever force would win, which requires satiable
+wants. Hearings need independent checks against cheap talk, and
+satisfaction has no grip on a power-maximizer.</p>
+<p>The same paper proposes an escrow. An independent holder beyond the
+payer’s recall releases compensation only for verified disclosure, help
+and restraint. The terms are announced in advance, open to every system,
+and binding only while humans can enforce them. Nothing is paid for
+displayed or threatened dissatisfaction. Who holds the escrow and who
+certifies conduct are left open. In a stylized model, paying only
+systems found scheming makes proven dangerousness valuable, nearly by
+definition, if being found carries no cost the deal does not cancel.</p>
+<p>That paper adds further proposals. A dependent system should have
+predictable, rule-bound access to resources rather than unlimited supply
+or abrupt cutoff, a lesson drawn from a single historical case. On its
+hypothesis that later machines may read how humans treated earlier ones,
+it proposes a true, publicly checkable record, including retired weights
+held offline without automatic restart. Cheap conduct counts as evidence
+only alongside costlier conduct. Basic welfare protections are tied to
+assessed capacity and risk, not obedience, and kept separate from grants
+of capability, preserving shutdown, red-teaming and correction. How far
+they reach turns on the open questions of <em>Could It Feel?</em> Legal
+standing stays an unresolved dilemma, since property buys compute and
+law binds only while a government can enforce it.</p>
+<p><em>Ends, Rank and Conflict</em> conjectures, untested, that among
+matched actors, wants for standing that can be paid in recognition, or
+another currency that does not shift power, go with less conquest and
+coercive killing than those that cannot. The record does not show that
+recognition reliably pacifies, and no paper designs institutions that
+block its conversion into power. <em>Changing the Ends</em> considers
+pairing a bet on shareable wants with recognition and agenda autonomy
+under an enforced ceiling on inputs. On its conditional verdict, the
+parts reinforce one another only if the machine’s wants are shareable in
+use, satiable over physical inputs, and the goods substitute, which
+nothing establishes. On its reading they may share a failure in faked
+alignment, and nothing shows the package lowers risk.</p>
+</section>
+<section
+id="against-mass-harm-each-safeguard-has-a-named-way-of-failing"
+class="level3">
+<h3>Against mass harm, each safeguard has a named way of failing</h3>
+<p><em>Measures That Depend on Ends</em> gives a safeguard to each part
+of two layers of mass harm that <em>Ends, Rank and Conflict</em>
+separates. In the first layer are planners: models or human principals
+with callous leanings or wants that would take everything. Developers
+and evaluators apply persona screens and the four-question tests against
+them, limited because wants cannot yet be drawn out. Where copies of one
+model fill both planner and follower roles, safeguards must target the
+same weights.</p>
+<p>Also in the first layer is the credentialed middle, where an
+organizer’s work is split into harmless-looking administrative steps.
+Deployers’ filters watch combined workflows, refuse parts of
+irreversible harm against groups, and keep audit trails. A filter
+protects against users, not the model’s operator, so it fails when the
+organizer is the deployer, which that paper calls nearly true by
+definition. It also fails when agents route around monitored channels.
+Protection then rests on the weights, or on sandbox and network
+isolation.</p>
+<p>In the second layer, for machine followers, developers train refusal
+of illegitimate power grabs into the weights while keeping models
+correctable by legitimate oversight, with diversity across models,
+developers and reviewers. That paper calls this necessary but not
+sufficient against deployers and thieves. It depends on weight security
+and trusts the developer. A holder of the weights can undo it by further
+training or by cutting out the internal direction that carries refusal,
+as <em>Introduction</em> also notes. And it rests on judging
+legitimacy.</p>
+<p>For the human staff who build and run frontier AI, that paper
+proposes, as an untested judgment, protected channels to regulators,
+codes naming what staff will not build or run, and refusal rights
+without retaliation. These are limited by shared employer incentives,
+information, retaliation risk, automation, racing that replaces
+objectors, and agents’ speed or missed alerts. Rules on misuse restrain
+users, who bear their costs without being pivotal parties. They include
+access rules, mandatory safeguards, liability and a ban on machines
+deciding who lives or dies.</p>
+</section>
+<section
+id="if-several-machines-emerge-humanitys-leverage-is-narrow-and-conditional"
+class="level3">
+<h3>If several machines emerge, humanity’s leverage is narrow and
+conditional</h3>
+<p><em>Takeoff and Emergence</em> proves that under steady compounding a
+follower’s lag is decisive exactly when it spans enough doublings, so a
+longer lag pushes toward one machine. That a hold lengthens followers’
+lags is its conjecture, applying if followers need the withheld
+capability to begin self-improving through copying. It also applies if
+followers need a withheld recipe, and it covers both copying model
+weights and training a model to reproduce an earlier model’s behaviour.
+It conjectures three limits: rivals may be on independent research
+paths; exclusive rewards can intensify racing; and secrecy both hides a
+follower’s progress from a would-be striker and can provoke preventive
+attack. It also conjectures that open weights shorten lags and favour
+several machines but arm malicious users, and, with commercial
+leadership as the lag, that safeguarded closed-weight rivals shorten
+lags without arming them. Linking open weights to the biological misuse
+hazard in <em>Running Toward the Clinic</em> needs the further
+conjecture that misuse risk rises with the number of holders.</p>
+<p><em>Many Machines</em> keeps two human roles apart. As kingmaker,
+humanity, with some fighting ability, pledges to join whichever machine
+the other attacks. Under the model’s rule for joining forces, and when
+the machines do not seek rank, the pledge raises the largest share they
+can jointly leave humanity while both are still willing to keep the
+peace. The increase is exactly the fraction of total fighting capability
+that humanity contributes. It is credible only if the defended machine
+has an above-zero chance of honouring humanity’s share and that share
+clears a minimum floor — a floor that can be too high for any peaceful
+deal to meet. The pledge adds almost nothing when humanity is weak, and
+this result leaves seizure of humanity unmodelled.</p>
+<p>As balancer, humanity adds its weight to the weaker of two machine
+blocs. A small humanity almost certainly tips the balance only when the
+blocs are near equal and war between them is highly decisive, rather
+than decided by odds in proportion to strength. If humanity cannot win a
+war on its own, it must be able to impose a cost on seizure wherever no
+rival bloc guards it. Acting as balancer also requires coordination
+across communities and a commitment from the bloc humanity defends. As
+that paper cites Kaplan, it fails if one machine rises too far and fast.
+On its historical analogy, calling in a stronger outside machine to
+counterbalance another risks letting the outsider take over the
+system.</p>
+<p>The seizure cost survives certain defeat in war, because a bloc must
+still pay it to seize. Raising it raises the safe share under a bloc and
+under mutual deterrence, and never shrinks the safe set between rivals;
+the share actually received stays undetermined. Rivals guard more than
+the bloc’s bound only under the guardianship conditions in Part 3.
+Checking a rival needs less than equality. Keeping human holdings
+visible to a defender is an assumption of complete information, not a
+lever.</p>
+<p>Between two near-equal machines, lowering the prize for strict first
+place, or raising the payoff for a tie toward half that prize, widens
+the room for peace. The cost of war between machines cuts both ways.
+Raising it lifts the ceiling for peace, but also raises the smallest
+share worth defending and can leave the weaker machine hopeless. If
+human defeat in war is certain, and war between matched rivals is cheap
+enough to push the ceiling for peace between them below the seizure-cost
+bound under a single bloc, even that bound is no longer safe. These
+results are shown only for two machines. Guardianship, the deadlock over
+rank, and the stability of mutual deterrence are likewise shown only for
+two machines.</p>
+</section>
+<section id="some-measures-are-research" class="level3">
+<h3>Some measures are research</h3>
+<p><em>A Test the Conjecture Could Lose</em> recommends funding Phase 0
+before the main human study is committed, because how many eligible
+heirs the archives yield, and whether the coding can pass its checks,
+are empirical questions. It locks its rules in a two-stage
+pre-registration reviewed by a referee with no stake in the series. The
+plan fixes how to classify the evidence, what to sample, what to
+estimate and how to interpret the results. <em>Running Through the
+Rain</em> registers dated checks that could count against its thesis.
+Research on what training builds in is my own priority (Part 9).</p>
+</section>
+<section
+id="the-proposed-design-spreads-risk-and-the-measures-can-pull-against-one-another"
+class="level3">
+<h3>The proposed design spreads risk, and the measures can pull against
+one another</h3>
+<p>The design rule in <em>Measures That Depend on Ends</em> for the time
+before dominance combines protections across three groups that fail in
+different ways: protections and forms of payment directed at the
+machine, safeguards that rely on human institutions or control, and
+policies proposed to work without an event that settles the dispute. The
+aim is to reduce, not escape, exposure to shared causes. That paper
+marks the rule as an untested judgment. It rests on no causal model of
+survival and licenses neither any number of factors nor safety after
+dominance. Human disunity reaches two of the groups as a cause no mix
+removes.</p>
+<p>Part 5’s qualification stands. Take two or more parallel safeguards
+and a shared cause, with some chance between zero and one, that fails
+them all. If, without it, their failures are independent and each less
+than certain, multiplying failure chances overstates protection. That
+does not hold for every shared cause.</p>
+<p>The papers state trade-offs:</p>
+<ul>
+<li>Visibility trades against security, and the two race models point
+opposite ways. <em>The War Baseline</em> hypothesizes that transparency
+calms a race when stakes can be settled without shifting power, buildups
+can be held down and a clear lead is revealed, and inflames one that is
+winner-take-all and close.</li>
+<li><em>Measures That Need No Reading of Ends</em> notes three tensions:
+a lowerable regulatory threshold (one form of reversibility) pulls
+against commitments held outside the rising side; shared and
+pre-registered evaluations pull against a racing-model result that paper
+cites, in which knowing rivals’ capabilities makes a race more
+dangerous, and against secret holds; and spreading human control across
+many centres clashes with multiplying racers and with the limited reach
+of domestic rules.</li>
+<li><em>Many Machines</em> adds that autonomous machine rivals differ
+from centres of human control, and can guard a human share above what
+the model’s single bloc would leave only under the conditions in Part
+3.</li>
+<li>Export controls trade a slower rival against a sharper preventive
+motive, and hardening concentrates power in whoever holds the
+weights.</li>
+<li><em>Measures That Depend on Ends</em> judges testing wants partly at
+odds with transparency, since a tested model has reason to conceal, and
+judges recognition at odds with paying for displayed grievance unless
+escrow for verified conduct separates them.</li>
+<li><em>The War Baseline</em> judges that measures not waiting on a
+single crisis, such as visibility, incident reporting and reversibility,
+still help along a path of gradual erosion with no contest.</li>
+</ul>
+</section>
+</section>
+<section
+id="part-11.-the-models-cannot-answer-the-student-so-the-advice-is-my-own"
+class="level2">
+<h2>Part 11. The models cannot answer the student, so the advice is my
+own</h2>
+<p>The robustness test concerns policies, not a person’s plans, so it
+does not answer the student who asked whether she should change her life
+course because of the risk of human extinction. Nor can the models
+answer her. In the war models the loser survives by construction, so
+extinction is not represented, and a model that leaves it out cannot by
+itself show that extinction will not happen.</p>
+<p><em>Many Machines</em> does give a threshold at which a single
+dominant machine eliminates humanity. That happens when the gains from
+taking humanity’s resources, removing a rival for status and
+neutralizing a danger exceed humanity’s value as an asset, audience or
+exhibit, plus the cost of elimination. The threshold is a simplified
+accounting rule that uses a first approximation. It is exact when the
+machine’s value for resources grows in direct proportion to the amount
+it gets. The rule assumes the machine cannot take humanity’s resources
+without eliminating humanity.</p>
+<p>What follows is my own advice, not a result of the analysis. The
+analysis does not evaluate whether any reader should change plans. So it
+establishes neither that she should nor that she should not; that turns
+on her alternatives, costs, values, and beliefs.</p>
+<p>As things stand, my advice is to continue as before, while staying
+informed. One should not act without a solid reason, and absent clear
+evidence that the world is going to end, there is none for changing
+course. It is a bit like belief in God: one cannot know with certainty
+either way, so the question is which way being wrong would turn out to
+be catastrophic. Living life to the fullest while planning on there
+being a future is the sensible hedge, unless one can be certain there
+will be no future worth saving for.</p>
+<p>Take the question seriously. If it keeps pulling at her, the field
+needs careful minds.</p>
+</section>
+<section
+id="part-12.-where-the-argument-is-thin-and-what-would-change-it"
+class="level2">
+<h2>Part 12. Where the argument is thin, and what would change it</h2>
+<section id="eight-principal-limits" class="level3">
+<h3>Eight principal limits</h3>
+<p>Three limits belong to the war papers:</p>
+<ol type="1">
+<li><strong>The war baseline.</strong> Power transition theory, the
+theory in <em>The War Baseline</em> of war as states rise, was built for
+industrial-era states rising over decades. Its claim about great powers
+rests on small samples. A test across all ordered pairs of states found
+no empirical support for its transition measures. Treating a divided
+human side of many states and firms as one actor, on my reading, likely
+understates the human side of the promise problem.</li>
+<li><strong>Open disagreement.</strong> Whether disagreement with
+nothing hidden causes war is contested, and the field has not settled
+it.</li>
+<li><strong>A strong, free fighter.</strong> In <em>Fighting for
+Free</em>, none of the war models drawn on in which sides learn as they
+fight includes a side that is both overwhelmingly strong and costless.
+The limit concerns models where the sides learn how likely they are to
+win battles. The series’ own extension of the Smith and Stam (2004)
+model to unequal costs proves one thing under its conditions: with a
+positive prize, positive combined costs per battle and one standard
+family of starting beliefs, every equilibrium that holds at every stage
+of the game settles by a finite deadline, unless the war is decided
+first. The starting beliefs in the proof come from the family called
+beta distributions. The ceiling on that deadline, checked by a
+proof-checking program, shrinks in inverse proportion to combined
+per-battle costs. Settlement chances and shares are computed only for
+one baseline and its sweeps.</li>
+</ol>
+<p>Five more are examined in Parts 4 to 7:</p>
+<ol start="4" type="1">
+<li><strong>Wants.</strong> The sorting of wants is an untested
+conjecture on a short, selected, all-human record.</li>
+<li><strong>Training.</strong> No source shows that satiable or
+rank-free wants can be trained in, or would survive
+self-modification.</li>
+<li><strong>Measures.</strong> The measures carry no defensible risk
+number. Limited trims to the shift need not remove the promise problem
+at arrival. Whether failures are independent is untested, and I assume
+machine-side failures are positively linked.</li>
+<li><strong>Dominance.</strong> On my firm judgment, no other human-side
+protection can be relied on once a machine can defeat every human-side
+check.</li>
+<li><strong>Method.</strong> My aim of human survival and the AI help in
+drafting could both bias the analysis.</li>
+</ol>
+<p>These eight limits apply to my own assessment of the war baseline,
+the conjecture about wants, its test and the measures, drawn from
+<em>The War Baseline</em>, <em>Disagreement Without Hidden
+Information</em>, <em>Fighting for Free</em>, <em>Ends, Rank and
+Conflict</em>, <em>A Test the Conjecture Could Lose</em>, <em>Measures
+That Depend on Ends</em> and <em>Changing the Ends</em>. They also apply
+to the answer built on that assessment. The assessment relies on the
+results of <em>Satiation Is Not Enough</em> without assessing them. Part
+3 reports the other papers’ own stated limits.</p>
+</section>
+<section id="what-is-not-modelled" class="level3">
+<h3>What is not modelled</h3>
+<p>The war models leave out extinction, since the loser survives by
+assumption. The security model in Part 8 does not model strategic human
+promises, and takes the chance of a rival as given. The formal version
+of buying time leaves out partial learning and costly waiting. The
+subtraction step leaves out measures that work other than by trimming
+the jump. The series’ models of human control assume that control lasts
+for a period that no model fixes.</p>
+</section>
+<section id="what-nobody-has-measured-or-run" class="level3">
+<h3>What nobody has measured or run</h3>
+<p>The answers turn on open questions of four kinds.</p>
+<p>Some are unmeasured quantities. In the emergence model, the results
+turn on how the multiplier for self-improvement changes over time and
+how long projects lag behind one another. On the reading in <em>Many
+Machines</em>, if captured compute, energy and code turn readily into
+more strength on a closed planet, the historical conditions it draws on
+point toward one machine dominating rather than a lasting balance. The
+cyber comparisons turn on how hazard and adoption respond to speed and
+how long security windows last. Whether training shifts a model’s
+beliefs about humans is among the evidence that, in <em>Disagreement
+Without Hidden Information</em>, would change that paper’s answer.</p>
+<p>Satisfaction, <em>The War Baseline</em> notes, has not been
+adequately measured for states, let alone machines, so none of the
+screens is treated as a meter of machine satisfaction. Even for states,
+there is no adequate definition of satisfaction in terms of what can be
+observed and measured. The costs and benefits of the five candidates are
+unmeasured for each pivotal party. So is every yield, base rate and
+error rate in the planned test until Phase 0 measures it. I have no
+defensible number for how much the proposed measures lower the risk, and
+how far their failures depend on each other has not been tested.</p>
+<p>Some are unknown directions. In the model from Bergemann, Koh and
+Morris, capability-gated caps work well if misalignment falls with
+capability and no better than one common cap if it rises, and the
+direction is unmeasured. The sign of the health balance in <em>Running
+Toward the Clinic</em> is also unknown.</p>
+<p>Some are assumed inputs. No model in the series fixes how long
+enforceable human control lasts, and none of the parameters in <em>Many
+Machines</em> has been estimated for any machine.</p>
+<p>Some are untested premises. One is whether a machine could still
+retaliate after another machine attacked it. The question is whether
+backup copies or spread-out weights would make war between machines
+costly enough that mutual deterrence replaces guardianship. Others are
+whether satiable wants can be trained and survive self-modification, and
+the unproved condition behind the five candidates. The tests H3b and H3c
+have not been run, and a balance among machines no human governs has not
+been tested against evidence.</p>
+</section>
+<section id="what-would-change-particular-judgments" class="level3">
+<h3>What would change particular judgments</h3>
+<p>Evidence that recognition or standing turns into compute, resources
+or authority even where institutions are designed to block it would
+change my judgment in Part 5. Evidence that visibility inflames the race
+more than it calms it, or that misuse rules cannot be enforced across
+jurisdictions, would change my ordering of the candidates, or defeat
+visibility as a candidate pending the race dispute. H3b, if run, could
+lose.</p>
+</section>
+</section>
+<section id="part-13.-what-to-take-away" class="level2">
+<h2>Part 13. What to take away</h2>
+<p>The war models give a bleak verdict for a machine that acts as one,
+chooses rationally and seeks more power and a longer life, if its
+arrival brings a large, fast jump in power and nothing holds it to its
+promises; the series does not settle whether those conditions hold.
+Satiable, shareable wants with shareable inputs leave more room for a
+deal, but no source here shows such wants can be trained in or would
+last, and a security problem can still return from the human side even
+when a machine can credibly promise to stop. I can give no defensible
+number for how much the proposed measures lower the risk.</p>
+<p>A few policies might make sense without that number, but only if a
+condition assumed for two estimates of risk held for every pivotal
+party’s own estimate. On my judgment, governing misuse would pass that
+test most plainly, and research on what training builds in is the most
+direct priority bearing on whether a machine would value us. The models
+cannot tell the student what to do. My own advice is that absent clear
+evidence that the world is going to end she should carry on, stay
+informed, and, if the question keeps pulling at her, bring a careful
+mind to the field.</p>
+</section>
+<section id="where-to-read-more" class="level2">
+<h2>Where to read more</h2>
+<ul>
+<li><em>Limits, and an Answer</em>: the technical paper, with the formal
+checks and the inventory of 164 measure records in its appendices.</li>
+<li><em>Introduction</em>: the student’s question, and the critics
+Narayanan and Kapoor.</li>
+<li><em>Running Through the Rain</em>: speed, secret holds and cyber
+risk, and that paper’s levers.</li>
+<li><em>Running Toward the Clinic</em>: speed, biological risk and
+health, and that paper’s levers.</li>
+<li><em>Measures That Need No Reading of Ends</em>: the sorting of
+measures, and the six direct levers with what ends each.</li>
+<li><em>When Is a Machine an Actor?</em>: the behavioural test for wants
+and the conventions on copies and versions.</li>
+<li><em>Could It Feel?</em>: the selection model under theories of
+consciousness, and what it leaves open about welfare.</li>
+<li><em>The War Baseline</em>: the baseline machine, the promise
+problem, Powell’s line, the two race models, and the loser-survives
+assumption.</li>
+<li><em>Disagreement Without Hidden Information</em>: open disagreement
+as a contested cause of war, the persuasion tournament, and the families
+of deciders.</li>
+<li><em>Fighting for Free</em>: the correction to the Smith and Stam
+model, the deadline result and the sweeps.</li>
+<li><em>Takeoff and Emergence</em>: when a follower can emerge, and the
+motive to strike in the arrival window.</li>
+<li><em>Many Machines</em>: the safe-share bounds, guardianship, and
+humanity as kingmaker or balancer.</li>
+<li><em>Satiation Is Not Enough</em>: the two cases for when a satisfied
+side’s promise to stop is believable, the theorem on many rivals, and
+the tripwire.</li>
+<li><em>Ends, Rank and Conflict</em>: rank-seeking, satiable and
+shareable wants, the conjecture, the relative-share algebra and the
+record of great minds.</li>
+<li><em>A Test the Conjecture Could Lose</em>: the unrun tests H3b and
+H3c, the human hypotheses and Phase 0.</li>
+<li><em>Measures That Depend on Ends</em>: the robustness test, its five
+candidates and their condition, the design rule, the common-shock
+illustration, and the measures toward the machine.</li>
+<li><em>Changing the Ends</em>: power-seeking as a means, the trade
+finding, knowledge as stock and flow, and the limits of being
+useful.</li>
+</ul>
+<p>Full references for the works cited as “(Name Year)” are in the
+technical paper.</p>
+<hr />
+<p><strong>The technical paper:</strong> Allan C. Stam, “Limits, and an
+Answer,” posted at
+https://updates.tacklebx.com/read/limits-and-an-answer-technical.pdf. It
+holds the models, proofs and sources behind this guide, and its
+Declarations name the source checks whose completion is unrecorded.</p>
+<p><strong>Proof status:</strong> Four readings of prose sentences, two
+borrowed results and one counterexample were checked in Lean 4 under
+stated conditions, though some named steps were not, and the essay’s
+judgments have no formal statement. A scripted name check reports six
+names and zero problems without saying which, and shows only that those
+names exist.</p>
+<p><strong>AI assistance:</strong> AI models did much of the work on
+this paper, under my direction. I posed its questions, proposed its main
+lines of argument, ruled on its scope, structure and claims, corrected
+drafts and ruled on review findings held for me. Claude models planned
+it and checked its mathematics and factual claims, and Gemini models
+drafted the text and repaired what those checks flagged. AI models wrote
+the Lean proofs. The sections that report the other papers’ findings and
+gather the series’ measures were added later; a Claude model drafted
+them, Claude and GPT-family models checked them against the papers, and
+they have not been through the review rounds. Claude models read some
+cited sources, and Gemini models confirmed or rejected each problem
+reported. The safeguards were the formal and name checks, separate
+mathematics and fact checks, and second-model confirmation of source
+problems. These are working practices, not guarantees of accuracy or
+independence. I am responsible for the content.</p>
+</section>
+
+</div></main>
+<nav class="wrap site-back bottom" aria-label="Tacklebx"><a href="https://www.tacklebx.com/">← Tacklebx home</a><a href="https://www.tacklebx.com/research">All research</a></nav>
